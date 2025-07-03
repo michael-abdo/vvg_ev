@@ -64,48 +64,9 @@
 2. **AI Provider**: OpenAI (can switch to other providers)
 3. **Export Libraries**: Not yet selected
 
-## Database Schema (MySQL Implementation)
+## Database Schema
 
-```sql
--- Table 1: nda_documents
-CREATE TABLE nda_documents (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  filename VARCHAR(255) NOT NULL,
-  original_name VARCHAR(255) NOT NULL,
-  file_hash VARCHAR(64) UNIQUE NOT NULL,
-  s3_url VARCHAR(500) NOT NULL,
-  file_size BIGINT NOT NULL,
-  upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  user_id VARCHAR(255) NOT NULL,
-  status ENUM('uploaded', 'processing', 'processed', 'error') DEFAULT 'uploaded'
-);
-
--- Table 2: nda_comparisons  
-CREATE TABLE nda_comparisons (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  document1_id INT NOT NULL,
-  document2_id INT NOT NULL,
-  comparison_result_s3_url VARCHAR(500),
-  comparison_summary TEXT,
-  created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  user_id VARCHAR(255) NOT NULL,
-  status ENUM('pending', 'processing', 'completed', 'error') DEFAULT 'pending',
-  FOREIGN KEY (document1_id) REFERENCES nda_documents(id),
-  FOREIGN KEY (document2_id) REFERENCES nda_documents(id)
-);
-
--- Table 3: nda_exports
-CREATE TABLE nda_exports (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  comparison_id INT NOT NULL,
-  export_type ENUM('pdf', 'docx') NOT NULL,
-  export_s3_url VARCHAR(500) NOT NULL,
-  created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  user_id VARCHAR(255) NOT NULL,
-  download_count INT DEFAULT 0,
-  FOREIGN KEY (comparison_id) REFERENCES nda_comparisons(id)
-);
-```
+See `/app/api/migrate-db/route.ts` for the authoritative MySQL schema implementation.
 
 ## API Endpoints
 

@@ -10,24 +10,24 @@
 |-----------|--------|---------|--------------|
 | Auth | ✅ Working | None | `curl http://localhost:3000/api/auth/session` |
 | Database | 🟡 Connected | No CREATE TABLE | `curl http://localhost:3000/api/test-db` |
-| S3 Upload | ❌ Blocked | No permissions | `curl -X POST http://localhost:3000/api/upload` |
+| Storage | ✅ Working | Local filesystem fallback | `/api/storage-health` |
 | OpenAI | ❌ Not configured | No API key | - |
 | EC2 | ❌ Not provisioned | Waiting on Satyen | - |
 
 ## 🔥 Active Blockers
 
-1. **S3 Access** - User has NO permissions → Contact AWS Admin
-2. **DB Tables** - Cannot CREATE → Contact Satyen  
-3. **OpenAI Key** - Not provided → Use mocks
+1. **DB Tables** - Cannot CREATE → Contact Satyen
+2. **S3 Permissions** - For production (using local storage workaround)
 
 ## ✅ What's Working Now
 
 - Run `npm run dev` and app starts
 - Login with Azure AD credentials
 - Database connects via SSM tunnel
-- Upload UI displays (but can't save)
+- **File upload now works** using local storage fallback
 - Database abstraction layer with in-memory fallback
-- Health check endpoint at `/api/db-health` (requires auth)
+- Storage abstraction layer with local filesystem fallback
+- Health check endpoints: `/api/db-health` and `/api/storage-health`
 
 ---
 *This is a living document - update after each test*

@@ -30,24 +30,6 @@ Source: `/app/api/migrate-db/route.ts`
 
 ---
 
-## 📊 Current Status
-
-### Working ✅
-- Azure AD authentication
-- MySQL connection (via SSM tunnel)
-- Upload API endpoint
-- Basic UI structure
-
-### Blocked ❌
-- **S3 Permissions**: No access to any bucket → Contact AWS admin
-- **DB Permissions**: Cannot CREATE TABLE → Contact Satyen
-- **OpenAI Key**: Not provided → Use mock data
-
-### In Progress 🔄
-- Document library UI
-- Text extraction integration
-
-For detailed status: See `Status Report` section below.
 
 ---
 
@@ -68,28 +50,11 @@ For detailed status: See `Status Report` section below.
 2. Connect OpenAI API
 3. Build export system
 
-For detailed roadmap: See `Development Phases` section below.
 
 ---
 
 ## 🔧 Developer Guide
 
-### Environment Setup
-```bash
-# 1. Start SSM tunnel
-aws ssm start-session --target i-07fba3edeb2e54729 \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters host="vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com",portNumber="3306",localPortNumber="10003" \
-  --profile vvg
-
-# 2. Start development
-npm run dev
-```
-
-### Key Environment Variables
-- `MYSQL_PASSWORD="Ei#qs9T!px@Wso"` (must be quoted!)
-- `S3_BUCKET_NAME=vvg-cloud-storage`
-- `S3_FOLDER_PREFIX=nda-analyzer/`
 
 ### API Patterns
 All APIs require authentication:
@@ -160,42 +125,14 @@ await s3Client.send(new PutObjectCommand({
 
 ---
 
-## 🔍 Quick Reference
-
-### Status Report
-**Current Blockers & Workarounds**
-| Issue | Impact | Workaround | Owner |
-|-------|---------|------------|-------|
-| S3 Access Denied | Cannot upload | Use local storage | AWS Admin |
-| No CREATE TABLE | Cannot persist | Use mock data | Satyen |
-| No OpenAI Key | No AI analysis | Return mock results | Manager |
-
-### Development Phases
-**MVP Roadmap (Working Around Blockers)**
-| Phase | Description | Can Start? | Duration |
-|-------|-------------|------------|----------|
-| 1 | Document UI | ✅ Now | 3 days |
-| 2 | Text Extraction | ✅ Now | 2 days |
-| 3 | Mock Comparison | ✅ Now | 2 days |
-| 4 | Database Integration | ❌ Blocked | 2 days |
-| 5 | Real AI | ❌ Blocked | 3 days |
-
-### Contact Directory
-- **Database/EC2**: Satyen
-- **Azure AD**: Bhavik  
-- **AWS/S3**: AWS Admin
-- **Deployment**: Jack
 
 ---
 
 ## 📚 Document Map
 
-This master document eliminates the need for most other docs, but for specific deep-dives:
-
-- **Quick Start**: `README.md` (points here)
-- **Detailed Status**: Generate from "Status Report" section
-- **Development Tasks**: Generate from "Development Phases" section
-- **Code Patterns**: See "Developer Guide" section
+- **Quick Start & Running**: See `README.md`
+- **Current Status & Blockers**: See `STATUS.md`
+- **Deployment Instructions**: See `deployment/README.md`
 
 ---
 
@@ -204,6 +141,7 @@ This master document eliminates the need for most other docs, but for specific d
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0.0 | 2025-07-03 | Initial master document |
+| 1.0.1 | 2025-07-03 | Updated blockers: EC2 access, deployment files ready |
 
 ---
 

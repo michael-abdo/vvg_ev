@@ -102,35 +102,7 @@ See `/app/api/migrate-db/route.ts` for the authoritative MySQL schema implementa
 
 ## 📊 Implementation Status
 
-### ✅ Completed
-- Azure AD authentication via NextAuth
-- MySQL database connection
-- S3 integration with AWS SDK
-- Upload API endpoint (`/api/upload`)
-- Upload UI component with drag-drop
-- Basic dashboard with navigation
-- Mock comparison API (`/api/compare`)
-
-### 🚧 In Progress
-- Database schema (defined but not created - pending permissions)
-- Text extraction utilities (created but not integrated)
-- Document library UI
-
-### ❌ Not Started
-- Tesseract/LayoutParser integration
-- OpenAI API integration (missing API key)
-- Export functionality (PDF/DOCX)
-- Real comparison logic
-- EC2 deployment
-
-## 🚨 Current Blockers
-
-1. **S3 Bucket**: `vvg-nda-analyzer` doesn't exist
-   - Consider using `vvg-cloud-storage` instead
-2. **Database Permissions**: Cannot CREATE TABLE
-   - Waiting on Satyen
-3. **OpenAI API Key**: Not configured
-   - Required for comparison feature
+See `/docs/DEPLOYMENT_STATUS.md` for current implementation status and blockers.
 
 ## ✅ Next Steps
 

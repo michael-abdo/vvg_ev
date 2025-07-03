@@ -8,46 +8,7 @@
 
 ## Core Requirements
 
-### 1. Authentication & Authorization
-- **Requirement**: Secure authentication via Azure AD SSO
-- **Status**: ✅ **IMPLEMENTED**
-- **Implementation**: NextAuth with Azure AD provider at `/app/api/auth/[...nextauth]/route.ts`
-
-### 2. Document Upload
-- **Requirement**: Upload NDA documents (PDF/DOCX) with deduplication
-- **Status**: ✅ **IMPLEMENTED** (API ready, S3 bucket needs update)
-- **Implementation**: `/app/api/upload/route.ts` with SHA-256 hashing
-
-### 3. Document Storage
-- **Requirement**: Secure cloud storage for uploaded documents
-- **Status**: 🚧 **BLOCKED** - S3 bucket `vvg-nda-analyzer` doesn't exist
-- **Workaround**: Use existing `vvg-cloud-storage` bucket with subfolder
-
-### 4. Database
-- **Requirement**: Store document metadata and comparison results
-- **Status**: 🚧 **CONNECTED** but no CREATE TABLE permissions
-- **Implementation**: MySQL (not PostgreSQL) via `truck_scrape` database
-- **Schema**: Defined in `/app/api/migrate-db/route.ts`
-
-### 5. Text Extraction
-- **Requirement**: Extract text from PDF/DOCX files
-- **Status**: 🏗️ **SCAFFOLDED** - Utilities created but not integrated
-- **Implementation**: Tesseract + LayoutParser (replacing AWS Textract for cost)
-
-### 6. NDA Comparison
-- **Requirement**: Compare uploaded NDA against standard template
-- **Status**: 🔄 **MOCKED** - Returns sample data
-- **Blocker**: OpenAI API key not configured
-
-### 7. AI Suggestions
-- **Requirement**: Generate alignment suggestions using AI
-- **Status**: ❌ **NOT STARTED**
-- **Dependency**: OpenAI GPT-4 API integration
-
-### 8. Export Functionality
-- **Requirement**: Export comparison results as PDF/DOCX
-- **Status**: ❌ **NOT STARTED**
-- **Technology**: Planned using PDF-lib/docx libraries
+See `/docs/DEPLOYMENT_STATUS.md` for current implementation status of all requirements.
 
 ## Technical Stack (Locked In)
 

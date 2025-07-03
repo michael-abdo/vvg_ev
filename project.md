@@ -100,29 +100,7 @@ Jack's giving you:
 
 ## ✅ Progress Completed
 
-| Task | Status | Date |
-|------|--------|------|
-| Clone vvg_truckscrape repo as template | ✅ DONE | 2025-07-03 |
-| Strip unnecessary pages/APIs | ✅ DONE | 2025-07-03 |
-| Configure local auth environment | ✅ DONE | 2025-07-03 |
-| Test auth flow on localhost:3000 | ✅ DONE | 2025-07-03 |
-| Verify NextAuth + Azure AD integration | ✅ DONE | 2025-07-03 |
-| **Database access confirmed** | ✅ DONE | 2025-07-03 |
-
-**Local Development Ready:** App runs successfully on localhost:3000 with working Azure AD authentication.
-
-**Database Connection Fully Operational:** 
-- MySQL RDS: `vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com`
-- User: `michael` (SELECT, INSERT, UPDATE, DELETE permissions)
-- Database: `truck_scrape` (using existing database)
-- Connection: Via AWS SSM tunnel on localhost:10003
-- Status: ✅ **WORKING** - App can read/write data successfully
-
-**Critical Configuration Notes:**
-- Password in .env.local must be quoted: `MYSQL_PASSWORD="Ei#qs9T!px@Wso"`
-- Requires AWS SSM tunnel: `aws ssm start-session --target i-07fba3edeb2e54729 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters host="vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com",portNumber="3306",localPortNumber="10003" --profile vvg`
-- Available tables: manufacturer_model_au, vvg_trucklistings, vvg_trucklistings_au
-- User lacks CREATE DATABASE/TABLE permissions (contact Satyen for schema creation)
+See `/docs/DEPLOYMENT_STATUS.md` for current implementation status and operational details.
 
 ## 🧭 Remaining Tasks  
 
@@ -136,29 +114,6 @@ Jack's giving you:
 | Write NGINX config, deploy via PM2 | You, guided by Jack's Loom | After EC2 |
 | Schedule feedback loop with Carmen (legal/db insight) | In progress | - |
 
-## 🏗️ Current Implementation Status
-
-**✅ Already Implemented:**
-1. **Authentication**: Azure AD SSO via NextAuth fully working
-2. **Database Connection**: MySQL via SSM tunnel operational
-3. **Upload API**: `/api/upload` endpoint with S3 integration
-4. **Upload UI**: Complete upload component with drag-drop
-5. **Comparison API**: `/api/compare` endpoint (mock implementation)
-6. **Dashboard**: Basic UI with navigation to upload page
-7. **S3 Integration**: AWS SDK configured and working
-
-**🚧 Partially Implemented:**
-1. **Database Schema**: Tables defined but not created (pending permissions)
-2. **Text Extraction**: Utility library created but not integrated
-3. **Document Viewing**: No UI yet for viewing uploaded documents
-
-**❌ Not Yet Implemented:**
-1. **Tesseract/LayoutParser** integration
-2. **OpenAI API** integration (missing API key)
-3. **Export functionality** (PDF/DOCX generation)
-4. **Document library** view
-5. **Real comparison** logic
-6. **Production deployment**
 
 ## 🗄️ Database Schema
 

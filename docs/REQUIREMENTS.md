@@ -82,23 +82,7 @@ See `/app/api/migrate-db/route.ts` for the authoritative MySQL schema implementa
 
 ## Current Blockers
 
-### Critical (Blocking Development)
-1. **S3 Bucket**: `vvg-nda-analyzer` doesn't exist
-   - **Impact**: Cannot test upload functionality
-   - **Resolution**: Use `vvg-cloud-storage` bucket
-
-2. **Database Permissions**: Cannot CREATE TABLE
-   - **Impact**: Cannot store document metadata
-   - **Resolution**: Waiting on Satyen for permissions
-
-### Non-Critical (Can Work Around)
-1. **OpenAI API Key**: Not configured
-   - **Impact**: Comparison returns mock data
-   - **Resolution**: Continue with mock data for MVP
-
-2. **EC2 Instance**: Not provisioned
-   - **Impact**: Cannot deploy to production
-   - **Resolution**: Continue local development
+See `/docs/DEPLOYMENT_STATUS.md` for current blockers and their resolution status.
 
 ## MVP Scope
 

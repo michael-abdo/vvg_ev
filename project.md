@@ -121,15 +121,7 @@ See `/app/api/migrate-db/route.ts` for the authoritative MySQL schema definition
 
 ## 🚨 Critical Blockers
 
-1. **S3 Bucket**: `vvg-nda-analyzer` does NOT exist
-   - Need to either create this bucket OR
-   - Use an existing bucket like `vvg-cloud-storage`
-   
-2. **Database Permissions**: Cannot CREATE TABLE
-   - Waiting on Satyen for permissions
-   
-3. **OpenAI API Key**: Not configured
-   - Required for actual NDA comparison
+See `/docs/DEPLOYMENT_STATUS.md` for current blockers and their status.
 
 ## 🚀 Next Immediate Actions
 

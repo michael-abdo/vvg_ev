@@ -26,6 +26,8 @@
 - Login with Azure AD credentials
 - Database connects via SSM tunnel
 - Upload UI displays (but can't save)
+- Database abstraction layer with in-memory fallback
+- Health check endpoint at `/api/db-health` (requires auth)
 
 ---
 *This is a living document - update after each test*

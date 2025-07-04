@@ -11,9 +11,9 @@ Last Updated: 2025-07-03 | Version: 1.0.0
 ### Tech Stack (Locked In)
 - **Frontend**: Next.js 15.2.4 with TypeScript
 - **Authentication**: Azure AD via NextAuth  
-- **Database**: MySQL via AWS RDS (truck_scrape)
+- **Database**: MySQL via AWS RDS (truck_scrape - legacy, rename to nda_analyzer)
 - **Storage**: AWS S3 (vvg-cloud-storage bucket)
-- **AI**: OpenAI GPT-4 (planned)
+- **AI**: OpenAI GPT-4 (configured)
 - **Deployment**: EC2 + NGINX + PM2
 
 ### Core Components
@@ -45,10 +45,14 @@ Source: `/app/api/migrate-db/route.ts`
 2. Connect upload to database
 3. Implement real queries
 
-### Phase 3: AI Integration (Blocked)
+### Phase 3: AI Integration (Ready)
 1. Integrate text extraction
-2. Connect OpenAI API
+2. Connect OpenAI API (✅ API key configured)
 3. Build export system
+
+### Phase 4: Deployment (Ready)
+- Deployment files created: nginx config, PM2 config, deploy script
+- EC2 access needed for final deployment
 
 
 ---
@@ -128,11 +132,20 @@ await s3Client.send(new PutObjectCommand({
 
 ---
 
+## 📞 Contact Directory
+
+- **Database/EC2**: Satyen
+- **Azure AD**: Bhavik  
+- **AWS/S3**: AWS Admin
+- **Deployment**: Jack
+
+---
+
 ## 📚 Document Map
 
 - **Quick Start & Running**: See `README.md`
 - **Current Status & Blockers**: See `STATUS.md`
-- **Deployment Instructions**: See `deployment/README.md`
+- **Deployment Config**: See `deployment/` directory (nginx, PM2, deploy scripts)
 
 ---
 
@@ -142,6 +155,7 @@ await s3Client.send(new PutObjectCommand({
 |---------|------|---------|
 | 1.0.0 | 2025-07-03 | Initial master document |
 | 1.0.1 | 2025-07-03 | Updated blockers: EC2 access, deployment files ready |
+| 1.0.2 | 2025-07-04 | Consolidated documentation, OpenAI configured, simplified workflow |
 
 ---
 

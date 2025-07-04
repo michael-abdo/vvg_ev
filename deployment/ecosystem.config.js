@@ -6,7 +6,8 @@ module.exports = {
   apps: [
     {
       name: 'nda-analyzer',
-      script: 'server.js',
+      script: 'npm',
+      args: 'start',
       cwd: '/home/ubuntu/nda-analyzer',
       
       // Environment configuration

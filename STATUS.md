@@ -9,7 +9,7 @@
 | Auth | ✅ Working | None | `curl http://localhost:3000/api/auth/session` |
 | Database | 🟡 Connected | No CREATE TABLE | `curl http://localhost:3000/api/test-db` |
 | Storage | ✅ Working | Local filesystem fallback | `/api/storage-health` |
-| OpenAI | ❌ Not configured | No API key | - |
+| OpenAI | ✅ Configured | None | API key set |
 | EC2 | ❌ Cannot access | No SSH/SSM permissions | Instance: i-035db647b0a1eb2e7 |
 
 ## 🔥 Active Blockers
@@ -52,12 +52,9 @@
    - 7 third-party sample NDAs in `/documents/third-party/`
    - 2 PDFs + 5 text templates ready for testing
 
-## 📞 Contact Directory
+## 📞 Contacts
 
-- **Database/EC2**: Satyen
-- **Azure AD**: Bhavik  
-- **AWS/S3**: AWS Admin
-- **Deployment**: Jack
+See [`MASTER.md`](MASTER.md) for contact directory.
 
 ---
 *This is a living document - update after each test*

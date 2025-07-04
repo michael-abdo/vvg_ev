@@ -90,11 +90,8 @@ async function isServerReady() {
     const options = {
       hostname: 'localhost',
       port: 3000,
-      path: '/api/documents',
+      path: '/api/health',
       method: 'GET',
-      headers: {
-        'x-test-user': CONFIG.testUser
-      },
       timeout: 1000
     };
 
@@ -144,117 +141,19 @@ async function killExistingServers() {
   });
 }
 
-async function uploadDocument(doc) {
-  const filePath = path.resolve(doc.path);
-  
-  if (!fs.existsSync(filePath)) {
-    return { success: false, error: `File not found: ${filePath}` };
-  }
-
-  const fileBuffer = fs.readFileSync(filePath);
-  const fileName = path.basename(filePath);
-  
-  const formData = new FormData();
-  const file = new File([fileBuffer], fileName, {
-    type: getContentType(fileName)
-  });
-  
-  formData.append('file', file);
-  formData.append('isStandard', doc.isStandard.toString());
-  formData.append('displayName', doc.displayName);
-
-  try {
-    const response = await fetch(`${CONFIG.baseUrl}/api/upload`, {
-      method: 'POST',
-      headers: {
-        'x-test-user': CONFIG.testUser
-      },
-      body: formData
-    });
-
-    const result = await response.json();
-    
-    if (!response.ok) {
-      if (result.duplicate) {
-        return { success: true, duplicate: true, document: result.document };
-      }
-      return { success: false, error: result.message || 'Upload failed' };
-    }
-
-    return { success: true, document: result.document };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-function getContentType(filename) {
-  const ext = path.extname(filename).toLowerCase();
-  const types = {
-    '.pdf': 'application/pdf',
-    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    '.doc': 'application/msword',
-    '.txt': 'text/plain'
-  };
-  return types[ext] || 'application/octet-stream';
-}
+// Import the memory database seeder
+const { seedMemoryDatabase } = require('./seed-memory-db.js');
 
 async function seedDocuments() {
-  console.log(`${colors.bright}🌱 Seeding documents...${colors.reset}\n`);
+  // Use direct memory database seeding instead of HTTP requests
+  const result = seedMemoryDatabase();
   
-  const standardDocs = CONFIG.documents.filter(d => d.isStandard);
-  const thirdPartyDocs = CONFIG.documents.filter(d => !d.isStandard);
-  
-  console.log(`${colors.blue}ℹ${colors.reset} Seeding ${standardDocs.length} standard templates and ${thirdPartyDocs.length} third-party NDAs\n`);
-  console.log(`${colors.cyan}👤${colors.reset} Using test user: ${CONFIG.testUser}\n`);
-
-  let uploadedCount = 0;
-  let existingCount = 0;
-  let errorCount = 0;
-
-  // Upload all documents
-  for (const doc of CONFIG.documents) {
-    const docType = doc.isStandard ? 'Standard Template' : 'Third-Party NDA';
-    console.log(`${colors.cyan}⏳${colors.reset} Uploading ${docType}: ${doc.displayName}`);
-    
-    const result = await uploadDocument(doc);
-    
-    if (result.success) {
-      if (result.duplicate) {
-        console.log(`${colors.yellow}⚠️${colors.reset} Document already exists: ${doc.displayName} (ID: ${result.document.id})`);
-        existingCount++;
-      } else {
-        console.log(`${colors.green}✅${colors.reset} Uploaded: ${doc.displayName} (ID: ${result.document.id})`);
-        if (doc.isStandard) {
-          console.log(`${colors.green}✅${colors.reset}    Already marked as standard template`);
-        }
-        uploadedCount++;
-      }
-    } else {
-      console.log(`${colors.yellow}❌${colors.reset} Failed: ${doc.displayName} - ${result.error}`);
-      errorCount++;
-    }
-  }
-
-  // Summary
-  console.log(`\n${colors.bright}📊 Seeding Summary${colors.reset}`);
-  console.log('==================\n');
-  
-  if (uploadedCount > 0) {
-    console.log(`${colors.green}✅${colors.reset} Uploaded: ${uploadedCount} documents`);
-  }
-  if (existingCount > 0) {
-    console.log(`${colors.yellow}⚠️${colors.reset} Already existed: ${existingCount} documents`);
-  }
-  if (errorCount > 0) {
-    console.log(`${colors.yellow}❌${colors.reset} Errors: ${errorCount} documents`);
-  }
-
-  console.log(`\n${colors.bright}🎉 Seeding Complete!${colors.reset}`);
-  console.log('===================\n');
   console.log('You can now:');
   console.log(`   • View documents at ${colors.blue}http://localhost:3000/documents${colors.reset}`);
   console.log(`   • Compare NDAs at ${colors.blue}http://localhost:3000/compare${colors.reset}`);
   console.log('   • Test the complete workflow\n');
+  
+  return result;
 }
 
 async function main() {

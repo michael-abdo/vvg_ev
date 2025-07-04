@@ -39,7 +39,7 @@ Requires these environment variables in `.env.local`:
 # Database (MySQL via SSM tunnel)
 MYSQL_HOST=127.0.0.1
 MYSQL_PORT=10003
-MYSQL_USER=michael
+MYSQL_USER=your-username
 MYSQL_PASSWORD="your-password"
 MYSQL_DATABASE=truck_scrape  # Legacy name, will rename to nda_analyzer
 

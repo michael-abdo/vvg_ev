@@ -14,7 +14,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/VVG/NDA.git"  # Update with actual repo URL
+REPO_URL="https://github.com/michael-abdo/vvg_nda.git"  # Updated with actual repo URL
 APP_DIR="/home/ubuntu/nda-analyzer"
 LOG_DIR="/home/ubuntu/logs/nda-analyzer"
 NGINX_SITE="/etc/nginx/sites-available/default"

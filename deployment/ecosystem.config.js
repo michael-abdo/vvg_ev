@@ -65,7 +65,7 @@ module.exports = {
       user: 'ubuntu',
       host: 'legal.vtc.systems',
       ref: 'origin/main',
-      repo: 'git@github.com:VVG/NDA.git', // Update with actual repo URL
+      repo: 'git@github.com:michael-abdo/vvg_nda.git', // Updated with actual repo URL
       path: '/home/ubuntu/nda-analyzer',
       
       // Pre-deployment commands

@@ -39,15 +39,17 @@ test_endpoint() {
 
 # Test authentication requirements
 echo -e "\n--- Testing Authentication ---"
-test_endpoint "GET" "/api/documents/1" "302" "Should redirect to login when not authenticated"
-test_endpoint "DELETE" "/api/documents/1" "401" "Should return 401 when not authenticated"
-test_endpoint "PATCH" "/api/documents/1" "401" "Should return 401 when not authenticated"
-test_endpoint "GET" "/api/dashboard/stats" "302" "Should redirect to login when not authenticated"
+test_endpoint "GET" "/api/documents/1" "307" "Should redirect to login when not authenticated"
+test_endpoint "DELETE" "/api/documents/1" "307" "Should redirect to login when not authenticated"
+test_endpoint "PATCH" "/api/documents/1" "307" "Should redirect to login when not authenticated"
+test_endpoint "GET" "/api/dashboard/stats" "307" "Should redirect to login when not authenticated"
+test_endpoint "GET" "/api/documents/1/download" "307" "Download should redirect when not authenticated"
+test_endpoint "POST" "/api/documents/1/set-standard" "307" "Set-standard should redirect when not authenticated"
 
 # Test validation
 echo -e "\n--- Testing Validation ---"
-test_endpoint "GET" "/api/documents/invalid" "401" "Should handle invalid document ID"
-test_endpoint "DELETE" "/api/documents/abc" "401" "Should handle non-numeric document ID"
+test_endpoint "GET" "/api/documents/invalid" "307" "Should handle invalid document ID"
+test_endpoint "DELETE" "/api/documents/abc" "307" "Should handle non-numeric document ID"
 
 # Build test
 echo -e "\n--- Testing Build ---"

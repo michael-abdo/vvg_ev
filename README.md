@@ -150,6 +150,81 @@ Additional consolidations completed:
 - **Error Handling**: Consistent use of `ApiErrors` utilities across all API routes
 - **Database Operations**: Added `withDbErrorHandling()` wrapper in `lib/nda/database.ts`
 
+### DRY Refactoring (Phase 3) - Complete Consolidation
+
+Major consolidations completed in this phase:
+
+#### 1. **Environment Configuration** (`lib/config.ts`)
+- Centralized all environment variable access into a single typed configuration module
+- Replaced 20+ instances of direct `process.env` usage
+- Added TypeScript interfaces for type safety
+- Automatic validation in production environments
+- Added `S3_FOLDER_PREFIX` support for multi-tenant storage
+
+#### 2. **Document Access Middleware** (`lib/auth-utils.ts`)
+- Created `withDocumentAccess()` middleware that combines:
+  - Authentication checking
+  - Document ID validation
+  - Document retrieval
+  - Ownership verification
+- Reduced boilerplate in all document-related endpoints by ~20 lines each
+- Example usage:
+  ```typescript
+  export const GET = withDocumentAccess(async (request, userEmail, document, context) => {
+    // document is already validated and ownership checked
+    return NextResponse.json(document);
+  });
+  ```
+
+#### 3. **Test Endpoints Consolidation** (`app/api/test/route.ts`)
+- Merged 5 separate test endpoints into a single unified endpoint:
+  - `/api/test-db` → `/api/test?operation=db`
+  - `/api/test-crud` → `/api/test?operation=crud`
+  - `/api/test-upload` → `/api/test` (POST with `operation: 'upload'`)
+  - `/api/test-extraction` → `/api/test?operation=documents`
+  - `/api/test-compare` → `/api/test` (POST with `operation: 'compare'`)
+- Created `requireDevelopment()` middleware for consistent dev-only guards
+- Reduced code duplication by ~70%
+
+#### 4. **Standardized Response Helpers** (`lib/auth-utils.ts`)
+- Added `ApiResponse` utility with methods:
+  - `success()` - Standard success response
+  - `list()` - Paginated list response
+  - `created()` - 201 Created response
+  - `noContent()` - 204 No Content response
+- Enhanced error handling with `withErrorHandler()` wrapper
+- Combined wrappers: `withAuthAndErrorHandling()`, `withAuthDynamicAndErrorHandling()`
+
+#### 5. **Storage Initialization** (`lib/storage/index.ts`)
+- Added `ensureStorageInitialized()` for idempotent initialization
+- Created storage middleware wrappers:
+  - `withStorage()` - Ensures storage is initialized
+  - `withAuthAndStorage()` - Combined auth + storage
+  - `withAuthDynamicAndStorage()` - For dynamic routes
+- Auto-initialization in development mode
+
+#### 6. **Error Logging System** (`lib/error-logger.ts`)
+- Created centralized error logging with context tracking
+- `ApiError` class with status codes and context
+- `ErrorLogger` with structured logging:
+  - Development: Human-readable console output
+  - Production: JSON structured logs
+- Error factory functions for common error types
+- Ready for integration with external services (Sentry, etc.)
+
+#### 7. **Middleware Simplification** (`middleware.ts`)
+- Cleaned up authentication middleware exclusions
+- Reduced from listing individual test endpoints to single `/api/test` exclusion
+
+### Benefits of DRY Refactoring
+
+1. **Code Reduction**: Eliminated ~500+ lines of duplicate code
+2. **Type Safety**: All configuration and middleware now fully typed
+3. **Maintainability**: Single source of truth for all common patterns
+4. **Error Handling**: Consistent error responses and logging across all endpoints
+5. **Developer Experience**: Less boilerplate, more focus on business logic
+6. **Testing**: Easier to test with consolidated test endpoints
+
 ## Project Structure
 
 ```

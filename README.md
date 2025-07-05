@@ -78,6 +78,50 @@ aws ssm start-session --target i-07fba3edeb2e54729 \
 - **Secure Storage**: AWS S3 with local fallback for development
 - **Authentication**: Azure AD integration
 
+## Code Organization
+
+### Centralized Utilities
+
+The codebase follows DRY (Don't Repeat Yourself) principles with centralized utilities:
+
+#### `lib/utils.ts`
+- **`ApiErrors`** - Standardized API error responses (401, 404, 400, 500, etc.)
+- **`FileValidation`** - Centralized file upload validation
+  - Allowed types: PDF, DOCX, DOC, TXT
+  - Max size: 10MB
+  - MIME type detection
+  - Validation error handling
+- **`requireDevelopment()`** - Development environment enforcement
+
+#### `lib/auth-utils.ts`
+- **`withAuth()`** - Higher-order function for API route authentication
+- Replaces inline session checking across all protected endpoints
+
+#### Usage Examples
+
+```typescript
+// API routes with authentication
+export const GET = withAuth(async (request: NextRequest, userEmail: string) => {
+  // userEmail is guaranteed to exist
+});
+
+// File validation
+const validationError = FileValidation.getValidationError(file);
+if (validationError) return validationError;
+
+// Standardized error responses
+return ApiErrors.unauthorized();
+return ApiErrors.notFound('Document');
+```
+
+### Eliminated Duplicates
+
+The following duplicate files were removed during DRY refactoring:
+- `components/ui/use-mobile.tsx` → use `hooks/use-mobile.tsx`
+- `hooks/use-toast.ts` → use `components/ui/use-toast.ts`
+- `styles/globals.css` → use `app/globals.css`
+- `tests/documents/` → consolidated into `documents/vvg/`
+
 ## Architecture
 
 See [`MASTER.md`](MASTER.md) for detailed system architecture and tech stack.

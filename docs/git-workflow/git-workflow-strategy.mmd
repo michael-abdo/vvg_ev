@@ -1,0 +1,50 @@
+gitGraph
+    commit id: "Initial Commit"
+    commit id: "Co-worker Baseline"
+    commit id: "26a1b28 (VALIDATED)"
+    
+    branch feature/dry-refactoring-test
+    checkout feature/dry-refactoring-test
+    commit id: "Remove duplicate files"
+    commit id: "Add withAuth wrapper"
+    commit id: "Add ApiErrors utilities"
+    commit id: "Add FileValidation"
+    commit id: "DRY Refactoring Complete"
+    commit id: "Phase 1 Testing: PASSED"
+    
+    branch develop/nda-features-refactored
+    checkout develop/nda-features-refactored
+    commit id: "FEATURE: Document comparison"
+    commit id: "FEATURE: Enhanced upload UI"
+    commit id: "BUGFIX: File validation edge case"
+    commit id: "REFACTOR-DEP: Use withAuth"
+    commit id: "FEATURE: Export functionality"
+    
+    checkout main
+    commit id: "Emergency fix (if needed)"
+    
+    %% Phase 2 Decision Point
+    checkout feature/dry-refactoring-test
+    commit id: "Phase 2 Testing"
+    
+    %% SUCCESS PATH
+    checkout main
+    merge feature/dry-refactoring-test
+    commit id: "✅ Refactoring Merged"
+    
+    checkout develop/nda-features-refactored
+    merge main
+    commit id: "Rebase on refactored main"
+    
+    checkout main
+    merge develop/nda-features-refactored
+    commit id: "🚀 Production Ready"
+    
+    %% FALLBACK PATH (alternative timeline)
+    checkout main
+    branch develop/nda-features-baseline
+    checkout develop/nda-features-baseline
+    commit id: "❌ Cherry-pick FEATURE commits"
+    commit id: "Port REFACTOR-DEP manually"
+    commit id: "Add safe 15% improvements"
+    commit id: "🛡️ Baseline + Features"

@@ -140,6 +140,16 @@ The following duplicate files were removed during DRY refactoring:
 - `styles/globals.css` → use `app/globals.css`
 - `tests/documents/` → consolidated into `documents/vvg/`
 
+### DRY Refactoring (Phase 2)
+
+Additional consolidations completed:
+- **Authentication**: All API routes now use `withAuth()` HOF from `lib/auth-utils.ts`
+- **Validation**: Common validations moved to `lib/utils.ts`:
+  - `parseDocumentId()` - Validates document IDs from route params
+  - `isDocumentOwner()` - Checks document ownership
+- **Error Handling**: Consistent use of `ApiErrors` utilities across all API routes
+- **Database Operations**: Added `withDbErrorHandling()` wrapper in `lib/nda/database.ts`
+
 ## Project Structure
 
 ```

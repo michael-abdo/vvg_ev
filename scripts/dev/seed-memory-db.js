@@ -11,6 +11,13 @@ const fs = require('fs');
 const path = require('path');
 const { createHash } = require('crypto');
 
+// Load environment variables
+try {
+  require('dotenv').config({ path: '.env.local' });
+} catch (e) {
+  // dotenv might not be installed, that's okay for Next.js
+}
+
 // Configuration
 const CONFIG = {
   testUser: process.env.DEV_SEED_USER || 'dev-user@example.com',

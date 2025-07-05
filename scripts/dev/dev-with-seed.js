@@ -141,28 +141,49 @@ async function killExistingServers() {
   });
 }
 
-// Import the memory database seeder
-const { seedMemoryDatabase } = require('./seed-memory-db.js');
+// Note: Using HTTP endpoint seeding to work within Next.js memory space
 
 async function seedDocuments() {
-  // Use direct memory database seeding instead of HTTP requests
-  const result = seedMemoryDatabase();
+  // Use the working Next.js seeding endpoint
+  try {
+    const response = await fetch(`${CONFIG.baseUrl}/api/seed-dev`, {
+      method: 'POST'
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log(`${colors.green}✅${colors.reset} ${result.message}`);
+      console.log(`${colors.blue}📊${colors.reset} Total documents in database: ${result.totalDocuments}\n`);
+    } else {
+      const error = await response.json();
+      console.log(`${colors.yellow}❌${colors.reset} Seeding failed: ${error.message}`);
+    }
+  } catch (error) {
+    console.log(`${colors.yellow}❌${colors.reset} Seeding failed: ${error.message}`);
+  }
   
   console.log('You can now:');
   console.log(`   • View documents at ${colors.blue}http://localhost:3000/documents${colors.reset}`);
   console.log(`   • Compare NDAs at ${colors.blue}http://localhost:3000/compare${colors.reset}`);
   console.log('   • Test the complete workflow\n');
-  
-  return result;
 }
 
 async function main() {
   console.log('🚀 Starting development server with auto-seeding...\n');
   
+  // Load environment variables from .env.local
+  try {
+    require('dotenv').config({ path: '.env.local' });
+  } catch (e) {
+    // dotenv might not be installed, that's okay
+  }
+
   // Verify environment
   if (!process.env.DEV_SEED_USER) {
     console.log(`${colors.yellow}⚠️  DEV_SEED_USER not set, using default: ${CONFIG.testUser}${colors.reset}`);
     console.log(`${colors.blue}💡 Set DEV_SEED_USER environment variable to use your email${colors.reset}\n`);
+  } else {
+    console.log(`${colors.cyan}👤 Seeding documents for: ${process.env.DEV_SEED_USER}${colors.reset}\n`);
   }
   
   // Kill existing servers first

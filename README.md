@@ -80,9 +80,9 @@ aws ssm start-session --target i-07fba3edeb2e54729 \
 
 ## Code Organization
 
-### Centralized Utilities
+### Centralized Utilities & Components
 
-The codebase follows DRY (Don't Repeat Yourself) principles with centralized utilities:
+The codebase follows DRY (Don't Repeat Yourself) principles with centralized utilities and reusable components:
 
 #### `lib/utils.ts`
 - **`ApiErrors`** - Standardized API error responses (401, 404, 400, 500, etc.)
@@ -96,6 +96,16 @@ The codebase follows DRY (Don't Repeat Yourself) principles with centralized uti
 #### `lib/auth-utils.ts`
 - **`withAuth()`** - Higher-order function for API route authentication
 - Replaces inline session checking across all protected endpoints
+
+#### `components/page-container.tsx`
+- **`PageContainer`** - Consistent page layout wrapper
+- Provides standard container spacing (p-8)
+- Accepts optional className for customization
+
+#### `components/page-title.tsx`
+- **`PageTitle`** - Consistent page headings
+- Supports optional description text
+- Standard text-3xl font-bold styling
 
 #### Usage Examples
 
@@ -112,6 +122,14 @@ if (validationError) return validationError;
 // Standardized error responses
 return ApiErrors.unauthorized();
 return ApiErrors.notFound('Document');
+
+// Page layout components
+<PageContainer>
+  <PageTitle description="Optional description">
+    Page Title
+  </PageTitle>
+  {/* Page content */}
+</PageContainer>
 ```
 
 ### Eliminated Duplicates

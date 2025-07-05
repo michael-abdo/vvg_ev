@@ -26,9 +26,35 @@ Last Updated: 2025-07-05 | Version: 1.1.0
 
 ### Database Schema
 Source: `/app/api/migrate-db/route.ts`
-- `nda_documents` - Document metadata
-- `nda_comparisons` - Comparison results  
-- `nda_exports` - Generated exports
+
+#### Tables:
+1. **nda_documents** - Stores uploaded NDA metadata
+   - File information (hash, size, S3 URL)
+   - Processing status
+   - Extracted text content
+   - Standard template flag
+
+2. **nda_comparisons** - Stores comparison results
+   - Links two documents
+   - AI analysis results
+   - Similarity scores
+   - Key differences and suggestions
+
+3. **nda_exports** - Tracks generated reports
+   - Export format (PDF/DOCX)
+   - Download tracking
+   - S3 storage URLs
+
+4. **nda_processing_queue** - Async task queue
+   - Text extraction tasks
+   - Comparison tasks
+   - Export generation tasks
+
+#### Database Abstraction Layer
+The database abstraction layer (`/lib/nda/database.ts`) provides:
+- **In-memory storage** when database CREATE access is not available
+- **MySQL storage** when full database access is granted
+- **Seamless transition** between the two modes
 
 ---
 
@@ -61,14 +87,56 @@ Source: `/app/api/migrate-db/route.ts`
 
 ## 🔧 Developer Guide
 
+### DRY Refactoring Implementation
+
+#### Centralized Utilities
+The codebase follows DRY (Don't Repeat Yourself) principles with centralized utilities:
+
+##### `lib/utils.ts`
+- **`ApiErrors`** - Standardized API error responses (401, 404, 400, 500, etc.)
+- **`FileValidation`** - Centralized file upload validation
+  - Allowed types: PDF, DOCX, DOC, TXT
+  - Max size: 10MB
+  - MIME type detection
+- **`requireDevelopment()`** - Development environment enforcement
+- **`parseDocumentId()`** - Validates document IDs from route params
+- **`isDocumentOwner()`** - Checks document ownership
+
+##### `lib/auth-utils.ts`
+- **`withAuth()`** - Higher-order function for API route authentication
+- **`withAuthDynamic()`** - For dynamic routes with parameters
+
+##### Components
+- **`PageContainer`** - Consistent page layout wrapper
+- **`PageTitle`** - Consistent page headings
+
+#### TypeScript Fixes Applied
+- ✅ Enum export issues resolved
+- ✅ withAuth type issues fixed with separate dynamic function
+- ✅ pdf-parse type declarations added
+- ✅ Buffer type compatibility fixed
+- ✅ Nullable return types handled
 
 ### API Patterns
-All APIs require authentication:
+All APIs use the centralized authentication wrapper:
 ```typescript
-const session = await getServerSession(authOptions)
-if (!session?.user?.email) {
-  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-}
+// Static routes
+export const GET = withAuth(async (request, userEmail) => {
+  // userEmail is guaranteed to exist
+});
+
+// Dynamic routes
+export const GET = withAuthDynamic<{ id: string }>(
+  async (request, userEmail, context) => {
+    const documentId = context.params.id;
+    // ...
+  }
+);
+
+// Standardized error responses
+return ApiErrors.unauthorized();
+return ApiErrors.notFound('Document');
+return ApiErrors.badRequest('Invalid file type');
 ```
 
 ### Code Patterns
@@ -151,6 +219,109 @@ await s3Client.send(new PutObjectCommand({
 
 ---
 
+## 🗄️ Storage Abstraction Layer
+
+### Overview
+The storage abstraction provides a unified interface for file storage that works with both local filesystem (development) and AWS S3 (production).
+
+### Architecture
+- **Local Storage Provider**: Stores files in `.storage/` directory with metadata
+- **S3 Storage Provider**: Full S3 feature support for production
+- **Automatic Provider Selection**: Based on environment configuration
+
+### Configuration
+```bash
+# Storage provider selection
+STORAGE_PROVIDER=local  # or 's3'
+S3_ACCESS=false         # Set to 'true' to auto-select S3
+
+# Local storage
+LOCAL_STORAGE_PATH=.storage
+
+# S3 configuration
+S3_BUCKET_NAME=vvg-cloud-storage
+S3_FOLDER_PREFIX=nda-analyzer/
+```
+
+### Usage
+```typescript
+import { storage } from '@/lib/storage';
+import { ndaPaths } from '@/lib/storage';
+
+// Initialize
+await storage.initialize();
+
+// Upload
+const result = await storage.upload(
+  ndaPaths.document(userId, fileHash, filename),
+  buffer,
+  { contentType: 'application/pdf' }
+);
+
+// Download
+const download = await storage.download(path);
+
+// Check provider
+if (storage.isLocal()) {
+  console.log('Using local storage');
+}
+```
+
+---
+
+## 🚀 Deployment Configuration
+
+### EC2 Deployment Files
+| File | Purpose | Status |
+|------|---------|--------|
+| `.env.production` | Production environment variables | ✅ Ready |
+| `nginx-site.conf` | NGINX server configuration | ✅ Ready |
+| `ecosystem.config.js` | PM2 process management | ✅ Ready |
+| `deploy.sh` | Automated deployment script | ✅ Ready |
+
+### Current Blocker
+**Cannot access EC2 instance**: SSM session fails with EOF error
+- Instance ID: `i-035db647b0a1eb2e7`
+- Domain: `legal.vtc.systems`
+- Need SSH key or SSM permissions from AWS admin
+
+### Deployment Process
+When EC2 access is granted:
+```bash
+# Copy files and deploy
+scp -r deployment/ ubuntu@legal.vtc.systems:~/
+ssh ubuntu@legal.vtc.systems
+cd ~/deployment
+./deploy.sh
+```
+
+---
+
+## 🧪 Testing Documentation
+
+### Local Testing Checklist
+#### Phase 1: Core Functionality (Can Test Now)
+- Build & development commands
+- Storage abstraction layer
+- Database abstraction layer
+- Authentication middleware
+- File validation utilities
+- UI components & pages
+
+#### Phase 2: Infrastructure Testing (Requires Access)
+- Database migration
+- S3 operations
+- Production deployment
+- EC2 access validation
+
+### Test Results Summary
+- **26 Test Cases Executed**: 26 ✅ PASSED, 0 ❌ FAILED
+- **4 Critical System Components**: All validated successfully
+- **Risk Assessment**: Low risk for Phase 2 deployment
+- **Rollback Validation**: Baseline still functional
+
+---
+
 ## 📞 Contact Directory
 
 - **Database/EC2**: Satyen
@@ -163,8 +334,9 @@ await s3Client.send(new PutObjectCommand({
 ## 📚 Document Map
 
 - **Quick Start & Running**: See `README.md`
-- **Current Status & Blockers**: See `STATUS.md`
-- **Deployment Config**: See `deployment/` directory (nginx, PM2, deploy scripts)
+- **Current Status & Blockers**: See `docs/STATUS.md`  
+- **Git Workflow**: See `docs/git-workflow.md`
+- **Deployment Files**: See `deployment/` directory
 
 ---
 
@@ -175,6 +347,7 @@ await s3Client.send(new PutObjectCommand({
 | 1.0.0 | 2025-07-03 | Initial master document |
 | 1.0.1 | 2025-07-03 | Updated blockers: EC2 access, deployment files ready |
 | 1.0.2 | 2025-07-04 | Consolidated documentation, OpenAI configured, simplified workflow |
+| 1.1.0 | 2025-07-05 | Major consolidation: merged database, storage, deployment, testing, DRY refactoring docs |
 
 ---
 

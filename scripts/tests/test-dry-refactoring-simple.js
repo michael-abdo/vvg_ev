@@ -80,8 +80,8 @@ runTest('All protected routes use withAuth wrapper', () => {
     if (!content.includes('withAuth')) {
       throw new Error(`Route ${route} doesn't use withAuth`);
     }
-    if (!content.includes("import { withAuth }")) {
-      throw new Error(`Route ${route} doesn't import withAuth`);
+    if (!content.includes("import { withAuth") && !content.includes("import { withAuthDynamic")) {
+      throw new Error(`Route ${route} doesn't import withAuth or withAuthDynamic`);
     }
   });
 });
@@ -132,14 +132,14 @@ runTest('withAuth supports dynamic route parameters', () => {
   const authUtilsPath = path.join(process.cwd(), 'lib/auth-utils.ts');
   const content = fs.readFileSync(authUtilsPath, 'utf8');
   
-  // Check for generic type parameter
-  if (!content.includes('withAuth<T extends Record<string, any> = {}>')) {
-    throw new Error('withAuth doesn\'t support generic type parameter');
+  // Check for withAuthDynamic function
+  if (!content.includes('withAuthDynamic<T extends Record<string, any>>')) {
+    throw new Error('withAuthDynamic function not found');
   }
   
-  // Check for context parameter
-  if (!content.includes('context?: { params: T }')) {
-    throw new Error('withAuth doesn\'t support context parameter');
+  // Check for context parameter in withAuthDynamic
+  if (!content.includes('context: { params: T }')) {
+    throw new Error('withAuthDynamic doesn\'t support context parameter');
   }
 });
 

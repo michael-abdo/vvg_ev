@@ -161,15 +161,13 @@ NDA/
 │   └── upload/            # Upload page
 ├── components/            # React components
 │   └── ui/               # UI components (shadcn/ui)
-├── database/              # Database migrations and scripts
+├── database/              # Database migrations
+│   └── migrations/       # SQL migration files
 ├── deployment/            # Deployment configurations
 ├── docs/                  # Documentation
 │   ├── MASTER.md         # Master documentation
-│   ├── CHANGELOG.md      # Project changelog
-│   ├── development/      # Development docs
-│   ├── git-workflow/     # Git workflow documentation
-│   ├── project-status/   # Project status reports
-│   └── testing/          # Testing documentation
+│   ├── STATUS.md         # Project status & development log
+│   └── git-workflow.md   # Git workflow strategy
 ├── documents/             # Sample NDA documents
 │   ├── third-party/      # Third-party NDAs
 │   └── vvg/              # VVG standard templates
@@ -179,9 +177,14 @@ NDA/
 │   └── storage/          # Storage abstraction
 ├── public/                # Static assets
 ├── scripts/               # Build and dev scripts
+│   ├── database/         # Database scripts
+│   ├── dev/              # Development scripts
+│   └── tests/            # Test scripts
 ├── tests/                 # Test files
-│   └── scripts/          # Test scripts
-└── types/                 # TypeScript type definitions
+├── types/                 # TypeScript type definitions
+└── @types/                # Custom type declarations
+    └── pdf-parse/        # Types for pdf-parse module
+```
 
 ## Architecture
 

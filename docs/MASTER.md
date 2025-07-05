@@ -2,7 +2,7 @@
 
 **This is the single source of truth. All other documents reference this file.**
 
-Last Updated: 2025-07-03 | Version: 1.0.0
+Last Updated: 2025-07-05 | Version: 1.1.0
 
 ---
 
@@ -17,10 +17,12 @@ Last Updated: 2025-07-03 | Version: 1.0.0
 - **Deployment**: EC2 + NGINX + PM2
 
 ### Core Components
-1. **Upload System**: `/app/api/upload` → S3 storage
-2. **Comparison Engine**: `/app/api/compare` → AI analysis
-3. **Document Library**: User document management
-4. **Export System**: PDF/DOCX generation
+1. **Upload System**: `/app/api/upload` → S3 storage + text extraction queue
+2. **Text Extraction**: Real PDF/DOCX/TXT extraction using pdf-parse & mammoth
+3. **Queue Processor**: `/app/api/process-queue` → background text extraction
+4. **Comparison Engine**: `/app/api/compare` → AI analysis (uses extracted text)
+5. **Document Library**: User document management with extracted text
+6. **Export System**: PDF/DOCX generation (not yet implemented)
 
 ### Database Schema
 Source: `/app/api/migrate-db/route.ts`
@@ -45,10 +47,10 @@ Source: `/app/api/migrate-db/route.ts`
 2. Connect upload to database
 3. Implement real queries
 
-### Phase 3: AI Integration (Ready)
-1. Integrate text extraction
-2. Connect OpenAI API (✅ API key configured)
-3. Build export system
+### Phase 3: AI Integration (In Progress)
+1. ✅ Integrate text extraction (COMPLETED - pdf-parse, mammoth)
+2. 🔴 Connect OpenAI API (API key configured, implementation needed)
+3. 🔴 Build export system
 
 ### Phase 4: Deployment (Ready)
 - Deployment files created: nginx config, PM2 config, deploy script
@@ -70,6 +72,23 @@ if (!session?.user?.email) {
 ```
 
 ### Code Patterns
+
+**Text Extraction Workflow**:
+```typescript
+// 1. On upload, queue extraction
+await queueDb.enqueue({
+  document_id: document.id,
+  task_type: TaskType.EXTRACT_TEXT,
+  priority: 5
+})
+
+// 2. Process queue (manually or via cron)
+POST /api/process-queue
+
+// 3. Extraction uses unified function
+import { extractText } from '@/lib/text-extraction'
+const content = await extractText(buffer, filename, hash)
+```
 
 **Database Queries**:
 ```typescript

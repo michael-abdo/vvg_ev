@@ -122,6 +122,39 @@ The following duplicate files were removed during DRY refactoring:
 - `styles/globals.css` → use `app/globals.css`
 - `tests/documents/` → consolidated into `documents/vvg/`
 
+## Project Structure
+
+```
+NDA/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── compare/           # Document comparison page
+│   ├── documents/         # Document library page
+│   └── upload/            # Upload page
+├── components/            # React components
+│   └── ui/               # UI components (shadcn/ui)
+├── database/              # Database migrations and scripts
+├── deployment/            # Deployment configurations
+├── docs/                  # Documentation
+│   ├── MASTER.md         # Master documentation
+│   ├── CHANGELOG.md      # Project changelog
+│   ├── development/      # Development docs
+│   ├── git-workflow/     # Git workflow documentation
+│   ├── project-status/   # Project status reports
+│   └── testing/          # Testing documentation
+├── documents/             # Sample NDA documents
+│   ├── third-party/      # Third-party NDAs
+│   └── vvg/              # VVG standard templates
+├── hooks/                 # React hooks
+├── lib/                   # Library code
+│   ├── nda/              # NDA-specific modules
+│   └── storage/          # Storage abstraction
+├── public/                # Static assets
+├── scripts/               # Build and dev scripts
+├── tests/                 # Test files
+│   └── scripts/          # Test scripts
+└── types/                 # TypeScript type definitions
+
 ## Architecture
 
-See [`MASTER.md`](MASTER.md) for detailed system architecture and tech stack.
+See [`docs/MASTER.md`](docs/MASTER.md) for detailed system architecture and tech stack.

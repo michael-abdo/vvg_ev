@@ -14,7 +14,7 @@
 const http = require('http');
 
 // Configuration
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3001';
 const DEV_BYPASS_HEADER = 'X-Dev-Bypass';
 const TIMEOUT_MS = 15000;
 
@@ -28,7 +28,7 @@ function makeRequest(path, method = 'GET', data = null) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'localhost',
-      port: 3000,
+      port: 3001,
       path,
       method,
       headers: {

@@ -100,11 +100,13 @@ async function testSeedData() {
   try {
     const response = await makeRequest('/api/seed-dev', 'POST');
     
-    if (response.status !== 200) {
+    if (response.status !== 200 && response.status !== 201) {
       throw new Error(`Status ${response.status}: ${response.body}`);
     }
     
-    const { processedCount, realDataUsed } = response.data;
+    // Handle new ApiResponse.operation format
+    const data = response.data?.data || response.data;
+    const { processedCount, realDataUsed } = data;
     
     // FAIL FAST if mock data used (Claude principle)
     if (!realDataUsed) {
@@ -130,7 +132,11 @@ async function testProcessQueue() {
     for (let i = 0; i < 5; i++) {
       const response = await makeRequest('/api/process-queue', 'POST');
       
-      if (response.status === 200 && response.data?.success) {
+      // Handle both old and new response formats
+      const isSuccess = (response.status === 200 || response.status === 201) && 
+                       (response.data?.success || response.data?.status === 'success');
+      
+      if (isSuccess) {
         processedCount++;
         await new Promise(resolve => setTimeout(resolve, 500)); // Small delay
       } else {

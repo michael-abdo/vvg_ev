@@ -2,7 +2,7 @@
 
 **This is the single source of truth. All other documents reference this file.**
 
-Last Updated: 2025-07-05 | Version: 1.1.0
+Last Updated: 2025-07-06 | Version: 1.2.0
 
 ---
 
@@ -103,8 +103,26 @@ The codebase follows DRY (Don't Repeat Yourself) principles with centralized uti
 - **`isDocumentOwner()`** - Checks document ownership
 
 ##### `lib/auth-utils.ts`
-- **`withAuth()`** - Higher-order function for API route authentication
-- **`withAuthDynamic()`** - For dynamic routes with parameters
+- **`withAuth()`** - Higher-order function for API route authentication with automatic timing tracking
+- **`withAuthDynamic()`** - For dynamic routes with parameters and timing
+- **`withDocumentAccess()`** - For routes that need document ownership validation
+- **`withComparisonAccess()`** - For comparison routes validating two document ownership
+- **`withRateLimit()`** - Rate limiting wrapper for expensive operations
+- **`ApiResponse`** - Standardized success response utilities
+  - `ApiResponse.operation()` - Standard operation response format
+  - Consistent response structure across all endpoints
+
+##### `lib/services/document-service.ts`
+- **`getDocumentUrls()`** - Centralized URL generation for document downloads
+- Handles both S3 signed URLs and local storage URLs
+- Single source of truth for document URL logic
+
+##### `lib/text-extraction.ts`
+- **Text extraction utilities** - PDF, DOCX, TXT extraction
+- **Text analysis utilities** - Added in DRY refactoring:
+  - `getTextStats()` - Comprehensive text statistics
+  - `findSections()` - Document section detection
+  - `calculateSimilarity()` - Jaccard similarity calculation
 
 ##### Components
 - **`PageContainer`** - Consistent page layout wrapper
@@ -120,9 +138,10 @@ The codebase follows DRY (Don't Repeat Yourself) principles with centralized uti
 ### API Patterns
 All APIs use the centralized authentication wrapper:
 ```typescript
-// Static routes
+// Static routes with automatic timing
 export const GET = withAuth(async (request, userEmail) => {
   // userEmail is guaranteed to exist
+  // X-Processing-Time header added automatically
 });
 
 // Dynamic routes
@@ -133,10 +152,35 @@ export const GET = withAuthDynamic<{ id: string }>(
   }
 );
 
-// Standardized error responses
+// Document access routes
+export const GET = withDocumentAccess(async (
+  request, userEmail, document, context
+) => {
+  // document ownership already validated
+});
+
+// Comparison routes
+export const POST = withComparisonAccess(async (
+  request, userEmail, doc1, doc2
+) => {
+  // Both documents ownership validated
+});
+
+// Rate limited routes
+export const POST = withRateLimit(
+  compareRateLimiter,
+  async (request, userEmail) => {
+    // Rate limit headers added automatically
+  }
+);
+
+// Standardized responses
 return ApiErrors.unauthorized();
 return ApiErrors.notFound('Document');
-return ApiErrors.badRequest('Invalid file type');
+return ApiResponse.operation('upload', {
+  result: { documentId, url },
+  status: 'created'
+});
 ```
 
 ### Code Patterns
@@ -348,6 +392,7 @@ cd ~/deployment
 | 1.0.1 | 2025-07-03 | Updated blockers: EC2 access, deployment files ready |
 | 1.0.2 | 2025-07-04 | Consolidated documentation, OpenAI configured, simplified workflow |
 | 1.1.0 | 2025-07-05 | Major consolidation: merged database, storage, deployment, testing, DRY refactoring docs |
+| 1.2.0 | 2025-07-06 | Complete DRY refactoring: automated timing, centralized responses, extracted text utilities |
 
 ---
 

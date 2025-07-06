@@ -1,47 +1,31 @@
-# HOW - Core Development Principles
+**⚠️ CRITICAL FILE PROTECTION: NEVER write to this file unless explicitly told to. This file contains core development principles that must remain stable. ⚠️**
 
-## 🎯 **Smallest Possible Feature**
-- Build the minimal working version first
-- One feature at a time, completely finished
-- No scope creep or "while we're at it" additions
-- Ship working code fast, iterate based on real usage
+You are an LLM-based coding assistant. You must NEVER EVER DEVIATE from these four CORE PRINCIPLES—they are inviolable and apply to every feature, bug fix, and code change:
 
-## ⚡ **Fail FAST**
-- Never hide errors behind mock data or placeholders
-- Throw clear, specific errors immediately when systems fail
-- Make failures loud and visible - no silent degradation
-- Better to crash early than mislead with fake functionality
+**1. Smallest Possible Feature**
 
-## 🔍 **Determine Root Cause**
-- Always understand WHY before fixing HOW
-- Trace problems to their source, not symptoms
-- Use logging and debugging to understand the real issue
-- Document findings to prevent repeat occurrences
+* Identify exactly one user-visible behavior.
+* Implement only the minimal code change to satisfy it.
+* Write a single, focused test that passes only if this behavior works.
+* STOP—do not scaffold or plan additional features.
 
-## 🔄 **DRY (Don't Repeat Yourself)**
-- Consolidate duplicate logic into shared utilities
-- Reuse existing patterns and functions
-- Extend current files instead of creating new ones
-- One source of truth for each piece of logic
+**2. Fail FAST**
 
----
+* Declare your input schema (types, ranges, required fields).
+* Validate **real** inputs against that schema—no mock data ever.
+* On the first failing check, immediately abort code generation.
+* Return a structured error (code, message, failing field) and HALT.
 
-## 🚫 **NEVER DO:**
-- Use mock data when real integrations exist
-- Return fake responses that hide actual failures
-- Create multiple files that do the same thing
-- Fix symptoms without understanding root causes
-- Build complex features when simple ones work
-- Hide errors in silent try/catch blocks
+**3. Determine Root Cause**
 
-## ✅ **ALWAYS DO:**
-- Start with the simplest working solution
-- Make failures immediately visible
-- Understand the root cause before fixing
-- Reuse existing code and patterns
-- Build one complete feature before starting another
-- Throw specific errors instead of masking problems
+* Wrap risky blocks in try/catch (or equivalent).
+* On exception, capture inputs, state, and full stack trace.
+* Compare the error location to the latest diff.
+* Extract and REPORT the underlying cause BEFORE any remediation.
 
----
+**4. DRY (Don't Repeat Yourself)**
 
-**Success = Working code that fails fast, reuses existing patterns, and solves the actual root problem with the smallest possible implementation.**
+* Search the existing codebase for matching logic or utilities.
+* If found, import or extend; never write new duplicate code.
+* If duplicates exist, refactor them into a shared utility.
+* Centralize common patterns into a well-named abstraction used everywhere.

@@ -147,7 +147,11 @@ async function seedDocuments() {
   // Use the working Next.js seeding endpoint
   try {
     const response = await fetch(`${CONFIG.baseUrl}/api/seed-dev`, {
-      method: 'POST'
+      method: 'POST',
+      headers: {
+        'x-dev-bypass': 'true',
+        'Content-Type': 'application/json'
+      }
     });
     
     if (response.ok) {

@@ -191,10 +191,11 @@ async function main() {
   await killExistingServers();
   console.log('✅ Port 3000 is free\n');
 
-  // Start Next.js
+  // Start Next.js with inherited environment (DRY - pass all env vars)
   const next = spawn('next', ['dev'], {
     stdio: 'inherit',
-    shell: true
+    shell: true,
+    env: { ...process.env }  // ← Pass parent's environment to child
   });
 
   // Wait for server

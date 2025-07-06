@@ -50,7 +50,7 @@ async function runMigrations() {
         values: [table]
       });
       
-      if (result[0].count > 0) {
+      if ((result as any[])[0].count > 0) {
         console.log(`✅ Table ${table} exists`);
       } else {
         console.error(`❌ Table ${table} not found`);

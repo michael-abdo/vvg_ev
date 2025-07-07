@@ -7,7 +7,7 @@ module.exports = {
     {
       name: 'nda-analyzer',
       script: 'npm',
-      args: 'start',
+      args: 'run start:prod',
       cwd: '/home/ubuntu/nda-analyzer',
       
       // Environment configuration
@@ -71,8 +71,8 @@ module.exports = {
       // Pre-deployment commands
       'pre-setup': 'sudo apt update && sudo apt install -y git nodejs npm',
       
-      // Post-deployment commands
-      'post-deploy': 'npm ci && npm run build && pm2 reload ecosystem.config.js --env production',
+      // Post-deployment commands (skip build due to hanging issue)
+      'post-deploy': 'npm ci && pm2 reload ecosystem.config.js --env production',
       
       // Environment variables for deployment
       env: {

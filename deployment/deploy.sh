@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# NDA Analyzer Deployment Script for EC2
+# ${PROJECT_DISPLAY_NAME} Deployment Script for EC2
 # Based on Jack's video instructions and deployment requirements
 # Target: EC2 instance i-035db647b0a1eb2e7 (legal.vtc.systems)
 
@@ -15,8 +15,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 REPO_URL="https://github.com/michael-abdo/vvg_nda.git"  # Updated with actual repo URL
-APP_DIR="/home/ubuntu/nda-analyzer"
-LOG_DIR="/home/ubuntu/logs/nda-analyzer"
+APP_DIR="/home/ubuntu/${PROJECT_NAME:-vvg-app}"
+LOG_DIR="/home/ubuntu/logs/${PROJECT_NAME:-vvg-app}"
 NGINX_SITE="/etc/nginx/sites-available/default"
 DOMAIN="legal.vtc.systems"
 
@@ -107,7 +107,7 @@ install_nginx() {
 
 # Clone repository
 clone_repository() {
-    log "Cloning NDA Analyzer repository..."
+    log "Cloning ${PROJECT_DISPLAY_NAME} repository..."
     
     # Remove existing directory if it exists
     if [ -d "$APP_DIR" ]; then
@@ -192,7 +192,7 @@ start_application() {
     fi
     
     # Stop existing PM2 processes
-    pm2 delete nda-analyzer 2>/dev/null || true
+    pm2 delete ${PROJECT_NAME:-vvg-app} 2>/dev/null || true
     
     # Start application
     pm2 start ecosystem.config.js --env production
@@ -234,7 +234,7 @@ test_application() {
     fi
     
     # Test NGINX proxy
-    if curl -s http://localhost/nda-analyzer > /dev/null; then
+    if curl -s http://localhost/${PROJECT_NAME:-vvg-app} > /dev/null; then
         log "NGINX proxy test passed ✓"
     else
         warn "NGINX proxy test failed"
@@ -261,7 +261,7 @@ install_ssl() {
 
 # Main deployment function
 main() {
-    log "Starting NDA Analyzer deployment on EC2..."
+    log "Starting ${PROJECT_DISPLAY_NAME} deployment on EC2..."
     
     check_user
     update_system
@@ -278,13 +278,13 @@ main() {
     test_application
     
     log "Deployment completed successfully! 🎉"
-    log "Application should be accessible at: http://$DOMAIN/nda-analyzer"
+    log "Application should be accessible at: http://$DOMAIN/${PROJECT_NAME:-vvg-app}"
     log ""
     log "Next steps:"
     info "1. Test the application in your browser"
     info "2. Install SSL certificate: ./deploy.sh ssl"
     info "3. Test Azure AD authentication"
-    info "4. Monitor logs: pm2 logs nda-analyzer"
+    info "4. Monitor logs: pm2 logs ${PROJECT_NAME:-vvg-app}"
     info "5. Check status: pm2 status"
 }
 
@@ -293,7 +293,7 @@ ssl_only() {
     log "Installing SSL certificate only..."
     install_ssl
     log "SSL installation completed!"
-    log "Application should now be accessible at: https://$DOMAIN/nda-analyzer"
+    log "Application should now be accessible at: https://$DOMAIN/${PROJECT_NAME:-vvg-app}"
 }
 
 # Handle command line arguments
@@ -305,16 +305,16 @@ case "${1:-}" in
         test_application
         ;;
     logs)
-        pm2 logs nda-analyzer
+        pm2 logs ${PROJECT_NAME:-vvg-app}
         ;;
     status)
         pm2 status
         ;;
     restart)
-        cd "$APP_DIR" && pm2 restart nda-analyzer
+        cd "$APP_DIR" && pm2 restart ${PROJECT_NAME:-vvg-app}
         ;;
     stop)
-        pm2 stop nda-analyzer
+        pm2 stop ${PROJECT_NAME:-vvg-app}
         ;;
     "")
         main

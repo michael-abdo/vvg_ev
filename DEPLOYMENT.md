@@ -1,6 +1,6 @@
-# NDA Analyzer - Deployment Guide
+# {PROJECT_DISPLAY_NAME} - Deployment Guide
 
-This guide covers deployment of the NDA Analyzer application to production environments.
+This guide covers deployment of the {PROJECT_DISPLAY_NAME} application to production environments.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -54,7 +54,7 @@ S3_ACCESS=true
 AWS_REGION=us-west-2
 AWS_ACCESS_KEY_ID=your-aws-access-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-S3_FOLDER_PREFIX=nda-analyzer/
+S3_FOLDER_PREFIX={PROJECT_NAME}/
 ```
 
 #### Authentication
@@ -169,8 +169,8 @@ CMD ["npm", "start"]
 
 Build and run:
 ```bash
-docker build -t nda-analyzer .
-docker run -p 3000:3000 --env-file .env.production nda-analyzer
+docker build -t {PROJECT_NAME} .
+docker run -p 3000:3000 --env-file .env.production {PROJECT_NAME}
 ```
 
 ## Reverse Proxy Configuration
@@ -235,7 +235,7 @@ curl https://your-domain.com/api/storage-health
 
 1. **Application Logs:**
    ```bash
-   pm2 logs nda-analyzer
+   pm2 logs {PROJECT_NAME}
    ```
 
 2. **PM2 Monitoring:**

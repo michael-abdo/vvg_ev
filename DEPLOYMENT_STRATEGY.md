@@ -1,4 +1,4 @@
-# NDA Analyzer Deployment Strategy Guide
+# {PROJECT_DISPLAY_NAME} Deployment Strategy Guide
 
 ## Health Check Implementation ✅
 
@@ -9,7 +9,7 @@ Health check endpoint is now available at `/api/health` returning:
   "timestamp": "2025-07-08T12:00:00.000Z",
   "environment": "production",
   "version": "0.1.0",
-  "service": "nda-analyzer",
+  "service": "{PROJECT_NAME}",
   "uptime": 3600,
   "memory": {
     "used": 120,
@@ -27,11 +27,11 @@ Health check endpoint is now available at `/api/health` returning:
 
 ```bash
 # Deploy to EC2
-scp -r . ubuntu@legal.vtc.systems:~/nda-analyzer/
+scp -r . ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
 ssh ubuntu@legal.vtc.systems
 
 # Install dependencies and build
-cd ~/nda-analyzer
+cd ~/{PROJECT_NAME}
 npm ci
 npm run build
 
@@ -52,7 +52,7 @@ pm2 startup
 ```javascript
 // PM2 will use health check endpoint
 pm2 set pm2-plus:webapp_host legal.vtc.systems
-pm2 set pm2-plus:webapp_health_check_path /nda-analyzer/api/health
+pm2 set pm2-plus:webapp_health_check_path /{PROJECT_NAME}/api/health
 ```
 
 ### Option 2: Docker for Development/Staging
@@ -110,8 +110,8 @@ CMD ["pm2-runtime", "start", "ecosystem.config.js"]
    ```bash
    # Clone or copy application
    cd /home/ubuntu
-   git clone <your-repo> nda-analyzer
-   cd nda-analyzer
+   git clone <your-repo> {PROJECT_NAME}
+   cd {PROJECT_NAME}
    
    # Install and build
    npm ci
@@ -130,7 +130,7 @@ CMD ["pm2-runtime", "start", "ecosystem.config.js"]
 
 4. **Configure Nginx** (existing)
    ```nginx
-   location /nda-analyzer {
+   location /{PROJECT_NAME} {
        proxy_pass http://localhost:3000;
        proxy_http_version 1.1;
        proxy_set_header Upgrade $http_upgrade;
@@ -139,7 +139,7 @@ CMD ["pm2-runtime", "start", "ecosystem.config.js"]
        proxy_cache_bypass $http_upgrade;
        
        # Health check passthrough
-       location = /nda-analyzer/api/health {
+       location = /{PROJECT_NAME}/api/health {
            access_log off;
            proxy_pass http://localhost:3000/api/health;
        }
@@ -166,7 +166,7 @@ pm2 set pm2-logrotate:retain 7
 ### Health Check Monitoring
 ```bash
 # Simple cron health check
-*/5 * * * * curl -f http://localhost:3000/api/health || pm2 restart nda-analyzer
+*/5 * * * * curl -f http://localhost:3000/api/health || pm2 restart {PROJECT_NAME}
 
 # CloudWatch integration (if on AWS)
 aws cloudwatch put-metric-data \
@@ -201,8 +201,8 @@ max_memory_restart: process.env.WEB_MEMORY || '750M',
 ### With PM2
 ```bash
 # Quick rollback
-pm2 restart nda-analyzer
-pm2 reload nda-analyzer # Zero-downtime reload
+pm2 restart {PROJECT_NAME}
+pm2 reload {PROJECT_NAME} # Zero-downtime reload
 
 # Code rollback
 git checkout <previous-version>
@@ -213,12 +213,12 @@ pm2 reload ecosystem.config.js
 ### With Docker (if used)
 ```bash
 # Tag releases
-docker tag nda-analyzer:latest nda-analyzer:backup
-docker build -t nda-analyzer:v1.2.0 .
+docker tag {PROJECT_NAME}:latest {PROJECT_NAME}:backup
+docker build -t {PROJECT_NAME}:v1.2.0 .
 
 # Rollback
-docker stop nda-analyzer
-docker run -d --name nda-analyzer nda-analyzer:backup
+docker stop {PROJECT_NAME}
+docker run -d --name {PROJECT_NAME} {PROJECT_NAME}:backup
 ```
 
 ## Decision Matrix

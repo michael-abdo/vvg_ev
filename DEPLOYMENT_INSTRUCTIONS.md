@@ -4,7 +4,7 @@
 - **All TypeScript errors fixed**: 29 compilation errors resolved
 - **Database schema updated**: Now matches TypeScript interfaces
 - **Environment configured**: Production variables corrected
-- **S3 integration**: Working with bucket `nda-analyzer-documents-20250706165230`
+- **S3 integration**: Working with bucket `{PROJECT_NAME}-documents-20250706165230`
 - **Code committed**: Latest changes pushed to `develop/nda-features-refactored` branch
 
 ## EC2 Deployment Steps
@@ -16,7 +16,7 @@ aws ssm start-session --target i-035db647b0a1eb2e7 --region us-west-2 --profile 
 
 ### 2. Navigate to Application Directory
 ```bash
-cd /home/ubuntu/nda-analyzer
+cd /home/ubuntu/{PROJECT_NAME}
 ```
 
 ### 3. Pull Latest Changes
@@ -59,16 +59,16 @@ cp .env.production.example .env.production
 # Verify these key settings:
 NODE_ENV=production
 MYSQL_DATABASE=nda_analyzer
-S3_BUCKET_NAME=nda-analyzer-documents-20250706165230
+S3_BUCKET_NAME={PROJECT_NAME}-documents-20250706165230
 ```
 
 ### 9. Start/Restart Application
 ```bash
 # If using PM2:
-pm2 restart nda-analyzer
+pm2 restart {PROJECT_NAME}
 
 # If using systemd:
-sudo systemctl restart nda-analyzer
+sudo systemctl restart {PROJECT_NAME}
 
 # If starting fresh:
 pm2 start ecosystem.config.js
@@ -77,11 +77,11 @@ pm2 start ecosystem.config.js
 ### 10. Verify Deployment
 ```bash
 # Check application status
-curl -I https://legal.vtc.systems/nda-analyzer
+curl -I https://legal.vtc.systems/{PROJECT_NAME}
 
 # Check health endpoints
-curl https://legal.vtc.systems/nda-analyzer/api/db-health
-curl https://legal.vtc.systems/nda-analyzer/api/storage-health
+curl https://legal.vtc.systems/{PROJECT_NAME}/api/db-health
+curl https://legal.vtc.systems/{PROJECT_NAME}/api/storage-health
 ```
 
 ## Critical Changes Made
@@ -101,7 +101,7 @@ curl https://legal.vtc.systems/nda-analyzer/api/storage-health
   - `nda_processing_queue`: Complete new table for task management
 
 ### Environment Configuration
-- ✅ Updated S3 bucket name to `nda-analyzer-documents-20250706165230`
+- ✅ Updated S3 bucket name to `{PROJECT_NAME}-documents-20250706165230`
 - ✅ Updated database name to `nda_analyzer`
 - ✅ Added missing environment variables
 
@@ -111,7 +111,7 @@ curl https://legal.vtc.systems/nda-analyzer/api/storage-health
 git reset --hard HEAD~1
 npm install --production
 npm run build
-pm2 restart nda-analyzer
+pm2 restart {PROJECT_NAME}
 ```
 
 ## Expected Behavior After Deployment

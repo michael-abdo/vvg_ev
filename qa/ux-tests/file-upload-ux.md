@@ -1,12 +1,12 @@
-# File Upload UX Test - NDA Analyzer
+# File Upload UX Test - {PROJECT_DISPLAY_NAME}
 
 ## Test Environment
-- **URL**: https://legal.vtc.systems/nda-analyzer
+- **URL**: https://legal.vtc.systems/{PROJECT_NAME}
 - **Feature**: File upload functionality for NDA documents
 - **Expected flow**: Authentication → Upload page → File selection → Success/Error feedback
 
 ## Pre-test Setup
-1. Navigate to https://legal.vtc.systems/nda-analyzer
+1. Navigate to https://legal.vtc.systems/{PROJECT_NAME}
 2. Complete authentication flow (should redirect to Microsoft login)
 3. After successful authentication, should land on dashboard
 

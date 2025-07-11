@@ -1,4 +1,4 @@
-# NDA Analyzer
+# {PROJECT_DISPLAY_NAME}
 
 AI-powered legal document analysis tool for comparing Non-Disclosure Agreements.
 

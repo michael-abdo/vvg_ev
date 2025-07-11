@@ -3,7 +3,7 @@
 ## Issue
 The application was getting "Access denied" errors when trying to upload files to S3:
 ```
-Error: Access denied for upload on nda-analyzer/users/michaelabdo@vvgtruck.com/documents/.../Torys-Mutual-NDA-Template.pdf
+Error: Access denied for upload on {PROJECT_NAME}/users/michaelabdo@vvgtruck.com/documents/.../Torys-Mutual-NDA-Template.pdf
 ```
 
 ## Root Cause
@@ -25,12 +25,12 @@ Switched from S3 storage to local storage on the EC2 instance:
 
 3. **Container restart command:**
    ```bash
-   docker run -d --name nda-analyzer \
+   docker run -d --name {PROJECT_NAME} \
      -p 3000:3000 \
      -v /home/ubuntu/nda-storage:/app/.storage \
      --env-file .env.docker.production \
      --restart unless-stopped \
-     nda-analyzer:latest
+     {PROJECT_NAME}:latest
    ```
 
 ## Result

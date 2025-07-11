@@ -12,7 +12,7 @@ This branch contains the working version from commit `b6a9145` (July 6, 9:58 PM)
 
 1. **Build the Docker image:**
    ```bash
-   docker build -t nda-analyzer:latest .
+   docker build -t {PROJECT_NAME}:latest .
    ```
 
 2. **Run with Docker Compose (recommended):**
@@ -29,7 +29,7 @@ This branch contains the working version from commit `b6a9145` (July 6, 9:58 PM)
    docker run -p 3000:3000 \
      --env-file .env.production \
      -v $(pwd)/storage:/app/storage \
-     nda-analyzer:latest
+     {PROJECT_NAME}:latest
    ```
 
 ## Production Deployment
@@ -39,13 +39,13 @@ This branch contains the working version from commit `b6a9145` (July 6, 9:58 PM)
 1. **Build and push to ECR:**
    ```bash
    # Build the image
-   docker build -t nda-analyzer:latest .
+   docker build -t {PROJECT_NAME}:latest .
    
    # Tag for ECR
-   docker tag nda-analyzer:latest <your-ecr-uri>/nda-analyzer:latest
+   docker tag {PROJECT_NAME}:latest <your-ecr-uri>/{PROJECT_NAME}:latest
    
    # Push to ECR
-   docker push <your-ecr-uri>/nda-analyzer:latest
+   docker push <your-ecr-uri>/{PROJECT_NAME}:latest
    ```
 
 2. **Deploy using ECS:**
@@ -58,16 +58,16 @@ This branch contains the working version from commit `b6a9145` (July 6, 9:58 PM)
 1. **On your deployment server:**
    ```bash
    # Pull or transfer the image
-   docker pull <your-registry>/nda-analyzer:latest
+   docker pull <your-registry>/{PROJECT_NAME}:latest
    
    # Run with production environment
    docker run -d \
-     --name nda-analyzer \
+     --name {PROJECT_NAME} \
      --restart unless-stopped \
      -p 80:3000 \
      --env-file /path/to/.env.production \
      -v /path/to/storage:/app/storage \
-     <your-registry>/nda-analyzer:latest
+     <your-registry>/{PROJECT_NAME}:latest
    ```
 
 ## Environment Variables
@@ -127,5 +127,5 @@ The container includes a health check endpoint at `/api/health`. Docker will aut
 
 - If the build fails, check that all required files are present and not in `.dockerignore`
 - Ensure environment variables are properly set
-- Check container logs: `docker logs nda-analyzer`
+- Check container logs: `docker logs {PROJECT_NAME}`
 - Verify health check: `curl http://localhost:3000/api/health`

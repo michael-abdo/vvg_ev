@@ -32,19 +32,19 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```bash
 # From your local machine
 rsync -avz --exclude 'node_modules' --exclude '.next' --exclude 'storage/*' \
-  ./ ubuntu@legal.vtc.systems:~/nda-analyzer/
+  ./ ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
 
 # Or use git
 ssh ubuntu@legal.vtc.systems
-git clone <your-repo> nda-analyzer
-cd nda-analyzer
+git clone <your-repo> {PROJECT_NAME}
+cd {PROJECT_NAME}
 ```
 
 ### 3. Configure Production Environment
 
 ```bash
 # On EC2
-cd ~/nda-analyzer
+cd ~/{PROJECT_NAME}
 
 # Ensure production env file exists
 cp .env.docker.production .env.production
@@ -60,7 +60,7 @@ mkdir -p storage
 ./docker-deploy.sh production
 
 # Or manually:
-docker build -t nda-analyzer:latest .
+docker build -t {PROJECT_NAME}:latest .
 docker-compose -f docker-compose.production.yml up -d
 ```
 
@@ -68,7 +68,7 @@ docker-compose -f docker-compose.production.yml up -d
 
 Your existing Nginx should work perfectly:
 ```nginx
-location /nda-analyzer {
+location /{PROJECT_NAME} {
     proxy_pass http://localhost:3000;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
@@ -90,7 +90,7 @@ sudo npm install -g pm2
 cat > ecosystem.docker.config.js << 'EOF'
 module.exports = {
   apps: [{
-    name: 'nda-analyzer-docker',
+    name: '{PROJECT_NAME}-docker',
     script: 'docker-compose',
     args: '-f docker-compose.production.yml up',
     interpreter: '/bin/bash',
@@ -124,7 +124,7 @@ curl http://localhost:3000/api/health
 
 # Check Docker container
 docker ps
-docker logs nda-analyzer
+docker logs {PROJECT_NAME}
 
 # Check with PM2 (if using)
 pm2 status
@@ -137,7 +137,7 @@ pm2 status
 docker-compose -f docker-compose.production.yml logs -f
 
 # Log rotation (add to crontab)
-0 0 * * * docker logs nda-analyzer > /var/log/nda-analyzer-$(date +\%Y\%m\%d).log
+0 0 * * * docker logs {PROJECT_NAME} > /var/log/{PROJECT_NAME}-$(date +\%Y\%m\%d).log
 ```
 
 ### Updates & Rollbacks
@@ -148,10 +148,10 @@ git pull
 ./docker-deploy.sh production
 
 # Rollback (tag your images!)
-docker tag nda-analyzer:latest nda-analyzer:backup
-docker build -t nda-analyzer:latest .
+docker tag {PROJECT_NAME}:latest {PROJECT_NAME}:backup
+docker build -t {PROJECT_NAME}:latest .
 # If issues:
-docker tag nda-analyzer:backup nda-analyzer:latest
+docker tag {PROJECT_NAME}:backup {PROJECT_NAME}:latest
 docker-compose -f docker-compose.production.yml up -d
 ```
 
@@ -185,7 +185,7 @@ docker-compose -f docker-compose.production.yml up -d
 4. **Health check failing**
    ```bash
    # Check if app is running
-   docker exec nda-analyzer curl http://localhost:3000/api/health
+   docker exec {PROJECT_NAME} curl http://localhost:3000/api/health
    ```
 
 ## Performance Optimization
@@ -231,7 +231,7 @@ Since you're already on the Docker branch with all fixes:
 Just run:
 ```bash
 # On EC2
-cd ~/nda-analyzer
+cd ~/{PROJECT_NAME}
 ./docker-deploy.sh production
 ```
 

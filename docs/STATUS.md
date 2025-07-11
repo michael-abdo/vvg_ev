@@ -1,4 +1,4 @@
-# NDA Analyzer - Live Status Dashboard
+# {PROJECT_DISPLAY_NAME} - Live Status Dashboard
 
 **Last Updated**: 2025-07-06 | **S3 Working, DRY Refactoring Complete** | **Production Readiness: PENDING PERMISSIONS** 🟡
 
@@ -22,7 +22,7 @@ The application has **excellent infrastructure** and **strong business functiona
 |-----------|--------|---------------|--------------|
 | Auth | ✅ 100% Working | Full Azure AD integration | `curl http://localhost:3000/api/auth/session` |
 | Database | ✅ 100% Working | Using truck_scrape temporarily | `curl http://localhost:3000/api/test-db` |
-| Storage | ✅ 100% Working | **NEW S3 BUCKET CREATED** | `nda-analyzer-documents-20250706165230` |
+| Storage | ✅ 100% Working | **NEW S3 BUCKET CREATED** | `{PROJECT_NAME}-documents-20250706165230` |
 | **OpenAI** | ✅ 100% Working | **FULLY IMPLEMENTED & TESTED** | Real AI comparisons working |
 | Text Extraction | ✅ 100% Integrated | Real PDF/DOCX extraction working | Queued on upload, `/api/process-queue` |
 | Export System | ❌ 0% Built | Libraries installed, no API | `/api/export` doesn't exist |
@@ -81,7 +81,7 @@ The application has **excellent infrastructure** and **strong business functiona
 ### Infrastructure (95% Complete)
 - ✅ Full authentication system with Azure AD
 - ✅ Document upload with deduplication
-- ✅ **NEW S3 BUCKET OPERATIONAL** (`nda-analyzer-documents-20250706165230`)
+- ✅ **NEW S3 BUCKET OPERATIONAL** (`{PROJECT_NAME}-documents-20250706165230`)
 - ✅ Database connection working (using truck_scrape temporarily)
 - ✅ Health check endpoints
 - ✅ **COMPLETE DRY REFACTORING** (26/26 tests passed)

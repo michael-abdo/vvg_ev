@@ -1,4 +1,4 @@
-# NDA Analyzer - Master Documentation
+# {PROJECT_DISPLAY_NAME} - Master Documentation
 
 **This is the single source of truth. All other documents reference this file.**
 
@@ -284,7 +284,7 @@ LOCAL_STORAGE_PATH=.storage
 
 # S3 configuration
 S3_BUCKET_NAME=vvg-cloud-storage
-S3_FOLDER_PREFIX=nda-analyzer/
+S3_FOLDER_PREFIX={PROJECT_NAME}/
 ```
 
 ### Usage

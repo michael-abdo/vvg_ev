@@ -1,5 +1,5 @@
 #!/bin/bash
-# NDA Analyzer - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
+# ${PROJECT_DISPLAY_NAME} - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
 # This script does EVERYTHING needed for a complete deployment
 
 set -e  # Exit on any error
@@ -16,8 +16,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Application Configuration
-APP_NAME="nda-analyzer"
-APP_DIR="/opt/nda-analyzer"
+APP_NAME="${PROJECT_NAME:-vvg-app}"
+APP_DIR="/opt/${PROJECT_NAME:-vvg-app}"
 APP_USER="ssm-user"
 APP_PORT="3000"
 REPO_URL="https://github.com/michael-abdo/vvg_nda.git"
@@ -26,7 +26,7 @@ REPO_URL="https://github.com/michael-abdo/vvg_nda.git"
 DB_HOST="vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com"
 DB_USER="michael"
 DB_PASS="Ei#qs9T!px@Wso"
-DB_NAME="nda_analyzer"
+DB_NAME="${PROJECT_NAME_UNDERSCORE}"
 
 # Node.js Configuration
 NODE_VERSION="18"
@@ -64,10 +64,10 @@ check_step() {
 # MAIN DEPLOYMENT FUNCTION
 # =============================================================================
 
-deploy_nda_analyzer() {
-    echo "🚀 NDA Analyzer - Complete Deployment Script"
+deploy_${PROJECT_NAME_UNDERSCORE}() {
+    echo "🚀 ${PROJECT_DISPLAY_NAME} - Complete Deployment Script"
     echo "============================================="
-    echo "This script will deploy the NDA Analyzer application from start to finish."
+    echo "This script will deploy the ${PROJECT_DISPLAY_NAME} application from start to finish."
     echo "Current user: $(whoami)"
     echo "Target directory: $APP_DIR"
     echo ""
@@ -140,14 +140,14 @@ deploy_nda_analyzer() {
     log_step "Setting up production environment"
     if [ ! -f ".env.production" ]; then
         cat > .env.production << 'EOF'
-# Production Environment Configuration for NDA Analyzer
+# Production Environment Configuration for ${PROJECT_DISPLAY_NAME}
 # Azure AD Authentication
 AZURE_AD_CLIENT_ID=997f55cb-6460-4317-a828-3e9ce8cca3aa
 AZURE_AD_CLIENT_SECRET=s8H8Q~ThiO8JTobP0VcjLaDD-IWlL0SsNJtwJapl
 AZURE_AD_TENANT_ID=1a58d276-b83f-4385-b9d2-0417f6191864
 
 # NextAuth Configuration
-NEXTAUTH_URL=https://legal.vtc.systems/nda-analyzer
+NEXTAUTH_URL=https://legal.vtc.systems/${PROJECT_NAME:-vvg-app}
 NEXTAUTH_SECRET=SSGAgfB0oE1XaIEHZtUzgG+C8xB2eBquQbyMQxDqo+A=
 
 # Database Configuration
@@ -155,15 +155,15 @@ MYSQL_HOST=vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.am
 MYSQL_PORT=3306
 MYSQL_USER=michael
 MYSQL_PASSWORD="Ei#qs9T!px@Wso"
-MYSQL_DATABASE=nda_analyzer
+MYSQL_DATABASE=${PROJECT_NAME_UNDERSCORE}
 
 # Storage Configuration
 STORAGE_PROVIDER=local
 AWS_REGION=us-west-2
 AWS_ACCESS_KEY_ID=AKIA6BJV4MLE534JMMW5
 AWS_SECRET_ACCESS_KEY=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
-S3_BUCKET_NAME=nda-analyzer-documents-20250706165230
-S3_FOLDER_PREFIX=nda-analyzer/
+S3_BUCKET_NAME=${PROJECT_NAME:-vvg-app}-documents-20250706165230
+S3_FOLDER_PREFIX=${PROJECT_NAME:-vvg-app}/
 
 # OpenAI Configuration
 OPENAI_API_KEY=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
@@ -203,7 +203,7 @@ server {
     listen 80;
     server_name _;
     
-    location /nda-analyzer {
+    location /${PROJECT_NAME:-vvg-app} {
         proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -262,7 +262,7 @@ EOF
     fi
     
     # Check local endpoint
-    if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$APP_PORT/nda-analyzer" | grep -q "200\|302"; then
+    if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$APP_PORT/${PROJECT_NAME:-vvg-app}" | grep -q "200\|302"; then
         log_success "Application responding on localhost"
     else
         log_error "Application not responding on localhost"
@@ -289,9 +289,9 @@ EOF
     if [ ${#FAILED_STEPS[@]} -eq 0 ]; then
         echo -e "${GREEN}✅ ALL STEPS SUCCESSFUL!${NC}"
         echo ""
-        echo "Your NDA Analyzer is now deployed and running:"
-        echo "• Application: http://localhost:$APP_PORT/nda-analyzer"
-        echo "• Production URL: https://legal.vtc.systems/nda-analyzer"
+        echo "Your ${PROJECT_DISPLAY_NAME} is now deployed and running:"
+        echo "• Application: http://localhost:$APP_PORT/${PROJECT_NAME:-vvg-app}"
+        echo "• Production URL: https://legal.vtc.systems/${PROJECT_NAME:-vvg-app}"
         echo "• PM2 Status: pm2 status"
         echo "• Logs: pm2 logs $APP_NAME"
         echo ""
@@ -325,4 +325,4 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 # Main execution
-deploy_nda_analyzer
+deploy_${PROJECT_NAME_UNDERSCORE}

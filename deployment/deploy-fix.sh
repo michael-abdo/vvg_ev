@@ -15,7 +15,7 @@ echo -e "${GREEN}Deploying NextAuth basePath fix...${NC}"
 # Create a temporary script that will be executed on the remote server
 cat > /tmp/nextauth-fix.sh << 'EOF'
 #!/bin/bash
-cd /home/ubuntu/nda-analyzer
+cd /home/ubuntu/${PROJECT_NAME:-vvg-app}
 
 # Update app/providers.tsx with basePath configuration
 cat > app/providers.tsx << 'PROVIDERS_EOF'
@@ -25,7 +25,7 @@ import { SessionProvider } from "next-auth/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider basePath="/nda-analyzer/api/auth">
+    <SessionProvider basePath="/${PROJECT_NAME:-vvg-app}/api/auth">
       {children}
     </SessionProvider>
   );
@@ -40,7 +40,7 @@ npm run build
 
 # Restart PM2
 echo "Restarting application..."
-pm2 restart nda-analyzer
+pm2 restart ${PROJECT_NAME:-vvg-app}
 
 echo "NextAuth basePath fix deployed successfully!"
 pm2 status

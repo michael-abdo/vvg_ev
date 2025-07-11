@@ -10,8 +10,8 @@ ssh ubuntu@legal.vtc.systems
 
 # Clone your repository
 cd ~
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git nda-analyzer
-cd nda-analyzer
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git {PROJECT_NAME}
+cd {PROJECT_NAME}
 
 # Switch to the docker branch
 git checkout docker
@@ -29,14 +29,14 @@ Transfer the entire project directory:
 # From your local machine (in the parent directory of NDA)
 rsync -avz --exclude 'node_modules' --exclude '.next' --exclude '.git' \
   --exclude 'storage/*' --exclude '.env.local' \
-  ./NDA/ ubuntu@legal.vtc.systems:~/nda-analyzer/
+  ./NDA/ ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
 
 # Or using scp for specific files
 scp -r NDA/{Dockerfile,docker-compose*.yml,docker-deploy.sh,.dockerignore} \
-  ubuntu@legal.vtc.systems:~/nda-analyzer/
+  ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
 
 # Transfer the production env file
-scp NDA/.env.docker.production ubuntu@legal.vtc.systems:~/nda-analyzer/
+scp NDA/.env.docker.production ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
 ```
 
 ## Method 3: Transfer Only Essential Docker Files
@@ -49,7 +49,7 @@ cat > transfer-docker-files.sh << 'EOF'
 #!/bin/bash
 
 EC2_HOST="ubuntu@legal.vtc.systems"
-EC2_DIR="~/nda-analyzer"
+EC2_DIR="~/{PROJECT_NAME}"
 
 # Create directory on EC2
 ssh $EC2_HOST "mkdir -p $EC2_DIR"
@@ -93,8 +93,8 @@ scp nda-docker.bundle ubuntu@legal.vtc.systems:~/
 
 # On EC2
 ssh ubuntu@legal.vtc.systems
-git clone nda-docker.bundle nda-analyzer
-cd nda-analyzer
+git clone nda-docker.bundle {PROJECT_NAME}
+cd {PROJECT_NAME}
 git checkout docker
 ```
 
@@ -105,7 +105,7 @@ Once files are on EC2:
 ```bash
 # SSH into EC2
 ssh ubuntu@legal.vtc.systems
-cd ~/nda-analyzer
+cd ~/{PROJECT_NAME}
 
 # Make deploy script executable
 chmod +x docker-deploy.sh
@@ -126,17 +126,17 @@ After transfer, verify these files exist on EC2:
 
 ```bash
 # Check critical files
-ls -la ~/nda-analyzer/Dockerfile
-ls -la ~/nda-analyzer/docker-compose.yml
-ls -la ~/nda-analyzer/docker-compose.production.yml
-ls -la ~/nda-analyzer/docker-deploy.sh
-ls -la ~/nda-analyzer/.env.docker.production
-ls -la ~/nda-analyzer/package.json
+ls -la ~/{PROJECT_NAME}/Dockerfile
+ls -la ~/{PROJECT_NAME}/docker-compose.yml
+ls -la ~/{PROJECT_NAME}/docker-compose.production.yml
+ls -la ~/{PROJECT_NAME}/docker-deploy.sh
+ls -la ~/{PROJECT_NAME}/.env.docker.production
+ls -la ~/{PROJECT_NAME}/package.json
 
 # Check source directories
-ls -la ~/nda-analyzer/app/
-ls -la ~/nda-analyzer/lib/
-ls -la ~/nda-analyzer/components/
+ls -la ~/{PROJECT_NAME}/app/
+ls -la ~/{PROJECT_NAME}/lib/
+ls -la ~/{PROJECT_NAME}/components/
 ```
 
 ## Pro Tips

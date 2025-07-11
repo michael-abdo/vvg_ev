@@ -16,16 +16,16 @@ async function createNDADatabase() {
     console.log('Connected to MySQL server');
     
     // Create the new database
-    await connection.execute('CREATE DATABASE IF NOT EXISTS nda_analyzer');
-    console.log('✅ Created database: nda_analyzer');
+    await connection.execute('CREATE DATABASE IF NOT EXISTS ${PROJECT_NAME_UNDERSCORE}');
+    console.log('✅ Created database: ${PROJECT_NAME_UNDERSCORE}');
     
     // Show databases to confirm
     const [databases] = await connection.execute('SHOW DATABASES');
     console.log('Available databases:', databases.map(db => db.Database));
     
     // Check if our new database exists
-    const ndaExists = databases.some(db => db.Database === 'nda_analyzer');
-    console.log(ndaExists ? '✅ nda_analyzer database confirmed' : '❌ nda_analyzer database not found');
+    const ndaExists = databases.some(db => db.Database === '${PROJECT_NAME_UNDERSCORE}');
+    console.log(ndaExists ? '✅ ${PROJECT_NAME_UNDERSCORE} database confirmed' : '❌ ${PROJECT_NAME_UNDERSCORE} database not found');
     
   } catch (error) {
     console.error('Error creating database:', error.message);

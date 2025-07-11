@@ -1,9 +1,9 @@
 #!/bin/bash
-# Production Deployment Script for NDA Analyzer
+# Production Deployment Script for ${PROJECT_DISPLAY_NAME}
 
 set -e  # Exit on error
 
-echo "🚀 NDA Analyzer Production Deployment"
+echo "🚀 ${PROJECT_DISPLAY_NAME} Production Deployment"
 echo "===================================="
 echo ""
 
@@ -237,7 +237,7 @@ echo "To start the server:"
 echo "  npm start"
 echo ""
 echo "Or with PM2:"
-echo "  pm2 start npm --name 'nda-analyzer' -- start"
+echo "  pm2 start npm --name '${PROJECT_NAME:-vvg-app}' -- start"
 echo ""
 
 # Clean up

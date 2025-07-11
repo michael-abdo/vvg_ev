@@ -1,7 +1,7 @@
-# 📱 **NDA Analyzer - Complete User Experience Flow**
+# 📱 **{PROJECT_DISPLAY_NAME} - Complete User Experience Flow**
 
 ## Overview
-This document describes the **step-by-step user journey** from dashboard to comparison results for the NDA Analyzer application.
+This document describes the **step-by-step user journey** from dashboard to comparison results for the {PROJECT_DISPLAY_NAME} application.
 
 ---
 
@@ -20,7 +20,7 @@ Successfully authenticated → Redirected to /dashboard
 ```
 Dashboard View:
 ┌─────────────────────────────────────┐
-│ 📊 NDA Analyzer Dashboard           │
+│ 📊 {PROJECT_DISPLAY_NAME} Dashboard           │
 ├─────────────────────────────────────┤
 │ Documents: 0 uploaded               │
 │ Comparisons: 0 completed            │

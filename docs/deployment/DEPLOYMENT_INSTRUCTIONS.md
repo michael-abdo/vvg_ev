@@ -11,7 +11,7 @@
 
 ### 1. SSH/SSM into EC2 Instance
 ```bash
-aws ssm start-session --target i-035db647b0a1eb2e7 --region us-west-2 --profile vvg
+aws ssm start-session --target YOUR-INSTANCE-ID --region YOUR-REGION --profile YOUR-PROFILE
 ```
 
 ### 2. Navigate to Application Directory

@@ -1,0 +1,14 @@
+CONFIG.TS DEPENDENCY ANALYSIS:
+
+CONFIG.TS IMPORTS: None (✅ Safe for additions)
+
+FILES IMPORTING FROM CONFIG.TS:
+1. lib/auth-utils.ts - imports: config, APP_CONSTANTS
+2. lib/utils.ts - imports: APP_CONSTANTS
+3. lib/storage/index.ts - imports: config, APP_CONSTANTS
+4. lib/nda/database.ts - imports: config
+5. + 7 API route files
+
+CIRCULAR DEPENDENCY RISK: ✅ NONE DETECTED
+- config.ts imports nothing, only exports
+- Safe to add PROJECT_TEMPLATE section

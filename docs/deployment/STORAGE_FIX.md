@@ -3,11 +3,11 @@
 ## Issue
 The application was getting "Access denied" errors when trying to upload files to S3:
 ```
-Error: Access denied for upload on {PROJECT_NAME}/users/michaelabdo@vvgtruck.com/documents/.../Torys-Mutual-NDA-Template.pdf
+Error: Access denied for upload on {PROJECT_NAME}/users/user@example.com/documents/.../Torys-Mutual-NDA-Template.pdf
 ```
 
 ## Root Cause
-The IAM user `michaelabdo@vvgtruck.com` does not have `s3:PutObject` permissions on any S3 bucket, including `vvg-cloud-storage`.
+The IAM user `user@example.com` does not have `s3:PutObject` permissions on any S3 bucket, including `{S3_BUCKET_NAME}`.
 
 ## Solution Implemented
 Switched from S3 storage to local storage on the EC2 instance:

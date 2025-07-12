@@ -1,3 +1,5 @@
+// PROPOSED CONFIG.TS STRUCTURE - COMPATIBLE WITH TEMPLATE SYSTEM
+
 export const config = {
   auth: {
     providers: {
@@ -17,7 +19,7 @@ export const config = {
     basePath: process.env.APP_BASE_PATH || `/${process.env.PROJECT_NAME || 'vvg-app'}`,
   },
   
-  // Template system integration for DRY consolidation
+  // NEW: Template system integration
   template: {
     // Core project identity
     name: process.env.PROJECT_NAME || 'vvg-template',
@@ -36,16 +38,10 @@ export const config = {
       // API paths for functional files
       api: {
         auth: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/auth`,
-        authCallback: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/auth/callback/azure-ad`,
         upload: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/upload`,
         documents: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/documents`,
         compare: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/compare`,
         dashboard: `/${process.env.PROJECT_NAME || 'vvg-template'}/api/dashboard`,
-      },
-      
-      // Full URLs for external references
-      urls: {
-        azureCallback: `https://${process.env.APP_DOMAIN || 'localhost:3000'}/${process.env.PROJECT_NAME || 'vvg-template'}/api/auth/callback/azure-ad`,
       },
       
       // Page paths

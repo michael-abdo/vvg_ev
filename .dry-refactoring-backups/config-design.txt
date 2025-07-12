@@ -1,0 +1,23 @@
+CONFIG.TS DESIGN FOR TEMPLATE COMPATIBILITY:
+
+CHALLENGE: make-generic-template.sh overwrites lib/config.ts completely
+
+SOLUTION: Update the template script to include PROJECT_TEMPLATE section
+
+PROPOSED CONFIG.TS STRUCTURE:
+
+DESIGN RATIONALE:
+1. Added 'template' section to existing config object
+2. Computed paths eliminate hardcoded {PROJECT_NAME} references
+3. API and page path objects provide centralized route management
+4. Compatible with existing make-generic-template.sh (needs update)
+
+USAGE IN FUNCTIONAL FILES:
+- middleware.ts: use config.template.paths.pages.signIn
+- app/providers.tsx: use config.template.paths.api.auth
+- app/documents/page.tsx: use config.template.paths.api.upload
+
+NEXT STEPS:
+1. Add template section to config.ts
+2. Update make-generic-template.sh to preserve template section
+3. Replace hardcoded paths in functional files

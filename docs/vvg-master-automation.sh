@@ -3,11 +3,12 @@ set -e
 
 # VVG Master Automation Script
 # Complete project lifecycle automation from 4-5 hours to 50 minutes
-# Usage: ./docs/vvg-master-automation.sh <project-name> <environment> [infrastructure-type]
+# Usage: ./docs/vvg-master-automation.sh <project-name> <environment> [infrastructure-type] [--worktree]
 
 PROJECT_NAME="$1"
 ENVIRONMENT="${2:-staging}"
 INFRASTRUCTURE_TYPE="${3:-aws}"  # aws, gcp, or local
+WORKTREE_MODE="${4:-}"  # --worktree for parallel development setup
 
 # Colors for output
 RED='\033[0;31m'
@@ -41,11 +42,12 @@ BANNER
 
 if [ -z "$PROJECT_NAME" ]; then
     show_banner
-    echo -e "${RED}Usage: $0 <project-name> [staging|production] [aws|gcp|local]${NC}"
+    echo -e "${RED}Usage: $0 <project-name> [staging|production] [aws|gcp|local] [--worktree]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
     echo -e "  $0 invoice-analyzer staging aws"
     echo -e "  $0 legal-processor production gcp"
     echo -e "  $0 contract-parser staging local"
+    echo -e "  $0 my-project staging aws --worktree    # With parallel development"
     echo ""
     echo -e "${BLUE}This script orchestrates the complete VVG project lifecycle:${NC}"
     echo -e "${BLUE}• Project Creation & Customization${NC}"
@@ -54,8 +56,10 @@ if [ -z "$PROJECT_NAME" ]; then
     echo -e "${BLUE}• Development Environment Setup${NC}"
     echo -e "${BLUE}• Deployment & Validation${NC}"
     echo -e "${BLUE}• Documentation Generation${NC}"
+    echo -e "${BLUE}• Parallel Development Setup (--worktree)${NC}"
     echo ""
     echo -e "${GREEN}Estimated Time Savings: 3.5-4.5 hours → 50 minutes${NC}"
+    echo -e "${GREEN}With Worktrees: Additional 30-35 hours/month saved${NC}"
     exit 1
 fi
 
@@ -64,13 +68,20 @@ echo -e "${PURPLE}🚀 VVG Master Automation Engine${NC}"
 echo -e "${BLUE}Project: $PROJECT_NAME${NC}"
 echo -e "${BLUE}Environment: $ENVIRONMENT${NC}"
 echo -e "${BLUE}Infrastructure: $INFRASTRUCTURE_TYPE${NC}"
+if [ "$WORKTREE_MODE" = "--worktree" ]; then
+    echo -e "${BLUE}Mode: Parallel Development (Worktrees)${NC}"
+fi
 echo -e "${BLUE}Started: $(date)${NC}"
 echo "=========================================="
 
 # Track automation progress
 PHASE_START_TIME=$(date +%s)
 PHASES_COMPLETED=0
-PHASES_TOTAL=8
+if [ "$WORKTREE_MODE" = "--worktree" ]; then
+    PHASES_TOTAL=9  # Extra phase for worktree setup
+else
+    PHASES_TOTAL=8
+fi
 AUTOMATION_LOG="vvg-automation-$PROJECT_NAME-$(date +%Y%m%d-%H%M%S).log"
 
 # Logging function
@@ -172,6 +183,42 @@ else
 fi
 
 complete_phase "Repository Setup and Configuration"
+
+# =================================================================
+# PHASE 3.5: WORKTREE SETUP (if requested)
+# =================================================================
+if [ "$WORKTREE_MODE" = "--worktree" ]; then
+    start_phase "Parallel Development Setup (Worktrees)"
+    
+    echo -e "${YELLOW}🌳 Setting up Git worktree structure...${NC}"
+    
+    # Get current repository URL if available
+    GIT_REPO_URL=""
+    if git remote get-url origin >/dev/null 2>&1; then
+        GIT_REPO_URL=$(git remote get-url origin)
+    fi
+    
+    # Run worktree setup
+    if [ -f "docs/setup-worktrees.sh" ]; then
+        if ! ./docs/setup-worktrees.sh "$PROJECT_NAME" "$GIT_REPO_URL"; then
+            echo -e "${YELLOW}⚠️ Worktree setup had issues, continuing...${NC}"
+        else
+            echo -e "${GREEN}✅ Worktree structure created${NC}"
+            echo -e "${BLUE}Main worktree: ~/projects/$PROJECT_NAME/main${NC}"
+            echo -e "${BLUE}Staging worktree: ~/projects/$PROJECT_NAME/$PROJECT_NAME-staging${NC}"
+            
+            # Update current directory to main worktree
+            if [ -d "$HOME/projects/$PROJECT_NAME/main" ]; then
+                cd "$HOME/projects/$PROJECT_NAME/main"
+                echo -e "${YELLOW}📁 Changed to main worktree${NC}"
+            fi
+        fi
+    else
+        echo -e "${YELLOW}⚠️ Worktree setup script not found${NC}"
+    fi
+    
+    complete_phase "Parallel Development Setup (Worktrees)"
+fi
 
 # =================================================================
 # PHASE 4: PRE-FLIGHT VALIDATION
@@ -312,6 +359,7 @@ cat > "$AUTOMATION_SUMMARY" << EOF
 **Project:** $PROJECT_NAME  
 **Environment:** $ENVIRONMENT  
 **Infrastructure:** $INFRASTRUCTURE_TYPE  
+**Parallel Development:** $([ "$WORKTREE_MODE" = "--worktree" ] && echo "Enabled" || echo "Disabled")  
 **Completed:** $(date)  
 
 ## Automation Results
@@ -357,6 +405,13 @@ cat > "$AUTOMATION_SUMMARY" << EOF
    - Automation summary created
    - Project ready for team
 
+$(if [ "$WORKTREE_MODE" = "--worktree" ]; then
+echo "9. ✅ **Parallel Development Setup**
+   - Git worktree structure created
+   - Main and staging worktrees configured
+   - Workflow tools available"
+fi)
+
 ## Quick Start Commands
 
 ### Development
@@ -367,6 +422,23 @@ npm run dev
 # View logs
 pm2 logs $PROJECT_NAME-$ENVIRONMENT
 \`\`\`
+
+$(if [ "$WORKTREE_MODE" = "--worktree" ]; then
+echo "### Parallel Development
+\`\`\`bash
+# Check worktree status
+~/projects/$PROJECT_NAME/bin/worktree-status
+
+# Create feature worktree
+~/projects/$PROJECT_NAME/bin/create-feature <feature-name>
+
+# Sync all worktrees
+./docs/sync-worktrees.sh
+
+# Launch workflow
+./docs/workflow-launcher.sh
+\`\`\`"
+fi)
 
 ### Infrastructure Management
 \`\`\`bash

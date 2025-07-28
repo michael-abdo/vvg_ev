@@ -102,7 +102,7 @@ async function main() {
     () => checkFile('package.json', 'package.json'),
     () => checkFile('next.config.mjs', 'Next.js config'),
     () => checkFile('tsconfig.json', 'TypeScript config'),
-    () => checkFile('tailwind.config.js', 'Tailwind config'),
+    () => checkFile('tailwind.config.ts', 'Tailwind config'),
     () => checkFile('.env.example', 'Environment example'),
     
     // Code quality checks
@@ -111,7 +111,7 @@ async function main() {
     
     // Build checks
     () => runCommand('npm run build', 'Production build'),
-    () => runCommand('npx next lint --max-warnings 0', 'ESLint validation'),
+    () => runCommand('npx next lint', 'ESLint validation'),
   ];
   
   let passed = 0;

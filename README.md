@@ -1,6 +1,6 @@
 # {PROJECT_DISPLAY_NAME}
 
-AI-powered legal document analysis tool for comparing Non-Disclosure Agreements.
+Generic document processing template with upload, extraction, and management features.
 
 ## Quick Start
 

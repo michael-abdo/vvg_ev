@@ -41,7 +41,7 @@ MYSQL_HOST=127.0.0.1
 MYSQL_PORT=10003
 MYSQL_USER=your-username
 MYSQL_PASSWORD="your-password"
-MYSQL_DATABASE=truck_scrape  # Legacy name, will rename to nda_analyzer
+MYSQL_DATABASE=vvg_template
 
 # Authentication (Azure AD)
 AZURE_AD_CLIENT_ID=your-client-id

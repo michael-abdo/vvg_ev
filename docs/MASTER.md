@@ -11,7 +11,7 @@ Last Updated: 2025-07-06 | Version: 1.2.0
 ### Tech Stack (Locked In)
 - **Frontend**: Next.js 15.2.4 with TypeScript
 - **Authentication**: Azure AD via NextAuth  
-- **Database**: MySQL via AWS RDS (truck_scrape - legacy, rename to nda_analyzer)
+- **Database**: MySQL via AWS RDS
 - **Storage**: AWS S3 (vvg-cloud-storage bucket)
 - **AI**: OpenAI GPT-4 (configured)
 - **Deployment**: EC2 + NGINX + PM2

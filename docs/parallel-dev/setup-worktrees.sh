@@ -3,7 +3,7 @@ set -e
 
 # VVG Template - Git Worktree Setup for Parallel Development
 # Creates optimal worktree structure for multi-environment development
-# Usage: ./docs/setup-worktrees.sh <project-name> [git-repo-url] [base-dir]
+# Usage: ./docs/parallel-dev/setup-worktrees.sh <project-name> [git-repo-url] [base-dir]
 
 PROJECT_NAME="$1"
 GIT_REPO_URL="$2"

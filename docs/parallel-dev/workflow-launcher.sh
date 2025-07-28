@@ -3,7 +3,7 @@ set -e
 
 # VVG Template - Universal Workflow Launcher
 # EXECUTE → COMPARE → COMMIT workflow with tmux and Claude integration
-# Usage: ./docs/workflow-launcher.sh [worktree-name] [--new-session]
+# Usage: ./docs/parallel-dev/workflow-launcher.sh [worktree-name] [--new-session]
 
 WORKTREE_NAME="${1:-}"
 NEW_SESSION="${2:-}"

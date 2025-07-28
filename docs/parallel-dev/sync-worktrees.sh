@@ -3,7 +3,7 @@ set -e
 
 # VVG Template - Worktree Synchronization Script
 # Safely syncs all worktrees with upstream branches
-# Usage: ./docs/sync-worktrees.sh [--force] [--no-backup]
+# Usage: ./docs/parallel-dev/sync-worktrees.sh [--force] [--no-backup]
 
 FORCE_SYNC="${1:-}"
 NO_BACKUP="${2:-}"
@@ -29,7 +29,7 @@ elif [ -f "../../.worktree-config" ]; then
     PROJECT_ROOT="$(cd ../.. && pwd)"
 else
     echo -e "${RED}❌ Not in a VVG worktree structure${NC}"
-    echo -e "${YELLOW}Run setup-worktrees.sh first${NC}"
+    echo -e "${YELLOW}Run ./docs/parallel-dev/setup-worktrees.sh first${NC}"
     exit 1
 fi
 

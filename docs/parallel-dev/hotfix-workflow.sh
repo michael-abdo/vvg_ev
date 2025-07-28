@@ -3,7 +3,7 @@ set -e
 
 # VVG Template - Production Hotfix Workflow Automation
 # Enforces proper hotfix procedures with safety checks
-# Usage: ./docs/hotfix-workflow.sh <hotfix-name> [--emergency]
+# Usage: ./docs/parallel-dev/hotfix-workflow.sh <hotfix-name> [--emergency]
 
 HOTFIX_NAME="$1"
 EMERGENCY_MODE="${2:-}"

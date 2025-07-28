@@ -3,7 +3,7 @@ set -e
 
 # VVG Master Automation Script
 # Complete project lifecycle automation from 4-5 hours to 50 minutes
-# Usage: ./docs/vvg-master-automation.sh <project-name> <environment> [infrastructure-type] [--worktree]
+# Usage: ./docs/automation/vvg-master-automation.sh <project-name> <environment> [infrastructure-type] [--worktree]
 
 PROJECT_NAME="$1"
 ENVIRONMENT="${2:-staging}"
@@ -152,7 +152,7 @@ case $INFRASTRUCTURE_TYPE in
         if [ -f "docs/setup-gcloud-dev.sh" ]; then
             echo -e "${BLUE}Running GCP setup in background...${NC}"
             # Note: GCP setup is interactive, so we note it for manual execution
-            echo -e "${YELLOW}💡 Run manually: ./docs/setup-gcloud-dev.sh $PROJECT_NAME${NC}"
+            echo -e "${YELLOW}💡 Run manually: ./docs/infrastructure/setup-gcloud-dev.sh $PROJECT_NAME${NC}"
         else
             echo -e "${YELLOW}⚠️ GCP setup script not found${NC}"
         fi
@@ -174,8 +174,8 @@ complete_phase "Infrastructure Provisioning"
 start_phase "Repository Setup and Configuration"
 
 echo -e "${YELLOW}📦 Setting up GitHub repository...${NC}"
-if [ -f "docs/create-github-repo.sh" ]; then
-    if ! ./docs/create-github-repo.sh "$PROJECT_NAME" "$ENVIRONMENT" "private"; then
+if [ -f "docs/infrastructure/create-github-repo.sh" ]; then
+    if ! ./docs/infrastructure/create-github-repo.sh "$PROJECT_NAME" "$ENVIRONMENT" "private"; then
         echo -e "${YELLOW}⚠️ GitHub repository setup had issues, continuing...${NC}"
     fi
 else
@@ -199,8 +199,8 @@ if [ "$WORKTREE_MODE" = "--worktree" ]; then
     fi
     
     # Run worktree setup
-    if [ -f "docs/setup-worktrees.sh" ]; then
-        if ! ./docs/setup-worktrees.sh "$PROJECT_NAME" "$GIT_REPO_URL"; then
+    if [ -f "docs/parallel-dev/setup-worktrees.sh" ]; then
+        if ! ./docs/parallel-dev/setup-worktrees.sh "$PROJECT_NAME" "$GIT_REPO_URL"; then
             echo -e "${YELLOW}⚠️ Worktree setup had issues, continuing...${NC}"
         else
             echo -e "${GREEN}✅ Worktree structure created${NC}"
@@ -253,7 +253,7 @@ start_phase "Development Environment Setup"
 case $INFRASTRUCTURE_TYPE in
     "aws")
         echo -e "${YELLOW}🔗 AWS tunnel automation available${NC}"
-        echo -e "${BLUE}💡 Connect later with: ./docs/aws-tunnel.sh <instance-id> $PROJECT_NAME${NC}"
+        echo -e "${BLUE}💡 Connect later with: ./docs/infrastructure/aws-tunnel.sh <instance-id> $PROJECT_NAME${NC}"
         ;;
     "gcp")
         echo -e "${YELLOW}☁️ Google Cloud development environment${NC}"
@@ -433,23 +433,23 @@ echo "### Parallel Development
 ~/projects/$PROJECT_NAME/bin/create-feature <feature-name>
 
 # Sync all worktrees
-./docs/sync-worktrees.sh
+./docs/parallel-dev/sync-worktrees.sh
 
 # Launch workflow
-./docs/workflow-launcher.sh
+./docs/parallel-dev/workflow-launcher.sh
 \`\`\`"
 fi)
 
 ### Infrastructure Management
 \`\`\`bash
 # AWS connection (if applicable)
-./docs/aws-tunnel.sh <instance-id> $PROJECT_NAME
+./docs/infrastructure/aws-tunnel.sh <instance-id> $PROJECT_NAME
 
 # GCP development (if applicable)  
-./docs/setup-gcloud-dev.sh $PROJECT_NAME
+./docs/infrastructure/setup-gcloud-dev.sh $PROJECT_NAME
 
 # Remote development setup
-./docs/setup-remote-dev.sh <host> $PROJECT_NAME
+./docs/infrastructure/setup-remote-dev.sh <host> $PROJECT_NAME
 \`\`\`
 
 ### Repository Operations

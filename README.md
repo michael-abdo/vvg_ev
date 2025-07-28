@@ -328,3 +328,55 @@ NDA/
 ## Architecture
 
 See [`docs/MASTER.md`](docs/MASTER.md) for detailed system architecture and tech stack.
+
+## CI/CD & Deployment
+
+### Automated Deployment
+
+This project uses GitHub Actions for automated deployment:
+
+- **Staging**: Automatically deploys on push to `main-staging` branch
+- **Production**: Automatically deploys on version tags (`v*`)
+
+### GitHub Secrets Required
+
+Configure these secrets in your GitHub repository settings:
+
+```
+EC2_SSH_KEY      # SSH private key for EC2 access
+EC2_HOST         # EC2 instance public IP (e.g., 3.25.209.115)
+EC2_USER         # EC2 user (typically 'ubuntu')
+```
+
+### Manual Deployment
+
+Deploy using GitHub Actions:
+```bash
+# Deploy to staging
+git push origin main-staging
+
+# Deploy to production (create a version tag)
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+```
+
+### AWS SSM Access
+
+Connect to EC2 instance using AWS SSM:
+```bash
+aws ssm start-session \
+  --target i-035db647b0a1eb2e7 \
+  --region us-west-2 \
+  --profile vvg
+```
+
+### Deployment URLs
+
+- **Production**: https://legal.vtc.systems/vvg-template
+- **Staging**: https://legal.vtc.systems:8443/vvg-template-staging
+
+### Additional Documentation
+
+- [AWS SSM Guide](deployment/AWS_SSM_GUIDE.md) - Detailed SSM connection instructions
+- [Rollback Procedures](deployment/ROLLBACK_PROCEDURES.md) - Emergency rollback steps
+- [NGINX Configuration](deployment/nginx.vvg-template.conf) - Web server configuration

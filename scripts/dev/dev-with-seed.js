@@ -13,8 +13,9 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
+const port = process.env.PORT || 4000;
 const CONFIG = {
-  baseUrl: 'http://localhost:3000',
+  baseUrl: `http://localhost:${port}`,
   testUser: process.env.DEV_SEED_USER || 'dev-user@example.com',
   maxRetries: 3,
   retryDelay: 2000,
@@ -89,7 +90,7 @@ async function isServerReady() {
   return new Promise((resolve) => {
     const options = {
       hostname: 'localhost',
-      port: 3000,
+      port: port,
       path: '/api/health',
       method: 'GET',
       timeout: 1000
@@ -131,7 +132,7 @@ async function waitForServer(maxWaitTime = 60000) {
 
 async function killExistingServers() {
   return new Promise((resolve) => {
-    spawn('lsof', ['-ti:3000'], { shell: true })
+    spawn('lsof', [`-ti:${port}`], { shell: true })
       .on('exit', () => {
         spawn('pkill', ['-f', 'next dev'], { shell: true })
           .on('exit', () => {
@@ -167,8 +168,8 @@ async function seedDocuments() {
   }
   
   console.log('You can now:');
-  console.log(`   • View documents at ${colors.blue}http://localhost:3000/documents${colors.reset}`);
-  console.log(`   • Compare NDAs at ${colors.blue}http://localhost:3000/compare${colors.reset}`);
+  console.log(`   • View documents at ${colors.blue}http://localhost:${port}/documents${colors.reset}`);
+  console.log(`   • Compare NDAs at ${colors.blue}http://localhost:${port}/compare${colors.reset}`);
   console.log('   • Test the complete workflow\n');
 }
 
@@ -193,10 +194,10 @@ async function main() {
   // Kill existing servers first
   console.log('🔪 Killing any existing servers...');
   await killExistingServers();
-  console.log('✅ Port 3000 is free\n');
+  console.log(`✅ Port ${port} is free\n`);
 
   // Start Next.js with inherited environment (DRY - pass all env vars)
-  const next = spawn('next', ['dev'], {
+  const next = spawn('next', ['dev', '--port', port], {
     stdio: 'inherit',
     shell: true,
     env: { ...process.env }  // ← Pass parent's environment to child
@@ -219,7 +220,7 @@ async function main() {
   try {
     await seedDocuments();
     console.log('\n✅ Development server is running with seeded documents!');
-    console.log('   Visit: http://localhost:3000/documents\n');
+    console.log(`   Visit: http://localhost:${port}/documents\n`);
   } catch (error) {
     console.log('\n⚠️  Seeding failed, but server is still running');
     console.error('Error:', error.message);

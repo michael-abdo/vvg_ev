@@ -17,16 +17,17 @@ const colors = {
   blue: '\x1b[34m'
 };
 
-function killPort3000() {
+function killPort() {
+  const port = process.env.PORT || 4000;
   return new Promise((resolve) => {
-    console.log(`${colors.yellow}🔪 Killing any processes on port 3000...${colors.reset}`);
+    console.log(`${colors.yellow}🔪 Killing any processes on port ${port}...${colors.reset}`);
     
-    // Kill any process on port 3000
-    exec('lsof -ti:3000 | xargs kill -9 2>/dev/null', (error) => {
+    // Kill any process on the specified port
+    exec(`lsof -ti:${port} | xargs kill -9 2>/dev/null`, (error) => {
       if (error) {
-        console.log(`${colors.green}✅ Port 3000 is already free${colors.reset}`);
+        console.log(`${colors.green}✅ Port ${port} is already free${colors.reset}`);
       } else {
-        console.log(`${colors.green}✅ Killed existing processes on port 3000${colors.reset}`);
+        console.log(`${colors.green}✅ Killed existing processes on port ${port}${colors.reset}`);
       }
       
       // Also kill any node processes for good measure
@@ -38,11 +39,12 @@ function killPort3000() {
 }
 
 async function startCleanDev() {
+  const port = process.env.PORT || 4000;
   console.log(`\n${colors.bright}🧹 Clean Development Start${colors.reset}`);
   console.log('==========================\n');
   
   // Step 1: Kill existing processes
-  await killPort3000();
+  await killPort();
   
   // Step 2: Clear Next.js cache
   console.log(`${colors.yellow}🗑️  Clearing Next.js cache...${colors.reset}`);
@@ -53,9 +55,9 @@ async function startCleanDev() {
   });
   
   // Step 3: Start development server
-  console.log(`\n${colors.blue}🚀 Starting fresh development server on port 3000${colors.reset}\n`);
+  console.log(`\n${colors.blue}🚀 Starting fresh development server on port ${port}${colors.reset}\n`);
   
-  const dev = spawn('next', ['dev'], {
+  const dev = spawn('next', ['dev', '--port', port], {
     stdio: 'inherit',
     shell: true
   });

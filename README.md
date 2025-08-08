@@ -47,6 +47,7 @@ MYSQL_DATABASE=vvg_template
 AZURE_AD_CLIENT_ID=your-client-id
 AZURE_AD_CLIENT_SECRET=your-client-secret
 AZURE_AD_TENANT_ID=your-tenant-id
+AZURE_AD_REDIRECT_URI=http://localhost:3001/api/auth/callback/azure-ad
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-nextauth-secret
 
@@ -380,3 +381,4 @@ aws ssm start-session \
 - [AWS SSM Guide](deployment/AWS_SSM_GUIDE.md) - Detailed SSM connection instructions
 - [Rollback Procedures](deployment/ROLLBACK_PROCEDURES.md) - Emergency rollback steps
 - [NGINX Configuration](deployment/nginx.vvg-template.conf) - Web server configuration
+- [OAuth Configuration Guide](docs/deployment/OAUTH_CONFIGURATION.md) - Azure AD OAuth setup for all environments

@@ -33,33 +33,38 @@ npm run dev:seed
 
 ## Environment Setup
 
-Requires these environment variables in `.env.local`:
+The project uses a secure 3-file environment configuration:
 
-```bash
-# Database (MySQL via SSM tunnel)
-MYSQL_HOST=127.0.0.1
-MYSQL_PORT=10003
-MYSQL_USER=your-username
-MYSQL_PASSWORD="your-password"
-MYSQL_DATABASE=vvg_template
+- `.env` - Base configuration with non-sensitive defaults (committed)
+- `.env.production` - Production-specific overrides (committed)
+- `.env.local` - Secrets and local overrides (gitignored)
 
-# Authentication (Azure AD)
-AZURE_AD_CLIENT_ID=your-client-id
-AZURE_AD_CLIENT_SECRET=your-client-secret
-AZURE_AD_TENANT_ID=your-tenant-id
-AZURE_AD_REDIRECT_URI=http://localhost:3001/api/auth/callback/azure-ad
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret
+### Quick Setup
 
-# Storage (AWS S3)
-AWS_REGION=us-west-2
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-S3_BUCKET_NAME=vvg-cloud-storage
+1. Copy the example file:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-# AI Analysis (OpenAI)
-OPENAI_API_KEY=your-openai-key
-```
+2. Add your secrets to `.env.local`:
+   ```bash
+   # Required secrets
+   NEXTAUTH_SECRET=generate-with-openssl-rand-base64-32
+   AZURE_AD_CLIENT_ID=your-client-id
+   AZURE_AD_CLIENT_SECRET=your-client-secret
+   AZURE_AD_TENANT_ID=your-tenant-id
+   
+   # Database credentials
+   MYSQL_USER=your-username
+   MYSQL_PASSWORD=your-password
+   
+   # Optional: Override defaults for local development
+   MYSQL_HOST=127.0.0.1  # For SSM tunnel
+   ```
+
+3. All non-sensitive defaults are already configured in `.env`
+
+See [Environment Configuration Guide](docs/deployment/ENVIRONMENT_CONFIGURATION_GUIDE.md) for detailed setup.
 
 ## Database Connection
 
@@ -378,6 +383,7 @@ aws ssm start-session \
 
 ### Additional Documentation
 
+- [Environment Configuration Guide](docs/deployment/ENVIRONMENT_CONFIGURATION_GUIDE.md) - Complete environment setup guide
 - [AWS SSM Guide](deployment/AWS_SSM_GUIDE.md) - Detailed SSM connection instructions
 - [Rollback Procedures](deployment/ROLLBACK_PROCEDURES.md) - Emergency rollback steps
 - [NGINX Configuration](deployment/nginx.vvg-template.conf) - Web server configuration

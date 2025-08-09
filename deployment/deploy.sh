@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ${PROJECT_DISPLAY_NAME} Deployment Script for EC2
+# Document Processing Template Deployment Script for EC2
 # Based on Jack's video instructions and deployment requirements
 # Target: EC2 instance i-035db647b0a1eb2e7 (legal.vtc.systems)
 
@@ -14,9 +14,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/michael-abdo/vvg_nda.git"  # Updated with actual repo URL
-APP_DIR="/home/ubuntu/${PROJECT_NAME:-vvg-app}"
-LOG_DIR="/home/ubuntu/logs/${PROJECT_NAME:-vvg-app}"
+REPO_URL="https://github.com/michael-abdo/vvg_template.git"  # Updated with actual repo URL
+APP_DIR="/home/ubuntu/${PROJECT_NAME:-template-app}"
+LOG_DIR="/home/ubuntu/logs/${PROJECT_NAME:-template-app}"
 NGINX_SITE="/etc/nginx/sites-available/default"
 DOMAIN="legal.vtc.systems"
 
@@ -107,7 +107,7 @@ install_nginx() {
 
 # Clone repository
 clone_repository() {
-    log "Cloning ${PROJECT_DISPLAY_NAME} repository..."
+    log "Cloning Document Processing Template repository..."
     
     # Remove existing directory if it exists
     if [ -d "$APP_DIR" ]; then
@@ -261,7 +261,7 @@ install_ssl() {
 
 # Main deployment function
 main() {
-    log "Starting ${PROJECT_DISPLAY_NAME} deployment on EC2..."
+    log "Starting Document Processing Template deployment on EC2..."
     
     check_user
     update_system

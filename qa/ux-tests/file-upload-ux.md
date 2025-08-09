@@ -1,20 +1,20 @@
-# File Upload UX Test - {PROJECT_DISPLAY_NAME}
+# File Upload UX Test - Document Processing Template
 
 ## Test Environment
-- **URL**: https://legal.vtc.systems/{PROJECT_NAME}
-- **Feature**: File upload functionality for NDA documents
+- **URL**: https://legal.vtc.systems/template
+- **Feature**: File upload functionality for documents
 - **Expected flow**: Authentication → Upload page → File selection → Success/Error feedback
 
 ## Pre-test Setup
-1. Navigate to https://legal.vtc.systems/{PROJECT_NAME}
+1. Navigate to https://legal.vtc.systems/template
 2. Complete authentication flow (should redirect to Microsoft login)
 3. After successful authentication, should land on dashboard
 
 ## Test Steps
 
 ### 1. Navigate to Upload Page
-1. From the dashboard, locate the "Upload NDA Document" button
-2. Click the "Upload NDA Document" button
+1. From the dashboard, locate the "Upload Document" button
+2. Click the "Upload Document" button
 3. **Expected**: Should navigate to upload page with file selection interface
 
 ### 2. Examine Upload Interface

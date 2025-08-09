@@ -4,7 +4,7 @@
 - **All TypeScript errors fixed**: 29 compilation errors resolved
 - **Database schema updated**: Now matches TypeScript interfaces
 - **Environment configured**: Production variables corrected
-- **S3 integration**: Working with bucket `{PROJECT_NAME}-documents-20250706165230`
+- **S3 integration**: Working with bucket `template-documents-20250706165230`
 - **Code committed**: Latest changes pushed to `develop/document-features-refactored` branch
 
 ## EC2 Deployment Steps
@@ -16,7 +16,7 @@ aws ssm start-session --target YOUR-INSTANCE-ID --region YOUR-REGION --profile Y
 
 ### 2. Navigate to Application Directory
 ```bash
-cd /home/ubuntu/{PROJECT_NAME}
+cd /home/ubuntu/template
 ```
 
 ### 3. Pull Latest Changes
@@ -59,16 +59,16 @@ cp .env.production.example .env.production
 # Verify these key settings:
 NODE_ENV=production
 MYSQL_DATABASE=document_analyzer
-S3_BUCKET_NAME={PROJECT_NAME}-documents-20250706165230
+S3_BUCKET_NAME=template-documents-20250706165230
 ```
 
 ### 9. Start/Restart Application
 ```bash
 # If using PM2:
-pm2 restart {PROJECT_NAME}
+pm2 restart template
 
 # If using systemd:
-sudo systemctl restart {PROJECT_NAME}
+sudo systemctl restart template
 
 # If starting fresh:
 pm2 start ecosystem.config.js
@@ -77,11 +77,11 @@ pm2 start ecosystem.config.js
 ### 10. Verify Deployment
 ```bash
 # Check application status
-curl -I https://legal.vtc.systems/{PROJECT_NAME}
+curl -I https://legal.vtc.systems/template
 
 # Check health endpoints
-curl https://legal.vtc.systems/{PROJECT_NAME}/api/db-health
-curl https://legal.vtc.systems/{PROJECT_NAME}/api/storage-health
+curl https://legal.vtc.systems/template/api/db-health
+curl https://legal.vtc.systems/template/api/storage-health
 ```
 
 ## Critical Changes Made
@@ -101,7 +101,7 @@ curl https://legal.vtc.systems/{PROJECT_NAME}/api/storage-health
   - `processing_queue`: Complete new table for task management
 
 ### Environment Configuration
-- ✅ Updated S3 bucket name to `{PROJECT_NAME}-documents-20250706165230`
+- ✅ Updated S3 bucket name to `template-documents-20250706165230`
 - ✅ Updated database name to `document_analyzer`
 - ✅ Added missing environment variables
 
@@ -111,7 +111,7 @@ curl https://legal.vtc.systems/{PROJECT_NAME}/api/storage-health
 git reset --hard HEAD~1
 npm install --production
 npm run build
-pm2 restart {PROJECT_NAME}
+pm2 restart template
 ```
 
 ## Expected Behavior After Deployment

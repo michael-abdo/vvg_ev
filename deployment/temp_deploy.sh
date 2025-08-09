@@ -1,5 +1,5 @@
 #!/bin/bash
-# ${PROJECT_DISPLAY_NAME} - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
+# Document Processing Template - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
 # This script does EVERYTHING needed for a complete deployment
 
 set -e  # Exit on any error
@@ -16,17 +16,17 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Application Configuration
-APP_NAME="${PROJECT_NAME:-vvg-app}"
-APP_DIR="/opt/${PROJECT_NAME:-vvg-app}"
+APP_NAME="${PROJECT_NAME:-template-app}"
+APP_DIR="/opt/${PROJECT_NAME:-template-app}"
 APP_USER="ssm-user"
 APP_PORT="3000"
-REPO_URL="https://github.com/michael-abdo/vvg_nda.git"
+REPO_URL="https://github.com/your-org/your-repo.git"
 
 # Database Configuration
-DB_HOST="vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com"
-DB_USER="michael"
-DB_PASS="Ei#qs9T!px@Wso"
-DB_NAME="${PROJECT_NAME_UNDERSCORE}"
+DB_HOST="your-database-host.amazonaws.com"
+DB_USER="your-db-user"
+DB_PASS="your-secure-password"
+DB_NAME="${PROJECT_NAME_UNDERSCORE:-template_db}"
 
 # Node.js Configuration
 NODE_VERSION="18"
@@ -64,10 +64,10 @@ check_step() {
 # MAIN DEPLOYMENT FUNCTION
 # =============================================================================
 
-deploy_${PROJECT_NAME_UNDERSCORE}() {
-    echo "🚀 ${PROJECT_DISPLAY_NAME} - Complete Deployment Script"
+deploy_template() {
+    echo "🚀 Document Processing Template - Complete Deployment Script"
     echo "============================================="
-    echo "This script will deploy the ${PROJECT_DISPLAY_NAME} application from start to finish."
+    echo "This script will deploy the Document Processing Template application from start to finish."
     echo "Current user: $(whoami)"
     echo "Target directory: $APP_DIR"
     echo ""
@@ -140,7 +140,7 @@ deploy_${PROJECT_NAME_UNDERSCORE}() {
     log_step "Setting up production environment"
     if [ ! -f ".env.production" ]; then
         cat > .env.production << 'EOF'
-# Production Environment Configuration for ${PROJECT_DISPLAY_NAME}
+# Production Environment Configuration for Document Processing Template
 # Azure AD Authentication
 AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}
 AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET}
@@ -155,7 +155,7 @@ MYSQL_HOST=${MYSQL_HOST}
 MYSQL_PORT=${MYSQL_PORT:-3306}
 MYSQL_USER=${MYSQL_USER}
 MYSQL_PASSWORD=${MYSQL_PASSWORD}
-MYSQL_DATABASE=${PROJECT_NAME_UNDERSCORE}
+MYSQL_DATABASE=${PROJECT_NAME_UNDERSCORE:-template_db}
 
 # Storage Configuration
 STORAGE_PROVIDER=${STORAGE_PROVIDER:-local}
@@ -289,7 +289,7 @@ EOF
     if [ ${#FAILED_STEPS[@]} -eq 0 ]; then
         echo -e "${GREEN}✅ ALL STEPS SUCCESSFUL!${NC}"
         echo ""
-        echo "Your ${PROJECT_DISPLAY_NAME} is now deployed and running:"
+        echo "Your Document Processing Template is now deployed and running:"
         echo "• Application: http://localhost:$APP_PORT/${PROJECT_NAME:-vvg-app}"
         echo "• Production URL: https://legal.vtc.systems/${PROJECT_NAME:-vvg-app}"
         echo "• PM2 Status: pm2 status"
@@ -325,4 +325,4 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 # Main execution
-deploy_${PROJECT_NAME_UNDERSCORE}
+deploy_template

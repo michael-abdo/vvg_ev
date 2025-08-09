@@ -1,4 +1,4 @@
-# {PROJECT_DISPLAY_NAME}
+# Document Processing Template
 
 Generic document processing template with upload, extraction, and management features.
 

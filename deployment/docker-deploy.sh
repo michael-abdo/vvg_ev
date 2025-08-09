@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Docker Deployment Script for ${PROJECT_DISPLAY_NAME}
+# Docker Deployment Script for Document Processing Template
 # This script ensures consistent deployment without the errors from direct deployment
 
 set -e  # Exit on any error
 
-echo "🚀 Starting Docker deployment for ${PROJECT_DISPLAY_NAME}..."
+echo "🚀 Starting Docker deployment for Document Processing Template..."
 
 # Check if running on EC2 or local
 if [ "$1" == "production" ]; then

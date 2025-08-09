@@ -33,48 +33,55 @@ npm run dev:seed
 
 ## Environment Setup
 
-Requires these environment variables in `.env.local`:
+The project uses a secure 3-file environment configuration:
 
-```bash
-# Database (MySQL via SSM tunnel)
-MYSQL_HOST=127.0.0.1
-MYSQL_PORT=10003
-MYSQL_USER=your-username
-MYSQL_PASSWORD="your-password"
-MYSQL_DATABASE=vvg_template
+- `.env` - Base configuration with non-sensitive defaults (committed)
+- `.env.production` - Production-specific overrides (committed)
+- `.env.local` - Secrets and local overrides (gitignored)
 
-# Authentication (Azure AD)
-AZURE_AD_CLIENT_ID=your-client-id
-AZURE_AD_CLIENT_SECRET=your-client-secret
-AZURE_AD_TENANT_ID=your-tenant-id
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret
+### Quick Setup
 
-# Storage (AWS S3)
-AWS_REGION=us-west-2
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-S3_BUCKET_NAME=vvg-cloud-storage
+1. Copy the example file:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-# AI Analysis (OpenAI)
-OPENAI_API_KEY=your-openai-key
-```
+2. Add your secrets to `.env.local`:
+   ```bash
+   # Required secrets
+   NEXTAUTH_SECRET=generate-with-openssl-rand-base64-32
+   AZURE_AD_CLIENT_ID=your-client-id
+   AZURE_AD_CLIENT_SECRET=your-client-secret
+   AZURE_AD_TENANT_ID=your-tenant-id
+   
+   # Database credentials
+   MYSQL_USER=your-username
+   MYSQL_PASSWORD=your-password
+   
+   # Optional: Override defaults for local development
+   MYSQL_HOST=127.0.0.1  # For SSM tunnel
+   ```
+
+3. All non-sensitive defaults are already configured in `.env`
+
+See [Environment Configuration Guide](docs/deployment/ENVIRONMENT_CONFIGURATION_GUIDE.md) for detailed setup.
 
 ## Database Connection
 
 Start SSM tunnel for database access:
 
 ```bash
-aws ssm start-session --target i-07fba3edeb2e54729 \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters host="vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com",portNumber="3306",localPortNumber="10003"
+# Configure your database connection details
+# aws ssm start-session --target YOUR_INSTANCE_ID \
+#   --document-name AWS-StartPortForwardingSessionToRemoteHost \
+#   --parameters host="your-database-host",portNumber="3306",localPortNumber="10003"
 ```
 
 ## Features
 
-- **Document Upload**: Upload NDAs in PDF, DOCX, or TXT format
+- **Document Upload**: Upload documents in PDF, DOCX, or TXT format
 - **AI Analysis**: Compare documents using OpenAI GPT models
-- **Template Management**: Standard VVG templates vs third-party NDAs
+- **Template Management**: Standard templates vs third-party documents
 - **Secure Storage**: AWS S3 with local fallback for development
 - **Authentication**: Azure AD integration
 
@@ -138,7 +145,7 @@ The following duplicate files were removed during DRY refactoring:
 - `components/ui/use-mobile.tsx` → use `hooks/use-mobile.tsx`
 - `hooks/use-toast.ts` → use `components/ui/use-toast.ts`
 - `styles/globals.css` → use `app/globals.css`
-- `tests/documents/` → consolidated into `documents/vvg/`
+- `tests/documents/` → consolidated into `documents/third-party/`
 
 ### DRY Refactoring (Phase 2)
 
@@ -220,7 +227,7 @@ Major consolidations completed in this phase:
 
 Completed comprehensive DRY refactoring with focus on eliminating remaining code duplication:
 
-#### 1. **Type Consolidation** (`types/nda/index.ts`)
+#### 1. **Type Consolidation** (`types/template/index.ts`)
 - Consolidated all Document-related interfaces into single location
 - Fixed database schema alignment (document1_id/document2_id)
 - Eliminated duplicate type definitions across components
@@ -238,7 +245,7 @@ Completed comprehensive DRY refactoring with focus on eliminating remaining code
   - `validateRequiredFields()` - Field validation helper
 - Updated all API routes to use standardized parsing
 
-#### 4. **Database Error Handling** (`lib/nda/database.ts`)
+#### 4. **Database Error Handling** (`lib/template/database.ts`)
 - Enhanced `withDbErrorHandling()` with detailed context
 - Added safe database operation wrappers:
   - `safeQuery()` - Query with automatic error handling
@@ -269,9 +276,9 @@ Completed comprehensive DRY refactoring with focus on eliminating remaining code
 - Added `processTextExtraction()` for extraction workflow
 - Reduced upload route from 100+ lines to ~30 lines
 
-#### 7. **Component Props Standardization** (`types/nda/index.ts`)
+#### 7. **Component Props Standardization** (`types/template/index.ts`)
 - Consolidated all component prop interfaces:
-  - `UploadNDAProps`
+  - `UploadTemplateProps`
   - `DocumentCardProps`
   - `DocumentWithUIFields`
   - `ComparisonResult`
@@ -292,7 +299,7 @@ Completed comprehensive DRY refactoring with focus on eliminating remaining code
 ## Project Structure
 
 ```
-NDA/
+vvg-template/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   ├── compare/           # Document comparison page
@@ -307,12 +314,11 @@ NDA/
 │   ├── MASTER.md         # Master documentation
 │   ├── STATUS.md         # Project status & development log
 │   └── git-workflow.md   # Git workflow strategy
-├── documents/             # Sample NDA documents
-│   ├── third-party/      # Third-party NDAs
-│   └── vvg/              # VVG standard templates
+├── documents/             # Sample documents
+│   └── third-party/      # Sample third-party documents
 ├── hooks/                 # React hooks
 ├── lib/                   # Library code
-│   ├── nda/              # NDA-specific modules
+│   ├── template/         # Template-specific modules
 │   └── storage/          # Storage abstraction
 ├── public/                # Static assets
 ├── scripts/               # Build and dev scripts
@@ -364,19 +370,22 @@ git push origin v1.0.0
 
 Connect to EC2 instance using AWS SSM:
 ```bash
-aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
-  --region us-west-2 \
-  --profile vvg
+# Configure your AWS SSM access
+# aws ssm start-session \
+#   --target YOUR_INSTANCE_ID \
+#   --region YOUR_REGION \
+#   --profile YOUR_PROFILE
 ```
 
 ### Deployment URLs
 
-- **Production**: https://legal.vtc.systems/vvg-template
-- **Staging**: https://legal.vtc.systems:8443/vvg-template-staging
+- **Production**: Configure your production URL
+- **Staging**: Configure your staging URL
 
 ### Additional Documentation
 
+- [Environment Configuration Guide](docs/deployment/ENVIRONMENT_CONFIGURATION_GUIDE.md) - Complete environment setup guide
 - [AWS SSM Guide](deployment/AWS_SSM_GUIDE.md) - Detailed SSM connection instructions
 - [Rollback Procedures](deployment/ROLLBACK_PROCEDURES.md) - Emergency rollback steps
 - [NGINX Configuration](deployment/nginx.vvg-template.conf) - Web server configuration
+- [OAuth Configuration Guide](docs/deployment/OAUTH_CONFIGURATION.md) - Azure AD OAuth setup for all environments

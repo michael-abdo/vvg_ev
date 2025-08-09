@@ -6,7 +6,6 @@ This directory contains sample documents for testing the VVG Template document p
 
 - `templates/` - Standard template documents
 - `third-party/` - Sample third-party documents for testing
-- `archive/` - Archived NDA-specific documents (no longer used)
 
 ## Supported File Types
 

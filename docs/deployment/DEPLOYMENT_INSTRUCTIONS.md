@@ -5,7 +5,7 @@
 - **Database schema updated**: Now matches TypeScript interfaces
 - **Environment configured**: Production variables corrected
 - **S3 integration**: Working with bucket `{PROJECT_NAME}-documents-20250706165230`
-- **Code committed**: Latest changes pushed to `develop/nda-features-refactored` branch
+- **Code committed**: Latest changes pushed to `develop/document-features-refactored` branch
 
 ## EC2 Deployment Steps
 
@@ -21,7 +21,7 @@ cd /home/ubuntu/{PROJECT_NAME}
 
 ### 3. Pull Latest Changes
 ```bash
-git pull origin develop/nda-features-refactored
+git pull origin develop/document-features-refactored
 ```
 
 ### 4. Install Dependencies
@@ -36,13 +36,13 @@ npm run build
 
 ### 6. Create Database (If Not Done Already)
 ```bash
-# Connect to MySQL and create the nda_analyzer database
+# Connect to MySQL and create the document_analyzer database
 # This replaces the temporary truck_scrape database
 mysql -h vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com -u michael -p
 
 # In MySQL prompt:
-CREATE DATABASE IF NOT EXISTS nda_analyzer;
-USE nda_analyzer;
+CREATE DATABASE IF NOT EXISTS document_analyzer;
+USE document_analyzer;
 # Exit MySQL
 ```
 
@@ -58,7 +58,7 @@ curl -X POST http://localhost:3000/api/migrate-db
 cp .env.production.example .env.production
 # Verify these key settings:
 NODE_ENV=production
-MYSQL_DATABASE=nda_analyzer
+MYSQL_DATABASE=document_analyzer
 S3_BUCKET_NAME={PROJECT_NAME}-documents-20250706165230
 ```
 
@@ -95,14 +95,14 @@ curl https://legal.vtc.systems/{PROJECT_NAME}/api/storage-health
 
 ### Database Schema Updates
 - ✅ Added missing columns to all tables:
-  - `nda_documents`: extracted_text, is_standard, metadata, created_at, updated_at
-  - `nda_comparisons`: similarity_score, key_differences, ai_suggestions, error_message, processing_time_ms
-  - `nda_exports`: file_size, last_downloaded_at, metadata
-  - `nda_processing_queue`: Complete new table for task management
+  - `documents`: extracted_text, is_standard, metadata, created_at, updated_at
+  - `comparisons`: similarity_score, key_differences, ai_suggestions, error_message, processing_time_ms
+  - `exports`: file_size, last_downloaded_at, metadata
+  - `processing_queue`: Complete new table for task management
 
 ### Environment Configuration
 - ✅ Updated S3 bucket name to `{PROJECT_NAME}-documents-20250706165230`
-- ✅ Updated database name to `nda_analyzer`
+- ✅ Updated database name to `document_analyzer`
 - ✅ Added missing environment variables
 
 ## Rollback Plan (If Needed)
@@ -120,7 +120,7 @@ pm2 restart {PROJECT_NAME}
 3. **Text Extraction**: Automatic background processing
 4. **AI Comparison**: Real OpenAI GPT-4 integration
 5. **S3 Storage**: All files stored in dedicated bucket
-6. **Database**: All data in new `nda_analyzer` database
+6. **Database**: All data in new `document_analyzer` database
 
 ## Contact for Issues
 - **Mike**: Technical questions about the code changes

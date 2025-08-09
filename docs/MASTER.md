@@ -28,30 +28,30 @@ Last Updated: 2025-07-06 | Version: 1.2.0
 Source: `/app/api/migrate-db/route.ts`
 
 #### Tables:
-1. **nda_documents** - Stores uploaded NDA metadata
+1. **documents** - Stores uploaded document metadata
    - File information (hash, size, S3 URL)
    - Processing status
    - Extracted text content
    - Standard template flag
 
-2. **nda_comparisons** - Stores comparison results
+2. **comparisons** - Stores comparison results
    - Links two documents
    - AI analysis results
    - Similarity scores
    - Key differences and suggestions
 
-3. **nda_exports** - Tracks generated reports
+3. **exports** - Tracks generated reports
    - Export format (PDF/DOCX)
    - Download tracking
    - S3 storage URLs
 
-4. **nda_processing_queue** - Async task queue
+4. **processing_queue** - Async task queue
    - Text extraction tasks
    - Comparison tasks
    - Export generation tasks
 
 #### Database Abstraction Layer
-The database abstraction layer (`/lib/nda/database.ts`) provides:
+The database abstraction layer provides:
 - **In-memory storage** when database CREATE access is not available
 - **MySQL storage** when full database access is granted
 - **Seamless transition** between the two modes
@@ -207,7 +207,7 @@ const content = await extractText(buffer, filename, hash)
 import { executeQuery } from '@/lib/db'
 
 const documents = await executeQuery({
-  query: 'SELECT * FROM nda_documents WHERE user_id = ?',
+  query: 'SELECT * FROM documents WHERE user_id = ?',
   values: [session.user.email]
 })
 ```
@@ -227,14 +227,14 @@ await s3Client.send(new PutObjectCommand({
 ## 📋 Requirements
 
 ### Core Features
-1. **Upload NDAs** - PDF/DOCX support with deduplication
+1. **Upload Documents** - PDF/DOCX support with deduplication
 2. **Compare Documents** - AI-powered analysis
 3. **View Results** - Side-by-side comparison
 4. **Export Summary** - PDF/DOCX download
 
 ### User Workflows
-1. Login → Upload Standard NDA → Mark as template
-2. Upload Third-party NDA → Select comparison → View results
+1. Login → Upload Standard Document → Mark as template
+2. Upload Third-party Document → Select comparison → View results
 3. Review suggestions → Export summary
 
 ### Success Metrics
@@ -290,14 +290,14 @@ S3_FOLDER_PREFIX={PROJECT_NAME}/
 ### Usage
 ```typescript
 import { storage } from '@/lib/storage';
-import { ndaPaths } from '@/lib/storage';
+import { storagePaths } from '@/lib/storage';
 
 // Initialize
 await storage.initialize();
 
 // Upload
 const result = await storage.upload(
-  ndaPaths.document(userId, fileHash, filename),
+  storagePaths.document(userId, fileHash, filename),
   buffer,
   { contentType: 'application/pdf' }
 );

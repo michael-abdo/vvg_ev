@@ -54,7 +54,7 @@ npm run dev:no-basepath
 | Authentication | ✅ | Azure AD, Google OAuth, Dev bypass |
 | Database | ✅ | Dual-mode (MySQL + in-memory fallback) |
 | Storage | ✅ | Dual-mode (S3 + local fallback) |
-| Document Processing | ✅ | NDA analysis with OpenAI integration |
+| Document Processing | ✅ | Document analysis with OpenAI integration |
 | API Routes | ✅ | All working with proper basepath |
 | Client Components | ✅ | Using new useBasePath hook |
 | Middleware Security | ✅ | Blacklist pattern with inline headers |

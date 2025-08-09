@@ -86,3 +86,152 @@ NEXTAUTH_URL=https://your-domain.com/template-staging
 - ✅ **Enhanced Scopes**: Uses `openid profile email offline_access User.Read`
 
 This follows 2024 industry standards and eliminates manual redirect URI configuration issues.
+
+---
+
+# Comprehensive Logging Strategy
+
+## 🔍 Complete Transparency with PM2 Logging
+
+This template implements industry-standard comprehensive logging with complete transparency for all operations.
+
+### **Logging Architecture**
+
+#### **✅ Winston-Based Structured Logging**
+- **JSON Format**: Structured logs for production environments
+- **Colored Console**: Human-readable development logging
+- **File Rotation**: Automatic log file management (10MB max, 5 files retained)
+- **Multiple Levels**: error, warn, info, http, debug
+
+#### **✅ PM2 Integration**
+```javascript
+// ecosystem.config.js - Comprehensive PM2 logging
+log_type: 'json',
+log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
+rotate_logs: true,
+max_log_file_size: '10M',
+retain_logs: 30
+```
+
+### **What Gets Logged**
+
+#### **🚀 Application Startup**
+- Environment configuration (masked sensitive values)
+- Database connection status
+- Authentication provider setup
+- Memory usage and system information
+- Platform and Node.js version details
+
+#### **🔐 Authentication Flow**
+- User sign-ins and sign-outs
+- JWT token creation and session management
+- Account linking events
+- Authentication failures with context
+
+#### **🌐 Request/Response Tracking**
+- All HTTP requests with method, path, status, and duration
+- Unique request IDs for tracing
+- Response times and performance metrics
+- Middleware execution logging
+
+#### **💾 Database Operations**
+- SQL query execution times and row counts
+- Connection pool status and health
+- Database errors with full context
+- Query performance monitoring
+
+#### **📁 File Operations**
+- Upload attempts and completions
+- File processing stages and results
+- Storage operations (local/S3)
+- Document extraction and analysis
+
+#### **❌ Error Handling**
+- Full stack traces with context
+- Error categorization and classification
+- Request correlation for debugging
+- Global error handlers for unhandled exceptions
+
+### **Log Files Structure**
+
+#### **Development**
+```bash
+logs/
+├── error.log          # Error-level logs only
+├── combined.log       # All log levels
+└── console output     # Real-time colored logging
+```
+
+#### **Production**
+```bash
+logs/
+├── app-error.log      # Application errors
+├── app-out.log        # Standard output
+├── error.log          # Winston error logs
+└── combined.log       # Winston combined logs
+```
+
+### **Environment Variables**
+
+```bash
+# Logging Configuration
+LOG_LEVEL=info              # debug, info, warn, error
+NODE_ENV=production         # Affects log format and detail
+
+# PM2 automatically handles:
+# - Log rotation (10MB max files)
+# - Timestamp formatting
+# - JSON structured output
+# - Log retention (30 days)
+```
+
+### **Key Features**
+
+#### **🔒 Security-First**
+- **No Sensitive Data**: Passwords, secrets, and API keys are masked
+- **Request Sanitization**: User input is sanitized in logs
+- **Error Context**: Errors include context without exposing sensitive information
+
+#### **📊 Performance Monitoring**
+- **Response Times**: Every request tracked with duration
+- **Database Performance**: Query execution times logged
+- **Memory Usage**: Startup memory footprint recorded
+- **Request Tracing**: Unique IDs for request correlation
+
+#### **🛠️ Developer Experience**
+- **Colored Console**: Easy-to-read development logs
+- **Stack Traces**: Full error context in development
+- **Request Flow**: Complete request lifecycle visibility
+- **Component Tracing**: Every major operation logged
+
+### **Usage Examples**
+
+#### **Application Monitoring**
+```bash
+# View real-time logs
+pm2 logs vvg-template
+
+# View specific log types
+pm2 logs vvg-template --lines 100
+tail -f logs/combined.log | grep ERROR
+```
+
+#### **Request Tracing**
+Each request gets a unique ID for end-to-end tracking:
+```
+→ POST /api/upload [abc-123-def]
+DB: INSERT documents 15ms [abc-123-def]
+File: upload-completed document.pdf [abc-123-def]
+← POST /api/upload 201 1.2s [abc-123-def]
+```
+
+### **Benefits**
+
+✅ **Complete Transparency**: Every operation is logged  
+✅ **Production Ready**: Structured JSON logs for monitoring  
+✅ **Performance Insights**: Response times and bottlenecks tracked  
+✅ **Error Debugging**: Full context for troubleshooting  
+✅ **Security Compliant**: No sensitive data in logs  
+✅ **Scalable**: Log rotation and retention policies  
+
+This comprehensive logging strategy provides complete visibility into application behavior while maintaining security and performance standards.

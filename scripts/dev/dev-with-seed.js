@@ -20,57 +20,11 @@ const CONFIG = {
   maxRetries: 3,
   retryDelay: 2000,
   documents: [
-    // Standard Templates
+    // Sample document for testing
     {
-      path: 'documents/vvg/Form NDA [Mutual].docx',
-      displayName: 'VVG Standard Mutual NDA',
+      path: 'documents/third-party/Sample Business Template.txt',
+      displayName: 'Sample Business Template',
       isStandard: true,
-    },
-    {
-      path: 'documents/vvg/Form NDA [Velocity as Disclosing Party].docx',
-      displayName: 'VVG Disclosing Party NDA',
-      isStandard: true,
-    },
-    {
-      path: 'documents/vvg/Form NDA [Velocity as Receiving Party].docx',
-      displayName: 'VVG Receiving Party NDA',
-      isStandard: true,
-    },
-    // Third-party NDAs
-    {
-      path: 'documents/third-party/UK-Government-Mutual-NDA.pdf',
-      displayName: 'UK Government Mutual NDA',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Torys-Mutual-NDA-Template.pdf',
-      displayName: 'Torys Law Firm NDA Template',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Sample-Tech-Company-Mutual-NDA.txt',
-      displayName: 'Tech Company Mutual NDA',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Financial-Services-NDA.txt',
-      displayName: 'Financial Services NDA',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Healthcare-Industry-NDA.txt',
-      displayName: 'Healthcare Industry NDA',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Manufacturing-Vendor-NDA.txt',
-      displayName: 'Manufacturing Vendor NDA',
-      isStandard: false,
-    },
-    {
-      path: 'documents/third-party/Simple-Mutual-NDA-Template.txt',
-      displayName: 'Simple Mutual NDA Template',
-      isStandard: false,
     },
   ]
 };
@@ -169,7 +123,7 @@ async function seedDocuments() {
   
   console.log('You can now:');
   console.log(`   • View documents at ${colors.blue}http://localhost:${port}/documents${colors.reset}`);
-  console.log(`   • Compare NDAs at ${colors.blue}http://localhost:${port}/compare${colors.reset}`);
+  console.log(`   • Compare documents at ${colors.blue}http://localhost:${port}/compare${colors.reset}`);
   console.log('   • Test the complete workflow\n');
 }
 

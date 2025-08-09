@@ -1,8 +1,8 @@
-# 🐳 Docker Development & Deployment Workflow
+# 🐳 Docker Development & Production Deployment Workflow
 
 ## Overview
 
-This guide outlines the complete Docker-based development and deployment workflow for the VVG Template system. Follow these patterns for consistent, professional development practices.
+This guide outlines the complete Docker-based development and deployment workflow for the VVG Template system, from localhost:3000 development to live production at legal.vtc.systems/app. Follow these patterns for consistent, professional development practices.
 
 ---
 
@@ -433,4 +433,105 @@ You'll know the workflow is working when:
 ✅ **Debugging is easy**: Clear logs and container access  
 ✅ **Team is aligned**: Everyone uses identical environment  
 
-This Docker workflow transforms development from setup-heavy to code-focused, letting you concentrate on building features instead of managing environments!
+---
+
+## 🌐 **Production Deployment Flow**
+
+### **From localhost:3000 to Production URL**
+
+Your application journey from development to live production:
+
+```
+Development (Your Laptop)     Production (EC2 Server)     Public Access
+localhost:3000          →     localhost:3000        →     legal.vtc.systems/app
+[Docker Container]            [Docker Container]           [NGINX Proxy]
+```
+
+### **Complete Journey Map**
+
+| Stage | URL | Environment | Purpose |
+|-------|-----|-------------|----------|
+| **Local Dev** | `http://localhost:3000` | Your laptop | Active development |
+| **Local Prod Test** | `http://localhost:3000` | Your laptop (prod build) | Pre-deployment validation |
+| **EC2 Internal** | `http://localhost:3000` | EC2 server | Production app running |
+| **Public Access** | `https://legal.vtc.systems/app` | Internet | End users |
+
+### **Step-by-Step Production Deployment**
+
+#### **1. Development (Your Laptop)**
+```bash
+# Start development
+./docker-startup.sh
+# Edit code, test at localhost:3000
+# Commit changes
+git commit -m "feat: new feature"
+git push origin docker
+```
+
+#### **2. Production Build & Test (Your Laptop)**
+```bash
+# Test production build locally
+docker-compose -f docker-compose.production.yml build
+docker-compose -f docker-compose.production.yml up -d
+# Verify at localhost:3000 with production settings
+```
+
+#### **3. Deploy to EC2 Server**
+```bash
+# SSH to EC2
+aws ssm start-session --target YOUR-INSTANCE-ID
+
+# On EC2 server:
+cd /home/ubuntu/vvg-app
+git pull origin docker
+docker-compose -f docker-compose.production.yml build
+docker-compose -f docker-compose.production.yml up -d
+```
+
+#### **4. Live on Internet**
+```bash
+# App immediately available at:
+https://legal.vtc.systems/app
+```
+
+### **NGINX Reverse Proxy Magic**
+
+**How users access your app:**
+```
+User types: https://legal.vtc.systems/app
+     ↓
+NGINX receives request on EC2 server
+     ↓
+NGINX proxies to localhost:3000 (your Next.js app)
+     ↓
+Your app responds
+     ↓
+NGINX sends response back to user
+```
+
+### **Environment Differences**
+
+| Component | Development | Production |
+|-----------|-------------|------------|
+| **Domain** | `localhost:3000` | `legal.vtc.systems/app` |
+| **Storage** | Local `./storage/` | AWS S3 |
+| **Database** | Local MySQL/In-memory | AWS RDS MySQL |
+| **Auth** | Dev bypass enabled | Azure AD required |
+| **SSL** | None (HTTP) | Let's Encrypt (HTTPS) |
+| **Proxy** | Direct access | NGINX reverse proxy |
+
+### **Why This Architecture Works**
+1. **Same Docker image** runs everywhere (consistency)
+2. **Environment variables** change behavior per environment
+3. **NGINX handles** SSL, routing, and load balancing
+4. **Next.js app** doesn't know it's behind a proxy
+5. **Subdirectory routing** (`/app`) works seamlessly
+
+### **Key Benefits**
+✅ **Simple Development**: Always work at localhost:3000  
+✅ **Consistent Builds**: Same Docker image from dev to prod  
+✅ **Easy Scaling**: Add more EC2 instances behind load balancer  
+✅ **Professional URLs**: Clean public URLs like legal.vtc.systems/app  
+✅ **Zero Downtime**: Deploy new containers alongside old ones  
+
+This Docker workflow transforms development from setup-heavy to code-focused, letting you concentrate on building features instead of managing environments while providing a clear path to professional production deployment!

@@ -393,6 +393,32 @@ cd ~/deployment
 | 1.0.2 | 2025-07-04 | Consolidated documentation, OpenAI configured, simplified workflow |
 | 1.1.0 | 2025-07-05 | Major consolidation: merged database, storage, deployment, testing, DRY refactoring docs |
 | 1.2.0 | 2025-07-06 | Complete DRY refactoring: automated timing, centralized responses, extracted text utilities |
+| 2.0.0 | 2025-08-09 | Documentation DRY refactoring: consolidated authentication guides, integrated live status dashboard |
+
+---
+
+## 📞 **Contact Directory**
+
+- **Database/EC2**: Satyen  
+- **Azure AD**: Bhavik
+- **AWS/S3**: AWS Admin
+- **Deployment**: Jack
+
+---
+
+## 📚 **Document Map**
+
+### 🎯 **Core References** (Use These)
+- **Technical Details & Status**: This file (`MASTER.md`)
+- **Quick Start & Commands**: `README.md`
+- **Authentication Implementation**: `BEARER_TOKEN_AUTH_IMPLEMENTATION.md`
+- **Docker Development**: `DOCKER_DEVELOPMENT_WORKFLOW.md`
+- **Deployment Process**: `deployment/` directory
+
+### 📜 **Legacy Archive** (Historical Only)
+- **DRY Refactoring History**: `legacy/` directory
+- **Old Status Tracking**: Consolidated into this file
+- **Infrastructure Analysis**: `analysis/` directory
 
 ---
 

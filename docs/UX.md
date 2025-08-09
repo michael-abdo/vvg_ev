@@ -51,7 +51,7 @@ Upload Page Interface:
 │ [Upload Document]                   │
 └─────────────────────────────────────┘
 ↓
-User selects: "Company_Standard_NDA.pdf"
+User selects: "Company_Standard_Document.pdf"
 ↓
 Clicks "Upload Document"
 ↓
@@ -81,7 +81,7 @@ Documents List View:
 ┌─────────────────────────────────────┐
 │ 📚 My Documents (2)                 │
 ├─────────────────────────────────────┤
-│ 📄 Company_Standard_NDA.pdf         │
+│ 📄 Company_Standard_Document.pdf    │
 │    Status: ✅ Processed             │
 │    Type: Standard Document          │
 │    [Compare] [Download] [Delete]    │
@@ -102,7 +102,7 @@ Compare Page Interface:
 │ ⚖️ Document Comparison              │
 ├─────────────────────────────────────┤
 │ Standard Document:                  │
-│ [📄 Company_Standard_NDA.pdf ▼]    │
+│ [📄 Company_Standard_Document.pdf ▼]│
 │                                     │
 │ Third Party Document:               │
 │ [📄 ThirdParty_Contract.docx ▼]    │
@@ -236,4 +236,4 @@ User Options:
 
 ---
 
-This creates a **seamless, intuitive workflow** where users can easily upload, manage, and compare their NDA documents with AI-powered analysis and actionable insights! 🎉
+This creates a **seamless, intuitive workflow** where users can easily upload, manage, and compare their documents with AI-powered analysis and actionable insights! 🎉

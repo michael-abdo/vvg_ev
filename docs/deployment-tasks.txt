@@ -14,17 +14,17 @@
   - Fix Azure AD Configuration
     - Log into Azure Portal
       - Navigate to App Registrations
-      - Find NDA Analyzer app
+      - Find Document Analyzer app
     - Add Production Redirect URIs
-      - Add: https://legal.vtc.systems/nda-analyzer/api/auth/callback/azure-ad
-      - Add: https://legal.vtc.systems/nda-analyzer/auth/signin
+      - Add: https://legal.vtc.systems/document-analyzer/api/auth/callback/azure-ad
+      - Add: https://legal.vtc.systems/document-analyzer/auth/signin
       - Save changes
     - Update Reply URLs
-      - Ensure https://legal.vtc.systems/nda-analyzer is listed
+      - Ensure https://legal.vtc.systems/document-analyzer is listed
       - Remove any localhost URLs from production
   - Prepare Deployment Files
     - Update .env.production
-      - Set NEXTAUTH_URL=https://legal.vtc.systems/nda-analyzer
+      - Set NEXTAUTH_URL=https://legal.vtc.systems/document-analyzer
       - Set STORAGE_PROVIDER=local (for initial deployment)
       - Set correct RDS credentials
       - Set NODE_ENV=production
@@ -41,9 +41,9 @@
     - Connect to RDS
       - Use mysql client from EC2
       - Authenticate with credentials
-    - Create nda_analyzer database
-      - Run: CREATE DATABASE IF NOT EXISTS nda_analyzer;
-      - Run: USE nda_analyzer;
+    - Create document_analyzer database
+      - Run: CREATE DATABASE IF NOT EXISTS document_analyzer;
+      - Run: USE document_analyzer;
     - Run migrations
       - Copy migration SQL from local
       - Execute all CREATE TABLE statements
@@ -62,8 +62,8 @@
       - Verify ubuntu user access
     - Clone repository
       - Run: cd /home/ubuntu
-      - Run: git clone [repo-url] nda-analyzer
-      - Run: cd nda-analyzer
+      - Run: git clone [repo-url] document-analyzer
+      - Run: cd document-analyzer
     - Install dependencies
       - Run: npm ci (not npm install)
       - Monitor for any errors
@@ -75,7 +75,7 @@
   - Configuration Setup
     - Copy production environment file
       - Upload .env.production to EC2
-      - Place in /home/ubuntu/nda-analyzer/
+      - Place in /home/ubuntu/document-analyzer/
       - Verify all variables are set
     - Test configuration
       - Run: node -e "require('dotenv').config({path:'.env.production'}); console.log(process.env.NODE_ENV)"
@@ -87,7 +87,7 @@
     - Start application
       - Run: pm2 start deployment/ecosystem.config.js --env production
       - Check status: pm2 status
-      - View logs: pm2 logs nda-analyzer
+      - View logs: pm2 logs document-analyzer
     - Configure PM2 startup
       - Run: pm2 startup
       - Follow the command it outputs
@@ -116,7 +116,7 @@
 - Post-Deployment Validation
   - Test Core Functionality
     - Test homepage loads
-      - Visit https://legal.vtc.systems/nda-analyzer
+      - Visit https://legal.vtc.systems/document-analyzer
       - Should redirect to sign-in
     - Test authentication
       - Click sign in
@@ -137,7 +137,7 @@
       - Verify no restarts
       - Check memory usage
     - Review application logs
-      - Run: pm2 logs nda-analyzer --lines 100
+      - Run: pm2 logs document-analyzer --lines 100
       - Look for errors
       - Check for memory warnings
     - Test API endpoints
@@ -172,14 +172,14 @@
       - Test from EC2 command line
   - Emergency Rollback Plan
     - Stop application
-      - Run: pm2 stop nda-analyzer
+      - Run: pm2 stop document-analyzer
       - Prevents further issues
     - Review logs
-      - Run: pm2 logs nda-analyzer --err
+      - Run: pm2 logs document-analyzer --err
       - Identify root cause
     - Fix and restart
       - Apply fixes
-      - Run: pm2 restart nda-analyzer
+      - Run: pm2 restart document-analyzer
       - Monitor closely
 - Future Optimization Tasks
   - Fix build hanging issue

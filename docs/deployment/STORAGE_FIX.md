@@ -3,7 +3,7 @@
 ## Issue
 The application was getting "Access denied" errors when trying to upload files to S3:
 ```
-Error: Access denied for upload on {PROJECT_NAME}/users/user@example.com/documents/.../Torys-Mutual-NDA-Template.pdf
+Error: Access denied for upload on {PROJECT_NAME}/users/user@example.com/documents/.../Company-Document-Template.pdf
 ```
 
 ## Root Cause
@@ -20,14 +20,14 @@ Switched from S3 storage to local storage on the EC2 instance:
    ```
 
 2. **Created persistent storage volume:**
-   - Created directory: `/home/ubuntu/nda-storage`
-   - Mounted as volume: `-v /home/ubuntu/nda-storage:/app/.storage`
+   - Created directory: `/home/ubuntu/document-storage`
+   - Mounted as volume: `-v /home/ubuntu/document-storage:/app/.storage`
 
 3. **Container restart command:**
    ```bash
    docker run -d --name {PROJECT_NAME} \
      -p 3000:3000 \
-     -v /home/ubuntu/nda-storage:/app/.storage \
+     -v /home/ubuntu/document-storage:/app/.storage \
      --env-file .env.docker.production \
      --restart unless-stopped \
      {PROJECT_NAME}:latest
@@ -35,7 +35,7 @@ Switched from S3 storage to local storage on the EC2 instance:
 
 ## Result
 ✅ Upload functionality now works correctly using local storage
-✅ Files are persisted in `/home/ubuntu/nda-storage`
+✅ Files are persisted in `/home/ubuntu/document-storage`
 ✅ No S3 permissions required
 
 ## Future Considerations

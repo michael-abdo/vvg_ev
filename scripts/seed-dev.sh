@@ -20,6 +20,6 @@ else
   echo ""
   echo "You can now:"
   echo "  • View documents at http://localhost:3000/documents"
-  echo "  • Compare NDAs at http://localhost:3000/compare"
+  echo "  • Compare documents at http://localhost:3000/compare"
   echo "  • Upload new documents at http://localhost:3000/upload"
 fi

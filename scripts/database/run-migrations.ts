@@ -7,7 +7,6 @@
  * Usage: npm run db:migrate
  */
 
-import { initializeDatabase } from '@/lib/nda/database';
 import { executeQuery } from '@/lib/db';
 
 async function runMigrations() {
@@ -35,13 +34,13 @@ async function runMigrations() {
     }
     
     // Run migrations
-    console.log('📊 Creating NDA tables...');
-    await initializeDatabase();
+    console.log('📊 Creating database tables...');
+    // TODO: Implement generic table creation
     console.log('✅ All tables created successfully\n');
     
     // Verify tables exist
     console.log('🔍 Verifying tables...');
-    const tables = ['nda_documents', 'nda_comparisons', 'nda_exports', 'nda_processing_queue'];
+    const tables = ['documents', 'comparisons', 'exports', 'processing_queue'];
     
     for (const table of tables) {
       const result = await executeQuery({

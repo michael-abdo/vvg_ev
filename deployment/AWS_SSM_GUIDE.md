@@ -49,7 +49,7 @@ aws configure --profile vvg
 ```bash
 # Connect to the VVG Template EC2 instance
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg
 ```
@@ -72,7 +72,7 @@ cd ~/vvg-template
 ```bash
 # Start a new tmux session for persistent work
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg \
   --document-name AWS-StartInteractiveCommand \
@@ -89,7 +89,7 @@ tmux attach -t deploy
 ```bash
 # Forward production port (3000)
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg \
   --document-name AWS-StartPortForwardingSession \
@@ -97,7 +97,7 @@ aws ssm start-session \
 
 # Forward staging port (3001)
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg \
   --document-name AWS-StartPortForwardingSession \
@@ -111,7 +111,7 @@ Create a local script `ssm-deploy.sh`:
 ```bash
 #!/bin/bash
 ENV=${1:-staging}
-INSTANCE_ID="i-035db647b0a1eb2e7"
+INSTANCE_ID="your-instance-id"
 REGION="us-west-2"
 PROFILE="vvg"
 
@@ -134,7 +134,7 @@ aws ssm send-command \
 ### Check Application Status
 ```bash
 aws ssm send-command \
-  --instance-ids "i-035db647b0a1eb2e7" \
+  --instance-ids "your-instance-id" \
   --region "us-west-2" \
   --profile "vvg" \
   --document-name "AWS-RunShellScript" \
@@ -146,7 +146,7 @@ aws ssm send-command \
 ```bash
 # View logs for staging
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg \
   --document-name AWS-StartInteractiveCommand \
@@ -154,7 +154,7 @@ aws ssm start-session \
 
 # View logs for production
 aws ssm start-session \
-  --target i-035db647b0a1eb2e7 \
+  --target your-instance-id \
   --region us-west-2 \
   --profile vvg \
   --document-name AWS-StartInteractiveCommand \
@@ -197,7 +197,7 @@ aws sts get-caller-identity --profile vvg
 ```bash
 # Check SSM agent status
 aws ssm describe-instance-information \
-  --instance-information-filter-list key=InstanceIds,valueSet=i-035db647b0a1eb2e7 \
+  --instance-information-filter-list key=InstanceIds,valueSet=your-instance-id \
   --region us-west-2 \
   --profile vvg
 ```
@@ -206,7 +206,7 @@ aws ssm describe-instance-information \
 
 | Task | Command |
 |------|---------|
-| Connect to EC2 | `aws ssm start-session --target i-035db647b0a1eb2e7 --region us-west-2 --profile vvg` |
+| Connect to EC2 | `aws ssm start-session --target your-instance-id --region us-west-2 --profile vvg` |
 | Switch to ubuntu | `sudo su - ubuntu` |
 | Navigate to project | `cd ~/vvg-template` |
 | Check PM2 status | `pm2 status` |

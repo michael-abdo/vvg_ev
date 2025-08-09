@@ -20,9 +20,9 @@ NC='\033[0m' # No Color
 if [ -z "$HOST" ] || [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <host> <project-name> [user]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 staging.vtc.systems invoice-analyzer ec2-user"
+    echo -e "  $0 staging.your-domain.com invoice-analyzer ec2-user"
     echo -e "  $0 192.168.1.100 legal-analyzer ubuntu"
-    echo -e "  $0 legal.vtc.systems contract-parser"
+    echo -e "  $0 your-domain.com contract-parser"
     exit 1
 fi
 

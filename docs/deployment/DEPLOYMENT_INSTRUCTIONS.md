@@ -1,4 +1,4 @@
-# Deployment Instructions for Satyen
+# Deployment Instructions
 
 ## Pre-deployment Status ✅
 - **All TypeScript errors fixed**: 29 compilation errors resolved
@@ -38,11 +38,11 @@ npm run build
 ```bash
 # Connect to MySQL and create the document_analyzer database
 # This replaces the temporary truck_scrape database
-mysql -h vtcawsinnovationmysql01-cluster.cluster-c1hfshlb6czo.us-west-2.rds.amazonaws.com -u michael -p
+mysql -h your-mysql-host.cluster-xxxxx.region.rds.amazonaws.com -u your-username -p
 
 # In MySQL prompt:
-CREATE DATABASE IF NOT EXISTS document_analyzer;
-USE document_analyzer;
+CREATE DATABASE IF NOT EXISTS template_app;
+USE template_app;
 # Exit MySQL
 ```
 
@@ -58,8 +58,8 @@ curl -X POST http://localhost:3000/api/migrate-db
 cp .env.production.example .env.production
 # Verify these key settings:
 NODE_ENV=production
-MYSQL_DATABASE=document_analyzer
-S3_BUCKET_NAME=template-documents-20250706165230
+MYSQL_DATABASE=template_app
+S3_BUCKET_NAME=your-storage-bucket
 ```
 
 ### 9. Start/Restart Application
@@ -77,11 +77,11 @@ pm2 start ecosystem.config.js
 ### 10. Verify Deployment
 ```bash
 # Check application status
-curl -I https://legal.vtc.systems/template
+curl -I https://your-domain.com/template
 
 # Check health endpoints
-curl https://legal.vtc.systems/template/api/db-health
-curl https://legal.vtc.systems/template/api/storage-health
+curl https://your-domain.com/template/api/db-health
+curl https://your-domain.com/template/api/storage-health
 ```
 
 ## Critical Changes Made
@@ -101,8 +101,8 @@ curl https://legal.vtc.systems/template/api/storage-health
   - `processing_queue`: Complete new table for task management
 
 ### Environment Configuration
-- ✅ Updated S3 bucket name to `template-documents-20250706165230`
-- ✅ Updated database name to `document_analyzer`
+- ✅ Updated S3 bucket name to `your-storage-bucket`
+- ✅ Updated database name to `template_app`
 - ✅ Added missing environment variables
 
 ## Rollback Plan (If Needed)
@@ -120,10 +120,10 @@ pm2 restart template
 3. **Text Extraction**: Automatic background processing
 4. **AI Comparison**: Real OpenAI GPT-4 integration
 5. **S3 Storage**: All files stored in dedicated bucket
-6. **Database**: All data in new `document_analyzer` database
+6. **Database**: All data in new `template_app` database
 
 ## Contact for Issues
-- **Mike**: Technical questions about the code changes
-- **You (Satyen)**: Infrastructure and deployment issues
+- **Developer**: Technical questions about the code changes
+- **DevOps**: Infrastructure and deployment issues
 
 The application is now production-ready with all critical bugs fixed!

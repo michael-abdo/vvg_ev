@@ -16,19 +16,19 @@ const environments = [
   {
     name: 'Staging',
     config: {
-      NEXTAUTH_URL: 'https://legal.vtc.systems:8443/vvg-template-staging',
-      AZURE_AD_REDIRECT_URI: 'https://legal.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad',
-      BASE_PATH: '/vvg-template-staging',
-      APP_URL: 'https://legal.vtc.systems:8443/vvg-template-staging'
+      NEXTAUTH_URL: 'https://your-domain.com:8443/template-staging',
+      AZURE_AD_REDIRECT_URI: 'https://your-domain.com:8443/template-staging/api/auth/callback/azure-ad',
+      BASE_PATH: '/template-staging',
+      APP_URL: 'https://your-domain.com:8443/template-staging'
     }
   },
   {
     name: 'Production',
     config: {
-      NEXTAUTH_URL: 'https://legal.vtc.systems/vvg-template',
-      AZURE_AD_REDIRECT_URI: 'https://legal.vtc.systems/vvg-template/api/auth/callback/azure-ad',
-      BASE_PATH: '/vvg-template',
-      APP_URL: 'https://legal.vtc.systems/vvg-template'
+      NEXTAUTH_URL: 'https://your-domain.com/template',
+      AZURE_AD_REDIRECT_URI: 'https://your-domain.com/template/api/auth/callback/azure-ad',
+      BASE_PATH: '/template',
+      APP_URL: 'https://your-domain.com/template'
     }
   }
 ];

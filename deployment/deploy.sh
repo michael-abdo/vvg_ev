@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Document Processing Template Deployment Script for EC2
+# Template App Deployment Script for EC2
 # Based on Jack's video instructions and deployment requirements
-# Target: EC2 instance i-035db647b0a1eb2e7 (legal.vtc.systems)
+# Target: EC2 instance your-instance-id (your-domain.com)
 
 set -e  # Exit on any error
 
@@ -18,7 +18,7 @@ REPO_URL="https://github.com/michael-abdo/vvg_template.git"  # Updated with actu
 APP_DIR="/home/ubuntu/${PROJECT_NAME:-template-app}"
 LOG_DIR="/home/ubuntu/logs/${PROJECT_NAME:-template-app}"
 NGINX_SITE="/etc/nginx/sites-available/default"
-DOMAIN="legal.vtc.systems"
+DOMAIN="your-domain.com"
 
 # Logging function
 log() {
@@ -107,7 +107,7 @@ install_nginx() {
 
 # Clone repository
 clone_repository() {
-    log "Cloning Document Processing Template repository..."
+    log "Cloning Template App repository..."
     
     # Remove existing directory if it exists
     if [ -d "$APP_DIR" ]; then
@@ -254,14 +254,14 @@ install_ssl() {
     sudo apt install -y certbot python3-certbot-nginx
     
     # Obtain certificate
-    sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email admin@vtc.systems
+    sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email admin@your-domain.com
     
     log "SSL certificate installed ✓"
 }
 
 # Main deployment function
 main() {
-    log "Starting Document Processing Template deployment on EC2..."
+    log "Starting Template App deployment on EC2..."
     
     check_user
     update_system

@@ -65,8 +65,8 @@ On production server, update `.env.local`:
 # Production configuration
 NODE_ENV=production
 ENVIRONMENT=production
-NEXTAUTH_URL=https://legal.vtc.systems/vvg-template
-AZURE_AD_REDIRECT_URI=https://legal.vtc.systems/vvg-template/api/auth/callback/azure-ad
+NEXTAUTH_URL=https://your-domain.com/vvg-template
+AZURE_AD_REDIRECT_URI=https://your-domain.com/vvg-template/api/auth/callback/azure-ad
 
 # Production secrets (use actual values)
 NEXTAUTH_SECRET=production-secret-NEVER-SHARE
@@ -135,7 +135,7 @@ pm2 logs vvg-template --lines 100
 - [ ] Memory usage normal
 
 ### 2. Functional Testing (5-15 minutes)
-- [ ] Access production URL: https://legal.vtc.systems/vvg-template
+- [ ] Access production URL: https://your-domain.com/vvg-template
 - [ ] Test authentication (use test account)
 - [ ] Verify document upload works
 - [ ] Check API endpoints respond

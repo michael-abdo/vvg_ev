@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Template - Git Worktree Setup for Parallel Development
+# Template App - Git Worktree Setup for Parallel Development
 # Creates optimal worktree structure for multi-environment development
 # Usage: ./docs/parallel-dev/setup-worktrees.sh <project-name> [git-repo-url] [base-dir]
 
@@ -19,11 +19,11 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 if [ -z "$PROJECT_NAME" ]; then
-    echo -e "${PURPLE}🌳 VVG Worktree Setup for Parallel Development${NC}"
+    echo -e "${PURPLE}🌳 Template App Worktree Setup for Parallel Development${NC}"
     echo -e "${RED}Usage: $0 <project-name> [git-repo-url] [base-dir]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 invoice-analyzer git@github.com:user/invoice-analyzer.git"
-    echo -e "  $0 legal-processor https://github.com/company/legal-processor.git ~/work"
+    echo -e "  $0 template-app git@github.com:user/template-app.git"
+    echo -e "  $0 my-project https://github.com/company/my-project.git ~/work"
     echo -e "  $0 my-project  # (when already in a git repository)"
     echo ""
     echo -e "${BLUE}This creates the optimal structure:${NC}"
@@ -35,7 +35,7 @@ if [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
-echo -e "${PURPLE}🌳 VVG Worktree Setup${NC}"
+echo -e "${PURPLE}🌳 Template App Worktree Setup${NC}"
 echo -e "${BLUE}Project: $PROJECT_NAME${NC}"
 echo -e "${BLUE}Base Directory: $BASE_DIR${NC}"
 echo -e "${BLUE}Repository: ${GIT_REPO_URL:-'Using existing repository'}${NC}"
@@ -205,11 +205,11 @@ mkdir -p "$BIN_DIR"
 cat > "$BIN_DIR/worktree-status" << 'EOF'
 #!/bin/bash
 
-# VVG Worktree Status - Shows status of all worktrees
+# Template App Worktree Status - Shows status of all worktrees
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT/main"
 
-echo -e "\033[0;35m🌳 VVG Worktree Status\033[0m"
+echo -e "\033[0;35m🌳 Template App Worktree Status\033[0m"
 echo "================================="
 
 # List all worktrees with their status
@@ -276,7 +276,7 @@ log_action "Created worktree-status utility"
 cat > "$BIN_DIR/create-feature" << 'EOF'
 #!/bin/bash
 
-# VVG Create Feature Worktree
+# Template App Create Feature Worktree
 FEATURE_NAME="$1"
 
 if [ -z "$FEATURE_NAME" ]; then
@@ -329,7 +329,7 @@ echo -e "\n${BLUE}📝 Creating workflow configuration...${NC}"
 
 # Create project configuration file
 cat > "$PROJECT_ROOT/.worktree-config" << EOF
-# VVG Worktree Configuration
+# Template App Worktree Configuration
 PROJECT_NAME="$PROJECT_NAME"
 PROJECT_ROOT="$PROJECT_ROOT"
 MAIN_BRANCH="main"
@@ -364,7 +364,7 @@ echo ""
 # Generate setup report
 REPORT_FILE="$PROJECT_ROOT/worktree-setup-report.md"
 cat > "$REPORT_FILE" << EOF
-# VVG Worktree Setup Report
+# Template App Worktree Setup Report
 
 **Project:** $PROJECT_NAME  
 **Created:** $(date)  
@@ -418,8 +418,8 @@ cd $PROJECT_ROOT/${PROJECT_NAME}-staging # Staging
 3. **Start Development**: Use \`npm run dev\` with different ports
 4. **Setup Sync**: Run \`./docs/sync-worktrees.sh\` for daily sync
 
-## Integration with VVG Automation
-- Each worktree contains full VVG automation scripts
+## Integration with Template App Automation
+- Each worktree contains full Template App automation scripts
 - PM2 apps named uniquely per worktree
 - Ports assigned to avoid conflicts
 - Deploy scripts work within each worktree context
@@ -442,5 +442,5 @@ if ! echo "$PATH" | grep -q "$BIN_DIR"; then
     echo -e "${BLUE}source ~/.bashrc${NC}"
 fi
 
-echo -e "\n${GREEN}🌳 Worktree structure ready for parallel development!${NC}"
+echo -e "\n${GREEN}🌳 Template App worktree structure ready for parallel development!${NC}"
 log_action "Worktree setup completed successfully"

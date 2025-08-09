@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Master Automation Script
+# Template App Master Automation Script
 # Complete project lifecycle automation from 4-5 hours to 50 minutes
 # Usage: ./docs/automation/vvg-master-automation.sh <project-name> <environment> [infrastructure-type] [--worktree]
 
@@ -44,9 +44,9 @@ if [ -z "$PROJECT_NAME" ]; then
     show_banner
     echo -e "${RED}Usage: $0 <project-name> [staging|production] [aws|gcp|local] [--worktree]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 invoice-analyzer staging aws"
-    echo -e "  $0 legal-processor production gcp"
-    echo -e "  $0 contract-parser staging local"
+    echo -e "  $0 template-app staging aws"
+    echo -e "  $0 my-project production gcp"
+    echo -e "  $0 sample-project staging local"
     echo -e "  $0 my-project staging aws --worktree    # With parallel development"
     echo ""
     echo -e "${BLUE}This script orchestrates the complete VVG project lifecycle:${NC}"

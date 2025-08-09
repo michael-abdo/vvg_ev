@@ -211,9 +211,9 @@ jobs:
       run: |
         sleep 30
         if [[ "\${{ steps.env.outputs.environment }}" == "production" ]]; then
-          curl -f https://legal.vtc.systems/$PROJECT_NAME/api/health
+          curl -f https://your-domain.com/$PROJECT_NAME/api/health
         else
-          curl -f https://staging.vtc.systems/$PROJECT_NAME-staging/api/health
+          curl -f https://staging.your-domain.com/$PROJECT_NAME-staging/api/health
         fi
 EOF
 
@@ -319,10 +319,10 @@ cat > "nginx/$PROJECT_NAME-production.conf" << EOF
 # Nginx configuration for $PROJECT_NAME (production)
 server {
     listen 443 ssl http2;
-    server_name legal.vtc.systems;
+    server_name your-domain.com;
     
-    ssl_certificate /etc/letsencrypt/live/legal.vtc.systems/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/legal.vtc.systems/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
     
     # Security headers
     add_header X-Frame-Options DENY;
@@ -361,7 +361,7 @@ server {
 # HTTP redirect
 server {
     listen 80;
-    server_name legal.vtc.systems;
+    server_name your-domain.com;
     return 301 https://\$server_name\$request_uri;
 }
 EOF
@@ -546,8 +546,8 @@ if [ "$VALIDATION_PASSED" = true ]; then
     echo "5. 📚 Generate docs: ./scripts/generate-docs.sh $PROJECT_NAME staging"
     
     echo -e "\n${YELLOW}🔗 URLs:${NC}"
-    echo "  Staging: https://staging.vtc.systems/$PROJECT_NAME-staging"
-    echo "  Production: https://legal.vtc.systems/$PROJECT_NAME"
+    echo "  Staging: https://staging.your-domain.com/$PROJECT_NAME-staging"
+    echo "  Production: https://your-domain.com/$PROJECT_NAME"
     
     echo -e "\n${GREEN}🎯 Ready for deployment!${NC}"
 else

@@ -30,14 +30,14 @@ echo "================================="
 if [ "$ENVIRONMENT" = "production" ]; then
     PORT=3000
     BASE_PATH="/$PROJECT_NAME"
-    DOMAIN="legal.vtc.systems"
+    DOMAIN="your-domain.com"
     FULL_URL="https://$DOMAIN$BASE_PATH"
     BRANCH="main"
     ENV_FILE=".env.production"
 else
     PORT=3001
     BASE_PATH="/$PROJECT_NAME-staging"
-    DOMAIN="staging.vtc.systems"
+    DOMAIN="staging.your-domain.com"
     FULL_URL="https://$DOMAIN$BASE_PATH"
     BRANCH="main-staging"
     ENV_FILE=".env.staging"

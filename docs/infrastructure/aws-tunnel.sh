@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Template - AWS Production Tunnel Manager
+# Template App - AWS Production Tunnel Manager
 # Automates AWS SSM session management and tmux setup
 # Usage: ./docs/aws-tunnel.sh <instance-id> <project-name> [region]
 
@@ -19,11 +19,11 @@ NC='\033[0m' # No Color
 
 if [ -z "$INSTANCE_ID" ] || [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <instance-id> <project-name> [region]${NC}"
-    echo -e "${YELLOW}Example: $0 i-1234567890abcdef0 invoice-analyzer us-east-1${NC}"
+    echo -e "${YELLOW}Example: $0 i-1234567890abcdef0 template-app us-east-1${NC}"
     exit 1
 fi
 
-echo -e "${PURPLE}🚀 VVG AWS Production Tunnel Manager${NC}"
+echo -e "${PURPLE}🚀 Template App AWS Production Tunnel Manager${NC}"
 echo -e "${BLUE}Instance ID: $INSTANCE_ID${NC}"
 echo -e "${BLUE}Project: $PROJECT_NAME${NC}"
 echo -e "${BLUE}Region: $AWS_REGION${NC}"
@@ -117,7 +117,7 @@ SESSION_SCRIPT="/tmp/aws-tunnel-session-$PROJECT_NAME.sh"
 cat > "$SESSION_SCRIPT" << EOF
 #!/bin/bash
 
-# VVG Project Setup Commands
+# Template App Project Setup Commands
 cd /home/ec2-user || cd /home/ubuntu || cd ~
 
 # Create project directory if it doesn't exist
@@ -130,7 +130,7 @@ cd "$PROJECT_NAME"
 
 # Show current status
 echo "=================================================="
-echo "🚀 VVG AWS Production Environment"
+echo "🚀 Template App AWS Production Environment"
 echo "📁 Project: $PROJECT_NAME"
 echo "🖥️ Instance: $INSTANCE_ID"
 echo "📍 Location: \$(pwd)"
@@ -219,7 +219,7 @@ if ! command -v tmux >/dev/null 2>&1; then
 fi
 
 # Check if tmux session exists
-SESSION_NAME="vvg-PROJECT_NAME"
+SESSION_NAME="template-PROJECT_NAME"
 if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
     echo "🔄 Attaching to existing tmux session: $SESSION_NAME"
     tmux attach-session -t "$SESSION_NAME"
@@ -297,7 +297,7 @@ cat "$SESSION_SCRIPT" "$TMUX_SETUP" > "$COMBINED_SCRIPT"
 
 echo -e "${GREEN}✅ Setup complete, connecting...${NC}"
 echo -e "${YELLOW}💡 You'll be connected to instance $INSTANCE_ID${NC}"
-echo -e "${YELLOW}💡 Tmux session 'vvg-$PROJECT_NAME' will be created/attached${NC}"
+echo -e "${YELLOW}💡 Tmux session 'template-$PROJECT_NAME' will be created/attached${NC}"
 echo -e "${YELLOW}💡 Use Ctrl+B, D to detach from tmux (keeps session running)${NC}"
 echo -e "${YELLOW}💡 Type 'exit' to close the tunnel completely${NC}"
 echo ""
@@ -347,7 +347,7 @@ echo -e "${BLUE}Region:${NC} $AWS_REGION"
 # Generate session report
 REPORT_FILE="aws-tunnel-report-$PROJECT_NAME-$(date +%Y%m%d-%H%M%S).txt"
 cat > "$REPORT_FILE" << EOF
-VVG AWS Tunnel Session Report
+Template App AWS Tunnel Session Report
 ============================
 Instance ID: $INSTANCE_ID
 Project: $PROJECT_NAME
@@ -357,7 +357,7 @@ User: $(whoami)
 
 Connection Details:
 - SSM Session established successfully
-- Tmux session: vvg-$PROJECT_NAME
+- Tmux session: template-$PROJECT_NAME
 - Project directory: ~//$PROJECT_NAME
 
 Commands Used:
@@ -367,9 +367,9 @@ Commands Used:
 
 Tmux Commands:
 - List sessions: tmux list-sessions
-- Attach to session: tmux attach-session -t vvg-$PROJECT_NAME
+- Attach to session: tmux attach-session -t template-$PROJECT_NAME
 - Detach from session: Ctrl+B, D
-- Kill session: tmux kill-session -t vvg-$PROJECT_NAME
+- Kill session: tmux kill-session -t template-$PROJECT_NAME
 
 Instance Management:
 - Stop instance: aws ec2 stop-instances --instance-ids $INSTANCE_ID --region $AWS_REGION

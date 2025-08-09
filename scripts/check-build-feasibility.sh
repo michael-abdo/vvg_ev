@@ -49,7 +49,7 @@ if [ $AVAILABLE_MEM -lt $NEEDED ]; then
     echo ""
     echo "🚨 RECOMMENDATIONS:"
     echo "   1. Stop the production container first:"
-    echo "      docker stop nda-analyzer"
+    echo "      docker stop template-app"
     echo "   2. Or add swap space:"
     echo "      sudo fallocate -l 4G /swapfile"
     echo "      sudo chmod 600 /swapfile"

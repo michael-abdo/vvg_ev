@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide outlines the complete Docker-based development and deployment workflow for the VVG Template system, from localhost:3000 development to live production at legal.vtc.systems/app. Follow these patterns for consistent, professional development practices.
+This guide outlines the complete Docker-based development and deployment workflow for the VVG Template system, from localhost:3000 development to live production at your-domain.com/app. Follow these patterns for consistent, professional development practices.
 
 ---
 
@@ -443,7 +443,7 @@ Your application journey from development to live production:
 
 ```
 Development (Your Laptop)     Production (EC2 Server)     Public Access
-localhost:3000          →     localhost:3000        →     legal.vtc.systems/app
+localhost:3000          →     localhost:3000        →     your-domain.com/app
 [Docker Container]            [Docker Container]           [NGINX Proxy]
 ```
 
@@ -454,7 +454,7 @@ localhost:3000          →     localhost:3000        →     legal.vtc.systems/
 | **Local Dev** | `http://localhost:3000` | Your laptop | Active development |
 | **Local Prod Test** | `http://localhost:3000` | Your laptop (prod build) | Pre-deployment validation |
 | **EC2 Internal** | `http://localhost:3000` | EC2 server | Production app running |
-| **Public Access** | `https://legal.vtc.systems/app` | Internet | End users |
+| **Public Access** | `https://your-domain.com/app` | Internet | End users |
 
 ### **Step-by-Step Production Deployment**
 
@@ -491,14 +491,14 @@ docker-compose -f docker-compose.production.yml up -d
 #### **4. Live on Internet**
 ```bash
 # App immediately available at:
-https://legal.vtc.systems/app
+https://your-domain.com/app
 ```
 
 ### **NGINX Reverse Proxy Magic**
 
 **How users access your app:**
 ```
-User types: https://legal.vtc.systems/app
+User types: https://your-domain.com/app
      ↓
 NGINX receives request on EC2 server
      ↓
@@ -513,7 +513,7 @@ NGINX sends response back to user
 
 | Component | Development | Production |
 |-----------|-------------|------------|
-| **Domain** | `localhost:3000` | `legal.vtc.systems/app` |
+| **Domain** | `localhost:3000` | `your-domain.com/app` |
 | **Storage** | Local `./storage/` | AWS S3 |
 | **Database** | Local MySQL/In-memory | AWS RDS MySQL |
 | **Auth** | Dev bypass enabled | Azure AD required |
@@ -531,7 +531,7 @@ NGINX sends response back to user
 ✅ **Simple Development**: Always work at localhost:3000  
 ✅ **Consistent Builds**: Same Docker image from dev to prod  
 ✅ **Easy Scaling**: Add more EC2 instances behind load balancer  
-✅ **Professional URLs**: Clean public URLs like legal.vtc.systems/app  
+✅ **Professional URLs**: Clean public URLs like your-domain.com/app  
 ✅ **Zero Downtime**: Deploy new containers alongside old ones  
 
 This Docker workflow transforms development from setup-heavy to code-focused, letting you concentrate on building features instead of managing environments while providing a clear path to professional production deployment!

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Template - Comprehensive Deployment Validation
+# Template App - Comprehensive Deployment Validation
 # Consolidates all validation steps into single script
 # Usage: ./scripts/validate-deployment.sh [staging|production] [host]
 
@@ -11,19 +11,19 @@ HOST=${2:-localhost}
 # Determine ports and URLs based on environment
 if [ "$ENVIRONMENT" = "production" ]; then
     PORT=3000
-    BASE_PATH="/vvg-template"
+    BASE_PATH="/template"
     if [ "$HOST" = "localhost" ]; then
         BASE_URL="http://localhost:3000"
     else
-        BASE_URL="https://legal.vtc.systems/vvg-template"
+        BASE_URL="https://your-domain.com/template"
     fi
 else
     PORT=3001
-    BASE_PATH="/vvg-template-staging"
+    BASE_PATH="/template-staging"
     if [ "$HOST" = "localhost" ]; then
         BASE_URL="http://localhost:3001"
     else
-        BASE_URL="https://staging.vtc.systems/vvg-template-staging"
+        BASE_URL="https://your-domain.com/template-staging"
     fi
 fi
 
@@ -34,7 +34,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}🔍 VVG Deployment Validation${NC}"
+echo -e "${BLUE}🔍 Template App Deployment Validation${NC}"
 echo -e "${BLUE}Environment: $ENVIRONMENT${NC}"
 echo -e "${BLUE}Host: $HOST${NC}"
 echo -e "${BLUE}Base URL: $BASE_URL${NC}"
@@ -289,7 +289,7 @@ if [ "$HOST" = "localhost" ]; then
     
     # Check if PM2 is managing the process
     if command -v pm2 >/dev/null 2>&1; then
-        PM2_STATUS=$(pm2 jlist 2>/dev/null | jq -r ".[] | select(.name | contains(\"vvg-template-$ENVIRONMENT\")) | .pm2_env.status" 2>/dev/null || echo "")
+        PM2_STATUS=$(pm2 jlist 2>/dev/null | jq -r ".[] | select(.name | contains(\"template-$ENVIRONMENT\")) | .pm2_env.status" 2>/dev/null || echo "")
         if [ "$PM2_STATUS" = "online" ]; then
             check_status 0 "PM2 process online" ""
         else
@@ -323,7 +323,7 @@ if [ $CHECKS_PASSED -eq $CHECKS_TOTAL ]; then
     # Generate success report
     REPORT_FILE="validation-report-$ENVIRONMENT-$(date +%Y%m%d-%H%M%S).txt"
     cat > $REPORT_FILE << EOF
-VVG Deployment Validation Report
+Template App Deployment Validation Report
 ================================
 Environment: $ENVIRONMENT
 Host: $HOST

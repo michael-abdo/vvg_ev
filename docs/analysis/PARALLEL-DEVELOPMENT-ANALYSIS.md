@@ -1,4 +1,4 @@
-# VVG Template vs Parallel Development SOP Analysis
+# Template App vs Parallel Development SOP Analysis
 
 **Comparing current automation structure with worktree-based parallel development**
 
@@ -7,9 +7,9 @@
 ### ✅ **HIGHLY COMPATIBLE ASPECTS**
 
 #### 1. **Directory Structure Alignment**
-**Current VVG Template:**
+**Current Template App:**
 ```
-vvg_template/
+template-app/
 ├── scripts/           # Deployment automation
 ├── docs/              # Infrastructure automation
 ├── .env.staging.example
@@ -27,7 +27,7 @@ vvg_template/
 └── bin/               # Universal scripts
 ```
 
-**Compatibility:** The template structure maps perfectly to each worktree. Each worktree would contain the full VVG template with all automation scripts.
+**Compatibility:** The template structure maps perfectly to each worktree. Each worktree would contain the full Template App with all automation scripts.
 
 #### 2. **Environment Configuration**
 **Current:** Separate `.env.staging.example` and `.env.production.example`  
@@ -35,7 +35,7 @@ vvg_template/
 **Compatibility:** ✅ Perfect match - template already supports multi-environment setup
 
 #### 3. **Deployment Scripts**
-**Current:** `scripts/deploy-env.sh` accepts environment parameter  
+**Current:** `scripts/deploy.sh` accepts environment parameter  
 **Parallel:** Each worktree has deploy.sh with environment-specific logic  
 **Compatibility:** ✅ Existing scripts already support this pattern
 

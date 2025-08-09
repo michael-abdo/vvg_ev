@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Template - Comprehensive Smoke Testing Suite
+# Template App - Comprehensive Smoke Testing Suite
 # Consolidates all testing phases into automated validation
 # Usage: ./scripts/smoke-test.sh [staging|production] [host]
 
@@ -19,25 +19,25 @@ NC='\033[0m' # No Color
 # Test configuration based on environment
 if [ "$ENVIRONMENT" = "production" ]; then
     PORT=3000
-    BASE_PATH="/vvg-template"
+    BASE_PATH="/template"
     if [ "$HOST" = "localhost" ]; then
         BASE_URL="http://localhost:3000"
     else
-        BASE_URL="https://legal.vtc.systems/vvg-template"
+        BASE_URL="https://your-domain.com/template"
     fi
-    PM2_APP="vvg-template-production"
+    PM2_APP="template-production"
 else
     PORT=3001
-    BASE_PATH="/vvg-template-staging"
+    BASE_PATH="/template-staging"
     if [ "$HOST" = "localhost" ]; then
         BASE_URL="http://localhost:3001"
     else
-        BASE_URL="https://staging.vtc.systems/vvg-template-staging"
+        BASE_URL="https://your-domain.com/template-staging"
     fi
-    PM2_APP="vvg-template-staging"
+    PM2_APP="template-staging"
 fi
 
-echo -e "${PURPLE}🧪 VVG Comprehensive Smoke Testing${NC}"
+echo -e "${PURPLE}🧪 Template App Comprehensive Smoke Testing${NC}"
 echo -e "${BLUE}Environment: $ENVIRONMENT${NC}"
 echo -e "${BLUE}Host: $HOST${NC}"
 echo -e "${BLUE}Base URL: $BASE_URL${NC}"
@@ -356,7 +356,7 @@ echo -e "${BLUE}Success Rate: ${SUCCESS_RATE}%${NC}"
 # Generate detailed report
 REPORT_FILE="smoke-test-report-$ENVIRONMENT-$(date +%Y%m%d-%H%M%S).txt"
 cat > "$REPORT_FILE" << EOF
-VVG Smoke Test Report
+Template App Smoke Test Report
 ====================
 Environment: $ENVIRONMENT
 Host: $HOST

@@ -1,4 +1,4 @@
-# Document Processing Template - Master Documentation
+# Template App - Master Documentation
 
 **This is the single source of truth. All other documents reference this file.**
 
@@ -12,7 +12,7 @@ Last Updated: 2025-07-06 | Version: 1.2.0
 - **Frontend**: Next.js 15.2.4 with TypeScript
 - **Authentication**: Azure AD via NextAuth  
 - **Database**: MySQL via AWS RDS
-- **Storage**: AWS S3 (vvg-cloud-storage bucket)
+- **Storage**: AWS S3 (your-storage-bucket bucket)
 - **AI**: OpenAI GPT-4 (configured)
 - **Deployment**: EC2 + NGINX + PM2
 
@@ -283,7 +283,7 @@ S3_ACCESS=false         # Set to 'true' to auto-select S3
 LOCAL_STORAGE_PATH=.storage
 
 # S3 configuration
-S3_BUCKET_NAME=vvg-cloud-storage
+S3_BUCKET_NAME=your-storage-bucket
 S3_FOLDER_PREFIX=template/
 ```
 
@@ -325,16 +325,16 @@ if (storage.isLocal()) {
 
 ### Current Blocker
 **Cannot access EC2 instance**: SSM session fails with EOF error
-- Instance ID: `i-035db647b0a1eb2e7`
-- Domain: `legal.vtc.systems`
+- Instance ID: `your-instance-id`
+- Domain: `your-domain.com`
 - Need SSH key or SSM permissions from AWS admin
 
 ### Deployment Process
 When EC2 access is granted:
 ```bash
 # Copy files and deploy
-scp -r deployment/ ubuntu@legal.vtc.systems:~/
-ssh ubuntu@legal.vtc.systems
+scp -r deployment/ ubuntu@your-domain.com:~/
+ssh ubuntu@your-domain.com
 cd ~/deployment
 ./deploy.sh
 ```

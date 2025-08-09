@@ -1,5 +1,5 @@
 #!/bin/bash
-# Document Processing Template - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
+# Template App - ONE COMPREHENSIVE DEPLOYMENT SCRIPT
 # This script does EVERYTHING needed for a complete deployment
 
 set -e  # Exit on any error
@@ -65,9 +65,9 @@ check_step() {
 # =============================================================================
 
 deploy_template() {
-    echo "🚀 Document Processing Template - Complete Deployment Script"
+    echo "🚀 Template App - Complete Deployment Script"
     echo "============================================="
-    echo "This script will deploy the Document Processing Template application from start to finish."
+    echo "This script will deploy the Template App application from start to finish."
     echo "Current user: $(whoami)"
     echo "Target directory: $APP_DIR"
     echo ""
@@ -118,10 +118,10 @@ deploy_template() {
     log_step "Deploying application code"
     if [ -d ".git" ]; then
         log_warn "Repository exists, pulling latest changes..."
-        git pull origin main || git pull origin develop/nda-features-refactored
+        git pull origin main || git pull origin develop/template-features-refactored
     else
         git clone "$REPO_URL" .
-        git checkout develop/nda-features-refactored || git checkout main
+        git checkout develop/template-features-refactored || git checkout main
     fi
     check_step "Application code deployed"
 
@@ -140,7 +140,7 @@ deploy_template() {
     log_step "Setting up production environment"
     if [ ! -f ".env.production" ]; then
         cat > .env.production << 'EOF'
-# Production Environment Configuration for Document Processing Template
+# Production Environment Configuration for Template App
 # Azure AD Authentication
 AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}
 AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET}
@@ -289,9 +289,9 @@ EOF
     if [ ${#FAILED_STEPS[@]} -eq 0 ]; then
         echo -e "${GREEN}✅ ALL STEPS SUCCESSFUL!${NC}"
         echo ""
-        echo "Your Document Processing Template is now deployed and running:"
+        echo "Your Template App is now deployed and running:"
         echo "• Application: http://localhost:$APP_PORT/${PROJECT_NAME:-vvg-app}"
-        echo "• Production URL: https://legal.vtc.systems/${PROJECT_NAME:-vvg-app}"
+        echo "• Production URL: https://your-domain.com/${PROJECT_NAME:-template-app}"
         echo "• PM2 Status: pm2 status"
         echo "• Logs: pm2 logs $APP_NAME"
         echo ""

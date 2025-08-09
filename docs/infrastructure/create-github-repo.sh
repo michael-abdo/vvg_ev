@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# VVG Template - GitHub Repository Creation Automation
+# Template App - GitHub Repository Creation Automation
 # Automates repository creation, setup, and initial deployment
 # Usage: ./docs/create-github-repo.sh <project-name> [environment] [visibility]
 
@@ -20,13 +20,13 @@ NC='\033[0m' # No Color
 if [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <project-name> [staging|production] [public|private]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 invoice-analyzer staging private"
-    echo -e "  $0 legal-processor production public"
-    echo -e "  $0 contract-parser"
+    echo -e "  $0 template-app staging private"
+    echo -e "  $0 my-project production public"
+    echo -e "  $0 sample-project"
     exit 1
 fi
 
-echo -e "${PURPLE}🚀 VVG GitHub Repository Creation${NC}"
+echo -e "${PURPLE}🚀 Template App GitHub Repository Creation${NC}"
 echo -e "${BLUE}Project: $PROJECT_NAME${NC}"
 echo -e "${BLUE}Environment: $ENVIRONMENT${NC}"
 echo -e "${BLUE}Visibility: $VISIBILITY${NC}"

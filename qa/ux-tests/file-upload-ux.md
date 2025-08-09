@@ -1,12 +1,12 @@
-# File Upload UX Test - Document Processing Template
+# File Upload UX Test - Template App
 
 ## Test Environment
-- **URL**: https://legal.vtc.systems/template
+- **URL**: https://your-domain.com/template
 - **Feature**: File upload functionality for documents
 - **Expected flow**: Authentication → Upload page → File selection → Success/Error feedback
 
 ## Pre-test Setup
-1. Navigate to https://legal.vtc.systems/template
+1. Navigate to https://your-domain.com/template
 2. Complete authentication flow (should redirect to Microsoft login)
 3. After successful authentication, should land on dashboard
 

@@ -52,7 +52,7 @@ chmod +x /tmp/nextauth-fix.sh
 # Execute the script on the remote server via SSM
 echo "Connecting to EC2 instance and applying fix..."
 aws ssm send-command \
-    --instance-ids i-035db647b0a1eb2e7 \
+    --instance-ids your-instance-id \
     --document-name "AWS-RunShellScript" \
     --region us-west-2 \
     --profile vvg \

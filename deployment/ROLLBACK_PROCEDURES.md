@@ -18,7 +18,7 @@ pm2 restart vvg-template-production
 #### 1. Rollback to Previous Commit
 ```bash
 # Connect to server
-aws ssm start-session --target i-035db647b0a1eb2e7 --region us-west-2 --profile vvg
+aws ssm start-session --target your-instance-id --region us-west-2 --profile vvg
 sudo su - ubuntu
 cd ~/vvg-template
 
@@ -119,7 +119,7 @@ The deploy workflow includes automatic rollback on health check failure:
 git push origin main-staging
 
 # Test thoroughly
-curl https://legal.vtc.systems:8443/vvg-template-staging/health
+curl https://staging.your-domain.com:8443/vvg-template-staging/health
 
 # If successful, tag for production
 git tag -a v1.0.1 -m "Tested in staging"

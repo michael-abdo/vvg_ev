@@ -12,7 +12,7 @@ AWS_REGION=${AWS_REGION:-us-east-1}
 if [ -z "$PROJECT_NAME" ]; then
     echo "❌ Error: Project name required"
     echo "Usage: ./scripts/provision-infrastructure.sh <project-name> [staging|production]"
-    echo "Example: ./scripts/provision-infrastructure.sh invoice-analyzer staging"
+    echo "Example: ./scripts/provision-infrastructure.sh my-project staging"
     exit 1
 fi
 

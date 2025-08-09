@@ -11,7 +11,7 @@ ENVIRONMENT=${2:-staging}
 if [ -z "$PROJECT_NAME" ]; then
     echo "❌ Error: Project name required"
     echo "Usage: ./scripts/create-project.sh <project-name> [staging|production]"
-    echo "Example: ./scripts/create-project.sh invoice-analyzer staging"
+    echo "Example: ./scripts/create-project.sh my-project staging"
     exit 1
 fi
 

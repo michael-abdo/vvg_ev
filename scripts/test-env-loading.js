@@ -9,6 +9,38 @@
 
 const fs = require('fs');
 const path = require('path');
+const dotenv = require('dotenv');
+
+// Load environment files in Next.js order (same as Next.js does)
+console.log('Loading environment files in Next.js order...');
+
+// 1. Load .env first (base defaults)
+if (fs.existsSync('.env')) {
+  dotenv.config({ path: '.env' });
+  console.log('✅ Loaded .env');
+} else {
+  console.log('❌ .env not found');
+}
+
+// 2. Load environment-specific file (.env.production if NODE_ENV=production)
+if (process.env.NODE_ENV === 'production' && fs.existsSync('.env.production')) {
+  dotenv.config({ path: '.env.production' });
+  console.log('✅ Loaded .env.production (production mode)');
+} else if (process.env.NODE_ENV === 'production') {
+  console.log('❌ .env.production not found (production mode)');
+} else {
+  console.log('ℹ️  Skipping .env.production (not production mode)');
+}
+
+// 3. Load .env.local last (highest priority - secrets and local overrides)
+if (fs.existsSync('.env.local')) {
+  dotenv.config({ path: '.env.local' });
+  console.log('✅ Loaded .env.local');
+} else {
+  console.log('❌ .env.local not found');
+}
+
+console.log('');
 
 console.log('Environment Loading Test');
 console.log('========================\n');

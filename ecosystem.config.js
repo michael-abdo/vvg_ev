@@ -24,7 +24,7 @@ module.exports = {
       // Environment Configuration
       env: {
         NODE_ENV: 'production',
-        PORT: process.env.PORT_STAGING || 3001,
+        PORT: process.env.PORT,
         ENVIRONMENT: 'staging',
         // Comprehensive logging flags
         DEBUG: 'app:*,auth:*,db:*,api:*',
@@ -34,7 +34,7 @@ module.exports = {
       },
       env_staging: {
         NODE_ENV: 'production',
-        PORT: process.env.PORT_STAGING || 3001,
+        PORT: process.env.PORT,
         ENVIRONMENT: 'staging',
         DEBUG: 'app:*,auth:*,db:*,api:*',
         LOG_LEVEL: 'debug',
@@ -94,7 +94,7 @@ module.exports = {
       // Environment Configuration
       env_production: {
         NODE_ENV: 'production',
-        PORT: process.env.PORT_PRODUCTION || 3000,
+        PORT: process.env.PORT,
         ENVIRONMENT: 'production',
         // Production logging (less verbose but comprehensive)
         DEBUG: 'app:error,auth:*,db:error,api:error',

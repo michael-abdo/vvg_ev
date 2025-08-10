@@ -20,9 +20,9 @@ NC='\033[0m' # No Color
 if [ -z "$HOST" ] || [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <host> <project-name> [user]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 staging.your-domain.com invoice-analyzer ec2-user"
-    echo -e "  $0 192.168.1.100 legal-analyzer ubuntu"
-    echo -e "  $0 your-domain.com contract-parser"
+    echo -e "  $0 staging.your-domain.com {PROJECT_NAME} ec2-user"
+    echo -e "  $0 192.168.1.100 your-app ubuntu"
+    echo -e "  $0 your-domain.com {PROJECT_NAME}"
     exit 1
 fi
 
@@ -383,8 +383,8 @@ alias gl='git log --oneline -10'
 alias pm2logs='pm2 logs'
 alias pm2status='pm2 status'
 alias pm2restart='pm2 restart'
-alias proj='cd ~/PROJECT_NAME_PLACEHOLDER'
-alias logs='cd ~/PROJECT_NAME_PLACEHOLDER/logs && tail -f *.log'
+alias proj='cd ~/{PROJECT_NAME}'
+alias logs='cd ~/{PROJECT_NAME}/logs && tail -f *.log'
 
 # Useful functions
 gitpush() {
@@ -394,12 +394,12 @@ gitpush() {
 }
 
 quickstart() {
-    echo "🚀 VVG Quick Start for PROJECT_NAME_PLACEHOLDER"
+    echo "🚀 VVG Quick Start for {PROJECT_NAME}"
     echo "=================================="
-    echo "📁 Project: cd ~/PROJECT_NAME_PLACEHOLDER"
+    echo "📁 Project: cd ~/{PROJECT_NAME}"
     echo "📊 Status: pm2 status"
     echo "📝 Logs: pm2 logs"
-    echo "🔄 Restart: pm2 restart PROJECT_NAME_PLACEHOLDER"
+    echo "🔄 Restart: pm2 restart {PROJECT_NAME}"
     echo "🌿 Git: gs, gb, gc, gp"
     echo "🛠️ Claude: claude"
     echo "=================================="
@@ -447,15 +447,15 @@ mkdir -p docs
 
 # Create a simple README
 cat > README.md << 'README'
-# PROJECT_NAME_PLACEHOLDER
+# {PROJECT_DISPLAY_NAME}
 
 VVG Project deployed to HOST_PLACEHOLDER
 
 ## Quick Commands
 
 - **Status**: \`pm2 status\`
-- **Logs**: \`pm2 logs PROJECT_NAME_PLACEHOLDER\`
-- **Restart**: \`pm2 restart PROJECT_NAME_PLACEHOLDER\`
+- **Logs**: \`pm2 logs {PROJECT_NAME}\`
+- **Restart**: \`pm2 restart {PROJECT_NAME}\`
 - **Git Status**: \`git status\`
 
 ## Environment
@@ -565,8 +565,8 @@ else
 fi
 
 # Check project directory
-if [ -d "~/PROJECT_NAME_PLACEHOLDER" ]; then
-    echo "✅ Project Directory: ~/PROJECT_NAME_PLACEHOLDER"
+if [ -d "~/{PROJECT_NAME}" ]; then
+    echo "✅ Project Directory: ~/{PROJECT_NAME}"
 else
     echo "❌ Project Directory: Not found"
 fi
@@ -578,7 +578,7 @@ echo "🎯 Development environment verification complete"
 echo ""
 echo "📚 Quick Reference:"
 echo "- Connect: ssh SSH_USER_PLACEHOLDER@HOST_PLACEHOLDER"
-echo "- Project: cd ~/PROJECT_NAME_PLACEHOLDER"
+echo "- Project: cd ~/{PROJECT_NAME}"
 echo "- Authenticate Claude: claude auth"
 echo "- GitHub test: ssh -T git@github.com"
 echo "- Quick help: quickstart"

@@ -6,7 +6,7 @@ The API endpoint fixes have been pushed to the `main-frontend-debug` branch.
 
 1. SSH into EC2:
 ```bash
-ssh ubuntu@legal.vtc.systems
+ssh ubuntu@department.vtc.systems
 ```
 
 2. Navigate to project directory:

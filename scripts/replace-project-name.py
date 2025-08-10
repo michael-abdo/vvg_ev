@@ -212,12 +212,12 @@ def main():
     
     # Define replacements
     replacements = {
-        'nda-analyzer': '${PROJECT_NAME}',
-        '/nda-analyzer': '/${PROJECT_NAME}',
-        'nda-analyzer/': '${PROJECT_NAME}/',
-        "'nda-analyzer'": "'${PROJECT_NAME}'",
-        '"nda-analyzer"': '"${PROJECT_NAME}"',
-        'NDA Analyzer': '${PROJECT_DISPLAY_NAME}',
+        '{PROJECT_NAME}': '${PROJECT_NAME}',
+        '/{PROJECT_NAME}': '/${PROJECT_NAME}',
+        '{PROJECT_NAME}/': '${PROJECT_NAME}/',
+        "'{PROJECT_NAME}'": "'${PROJECT_NAME}'",
+        '"{PROJECT_NAME}"': '"${PROJECT_NAME}"',
+        '{PROJECT_DISPLAY_NAME}': '${PROJECT_DISPLAY_NAME}',
         'nda_analyzer': '${PROJECT_NAME_UNDERSCORE}',
     }
     
@@ -228,14 +228,14 @@ def main():
         '.js': replacements,
         '.jsx': replacements,
         '.json': {
-            '"nda-analyzer"': '"vvg-template"',  # For package.json
+            '"{PROJECT_NAME}"': '"vvg-template"',  # For package.json
         },
         '.yml': replacements,
         '.yaml': replacements,
         '.sh': replacements,
         '.md': {
-            'nda-analyzer': '{PROJECT_NAME}',
-            'NDA Analyzer': '{PROJECT_DISPLAY_NAME}',
+            '{PROJECT_NAME}': '{PROJECT_NAME}',
+            '{PROJECT_DISPLAY_NAME}': '{PROJECT_DISPLAY_NAME}',
         },
         '.conf': replacements,
     }

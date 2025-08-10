@@ -27,8 +27,8 @@ Health check endpoint is now available at `/api/health` returning:
 
 ```bash
 # Deploy to EC2
-scp -r . ubuntu@legal.vtc.systems:~/{PROJECT_NAME}/
-ssh ubuntu@legal.vtc.systems
+scp -r . ubuntu@department.vtc.systems:~/{PROJECT_NAME}/
+ssh ubuntu@department.vtc.systems
 
 # Install dependencies and build
 cd ~/{PROJECT_NAME}
@@ -51,7 +51,7 @@ pm2 startup
 **Health Check Integration:**
 ```javascript
 // PM2 will use health check endpoint
-pm2 set pm2-plus:webapp_host legal.vtc.systems
+pm2 set pm2-plus:webapp_host department.vtc.systems
 pm2 set pm2-plus:webapp_health_check_path /{PROJECT_NAME}/api/health
 ```
 

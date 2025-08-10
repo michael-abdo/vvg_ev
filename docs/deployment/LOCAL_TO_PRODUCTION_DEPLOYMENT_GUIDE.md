@@ -22,7 +22,7 @@ This guide analyzes the VVG template's local-to-production deployment challenges
    // Current in next.config.mjs
    basePath: process.env.BASE_PATH || '',
    ```
-   - Even with `BASE_PATH=` (empty), falls back to `/invoice-analyzer`
+   - Even with `BASE_PATH=` (empty), falls back to `/{PROJECT_NAME}`
    - Forces different `NEXTAUTH_URL` values between environments
    - Creates local vs production URL inconsistencies
 
@@ -121,7 +121,7 @@ According to industry research and Next.js documentation:
 - CORS headers mismatch with hardcoded localhost:3000
 
 **Third-order effects:**
-- Reverse proxy configurations fail (NGINX expects `/invoice-analyzer`)
+- Reverse proxy configurations fail (NGINX expects `/{PROJECT_NAME}`)
 - Monitoring/logging paths change (APM tools won't match)
 - Developer muscle memory disruption
 - Documentation drift (all guides reference basePath URL)
@@ -183,8 +183,8 @@ module.exports = (phase, { defaultConfig }) => {
   // Production: Use base path with sensible default
   return {
     ...defaultConfig,
-    basePath: process.env.BASE_PATH || '/invoice-analyzer',
-    assetPrefix: process.env.BASE_PATH || '/invoice-analyzer',
+    basePath: process.env.BASE_PATH || '/{PROJECT_NAME}',
+    assetPrefix: process.env.BASE_PATH || '/{PROJECT_NAME}',
   }
 }
 ```
@@ -267,7 +267,7 @@ export function validateEnvironment() {
      if (process.env.NODE_ENV === 'development') {
        return process.env.NEXTAUTH_URL || 'http://localhost:3000'
      }
-     return process.env.NEXTAUTH_URL || 'https://legal.vtc.systems/invoice-analyzer'
+     return process.env.NEXTAUTH_URL || 'https://department.vtc.systems/{PROJECT_NAME}'
    }
    ```
 

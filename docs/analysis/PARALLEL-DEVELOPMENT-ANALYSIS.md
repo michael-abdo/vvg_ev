@@ -9,7 +9,7 @@
 #### 1. **Directory Structure Alignment**
 **Current Template App:**
 ```
-template-app/
+{PROJECT_NAME}/
 ├── scripts/           # Deployment automation
 ├── docs/              # Infrastructure automation
 ├── .env.staging.example
@@ -76,12 +76,12 @@ template-app/
 #### 1. **Master Automation Enhancement**
 ```bash
 # Enhanced master automation for worktree setup
-./docs/vvg-master-automation.sh invoice-analyzer staging aws --worktree
+./docs/vvg-master-automation.sh {PROJECT_NAME} staging aws --worktree
 
 # Would create:
-# ~/projects/invoice-analyzer/
+# ~/projects/{PROJECT_NAME}/
 #   ├── main/
-#   ├── invoice-analyzer-staging/
+#   ├── {PROJECT_NAME}-staging/
 #   └── bin/
 ```
 
@@ -90,7 +90,7 @@ Current `ecosystem.config.js` could be enhanced:
 ```javascript
 // Dynamic path based on worktree
 const WORKTREE = process.env.WORKTREE_NAME || 'main';
-const BASE_PATH = WORKTREE === 'main' ? '/invoice-analyzer' : `/invoice-analyzer-${WORKTREE}`;
+const BASE_PATH = WORKTREE === 'main' ? '/{PROJECT_NAME}' : `/{PROJECT_NAME}-${WORKTREE}`;
 ```
 
 #### 3. **Port Management**

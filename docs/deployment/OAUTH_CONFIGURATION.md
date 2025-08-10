@@ -27,8 +27,8 @@ Each environment requires a specific redirect URI that must be registered in Azu
 | Environment | AZURE_AD_REDIRECT_URI | Notes |
 |------------|----------------------|-------|
 | Local Development | `http://localhost:3001/api/auth/callback/azure-ad` | Default port is 3001 |
-| Staging | `https://legal.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad` | Includes port and basePath |
-| Production | `https://legal.vtc.systems/vvg-template/api/auth/callback/azure-ad` | Includes basePath |
+| Staging | `https://department.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad` | Includes port and basePath |
+| Production | `https://department.vtc.systems/vvg-template/api/auth/callback/azure-ad` | Includes basePath |
 
 ## Azure AD App Registration Setup
 
@@ -73,10 +73,10 @@ NEXTAUTH_SECRET=your-dev-secret
 AZURE_AD_CLIENT_ID=your-staging-client-id
 AZURE_AD_CLIENT_SECRET=your-staging-client-secret
 AZURE_AD_TENANT_ID=your-tenant-id
-AZURE_AD_REDIRECT_URI=https://legal.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad
+AZURE_AD_REDIRECT_URI=https://department.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad
 
 # NextAuth
-NEXTAUTH_URL=https://legal.vtc.systems:8443/vvg-template-staging
+NEXTAUTH_URL=https://department.vtc.systems:8443/vvg-template-staging
 NEXTAUTH_SECRET=your-staging-secret
 ```
 
@@ -86,10 +86,10 @@ NEXTAUTH_SECRET=your-staging-secret
 AZURE_AD_CLIENT_ID=your-production-client-id
 AZURE_AD_CLIENT_SECRET=your-production-client-secret
 AZURE_AD_TENANT_ID=your-tenant-id
-AZURE_AD_REDIRECT_URI=https://legal.vtc.systems/vvg-template/api/auth/callback/azure-ad
+AZURE_AD_REDIRECT_URI=https://department.vtc.systems/vvg-template/api/auth/callback/azure-ad
 
 # NextAuth
-NEXTAUTH_URL=https://legal.vtc.systems/vvg-template
+NEXTAUTH_URL=https://department.vtc.systems/vvg-template
 NEXTAUTH_SECRET=your-production-secret
 ```
 

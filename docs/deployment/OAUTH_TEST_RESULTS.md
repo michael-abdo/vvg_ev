@@ -26,8 +26,8 @@ All OAuth configuration tests passed successfully. The new static redirect URI c
 ### 2. Staging Environment (With basePath)
 
 **Configuration:**
-- NEXTAUTH_URL: `https://legal.vtc.systems:8443/vvg-template-staging`
-- AZURE_AD_REDIRECT_URI: `https://legal.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad`
+- NEXTAUTH_URL: `https://department.vtc.systems:8443/vvg-template-staging`
+- AZURE_AD_REDIRECT_URI: `https://department.vtc.systems:8443/vvg-template-staging/api/auth/callback/azure-ad`
 - BASE_PATH: `/vvg-template-staging`
 
 **Test Status:** ✅ PASSED
@@ -41,8 +41,8 @@ All OAuth configuration tests passed successfully. The new static redirect URI c
 ### 3. Production Environment (With basePath)
 
 **Configuration:**
-- NEXTAUTH_URL: `https://legal.vtc.systems/vvg-template`
-- AZURE_AD_REDIRECT_URI: `https://legal.vtc.systems/vvg-template/api/auth/callback/azure-ad`
+- NEXTAUTH_URL: `https://department.vtc.systems/vvg-template`
+- AZURE_AD_REDIRECT_URI: `https://department.vtc.systems/vvg-template/api/auth/callback/azure-ad`
 - BASE_PATH: `/vvg-template`
 
 **Test Status:** ✅ PASSED

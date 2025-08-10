@@ -139,7 +139,7 @@ pm2 reload app --wait-ready  # No interruption
 ```javascript
 // New: Multi-instance cluster mode
 {
-  name: 'nda-analyzer-prod',
+  name: '{PROJECT_NAME}-prod',
   instances: 4,                 // Utilize all CPU cores
   exec_mode: 'cluster',         // Enable clustering
   max_memory_restart: '1G'      // Auto-restart on memory limit
@@ -151,11 +151,11 @@ pm2 reload app --wait-ready  # No interruption
 **Staging/Production Separation:**
 ```
 /var/www/
-├── nda-analyzer/              # Production
+├── {PROJECT_NAME}/              # Production
 │   ├── current → releases/v1.2.0
 │   ├── releases/
 │   └── shared/
-└── nda-analyzer-staging/      # Staging  
+└── {PROJECT_NAME}-staging/      # Staging  
     ├── current → releases/v1.3.0-beta
     ├── releases/
     └── shared/
@@ -164,12 +164,12 @@ pm2 reload app --wait-ready  # No interruption
 **Nginx Dual Environment Support:**
 ```nginx
 # Production
-location /nda-analyzer/ {
+location /{PROJECT_NAME}/ {
     proxy_pass http://localhost:3000/;
 }
 
 # Staging
-location /nda-analyzer-staging/ {
+location /{PROJECT_NAME}-staging/ {
     proxy_pass http://localhost:4000/;
     add_header X-Environment "staging" always;
 }
@@ -189,7 +189,7 @@ add_header Strict-Transport-Security "max-age=31536000" always;
 **Enhanced Monitoring:**
 ```bash
 # Automated health checks
-curl -f https://legal.vtc.systems/nda-analyzer/api/health
+curl -f https://department.vtc.systems/{PROJECT_NAME}/api/health
 
 # Comprehensive process monitoring
 pm2 monit
@@ -270,7 +270,7 @@ location /app-staging/ {
 ./deploy-staging.sh
 
 # Test extensively
-curl https://legal.vtc.systems/app-staging/api/health
+curl https://department.vtc.systems/app-staging/api/health
 ```
 
 **Validate All Features:**
@@ -328,8 +328,8 @@ instances: 4, // Scale to 4 when confident
 **🔴 Authentication Configuration:**
 ```bash
 # Risk: Azure AD redirect URI changes
-# Current: https://legal.vtc.systems/app/api/auth/callback/azure-ad
-# New: https://legal.vtc.systems/nda-analyzer/api/auth/callback/azure-ad
+# Current: https://department.vtc.systems/app/api/auth/callback/azure-ad
+# New: https://department.vtc.systems/{PROJECT_NAME}/api/auth/callback/azure-ad
 # Mitigation: Update Azure AD before deployment
 ```
 
@@ -367,7 +367,7 @@ sudo systemctl reload nginx
 pm2 start ecosystem.config.js.backup
 
 # 3. Verify service restoration
-curl https://legal.vtc.systems/app/api/health
+curl https://department.vtc.systems/app/api/health
 ```
 
 **Monitoring During Migration:**
@@ -375,7 +375,7 @@ curl https://legal.vtc.systems/app/api/health
 # Real-time monitoring script
 #!/bin/bash
 while true; do
-    curl -s https://legal.vtc.systems/app/api/health || echo "ALERT: Service down"
+    curl -s https://department.vtc.systems/app/api/health || echo "ALERT: Service down"
     sleep 5
 done
 ```

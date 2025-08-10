@@ -121,7 +121,7 @@ grep -i "oauth\|auth\|azure" /path/to/logs/app.log
 ### Production
 ```bash
 # Production URL check
-curl https://legal.vtc.systems/vvg-template/callback/azure-ad
+curl https://department.vtc.systems/vvg-template/callback/azure-ad
 
 # Restart production
 pm2 restart vvg-template-production
@@ -130,7 +130,7 @@ pm2 restart vvg-template-production
 ### Staging
 ```bash
 # Staging URL check
-curl https://legal.vtc.systems:8443/vvg-template-staging/callback/azure-ad
+curl https://department.vtc.systems:8443/vvg-template-staging/callback/azure-ad
 
 # Restart staging
 pm2 restart vvg-template-staging

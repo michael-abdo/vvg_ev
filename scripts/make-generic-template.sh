@@ -252,7 +252,7 @@ EOF
 
 # 5. Update nginx configs
 echo "Updating nginx configurations..."
-for nginx_file in nginx-legal-vtc-systems.conf deployment/nginx-site.conf; do
+for nginx_file in nginx-department-vtc-systems.conf deployment/nginx-site.conf; do
     if [ -f "$nginx_file" ]; then
         sed -i '' "s|/${PROJECT_NAME}|/\${PROJECT_NAME}|g" "$nginx_file"
         sed -i '' "s|proxy_pass http://localhost:3000/${PROJECT_NAME}/|proxy_pass http://localhost:3000/\${PROJECT_NAME}/|g" "$nginx_file"

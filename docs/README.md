@@ -13,8 +13,8 @@
 ./docs/automation/vvg-master-automation.sh <project-name> [staging|production] [aws|gcp|local] --worktree
 
 # Examples:
-./docs/automation/vvg-master-automation.sh invoice-analyzer staging aws
-./docs/automation/vvg-master-automation.sh legal-processor production gcp
+./docs/automation/vvg-master-automation.sh {PROJECT_NAME} staging aws
+./docs/automation/vvg-master-automation.sh your-app production gcp
 ./docs/automation/vvg-master-automation.sh my-project staging aws --worktree
 ```
 
@@ -214,10 +214,10 @@ docs/
 ### New Project (Complete Setup)
 ```bash
 # 1. Run master automation
-./docs/automation/vvg-master-automation.sh invoice-analyzer staging aws
+./docs/automation/vvg-master-automation.sh {PROJECT_NAME} staging aws
 
 # 2. Connect to infrastructure (if AWS)
-./docs/infrastructure/aws-tunnel.sh i-1234567890abcdef0 invoice-analyzer
+./docs/infrastructure/aws-tunnel.sh i-1234567890abcdef0 {PROJECT_NAME}
 
 # 3. Start development
 npm run dev
@@ -226,10 +226,10 @@ npm run dev
 ### AWS Production Environment
 ```bash
 # 1. Setup infrastructure
-./scripts/provision-infrastructure.sh invoice-analyzer production
+./scripts/provision-infrastructure.sh {PROJECT_NAME} production
 
 # 2. Connect via tunnel
-./docs/infrastructure/aws-tunnel.sh i-1234567890abcdef0 invoice-analyzer us-east-1
+./docs/infrastructure/aws-tunnel.sh i-1234567890abcdef0 {PROJECT_NAME} us-east-1
 
 # 3. Deploy application
 ./scripts/deploy-env.sh production
@@ -238,25 +238,25 @@ npm run dev
 ### Google Cloud Development
 ```bash
 # 1. Setup GCP development environment
-./docs/infrastructure/setup-gcloud-dev.sh invoice-analyzer us-central1-a
+./docs/infrastructure/setup-gcloud-dev.sh {PROJECT_NAME} us-central1-a
 
 # 2. Connect to development instance
-gcp-dev-invoice-analyzer
+gcp-dev-{PROJECT_NAME}
 
 # 3. Start development
-cd ~/invoice-analyzer && npm run dev
+cd ~/{PROJECT_NAME} && npm run dev
 ```
 
 ### Remote Development Server
 ```bash
 # 1. Setup remote development environment
-./docs/infrastructure/setup-remote-dev.sh staging.vtc.systems invoice-analyzer
+./docs/infrastructure/setup-remote-dev.sh staging.vtc.systems {PROJECT_NAME}
 
 # 2. SSH to server
 ssh ec2-user@staging.vtc.systems
 
 # 3. Navigate to project
-cd ~/invoice-analyzer
+cd ~/{PROJECT_NAME}
 ```
 
 ### Parallel Development Workflow

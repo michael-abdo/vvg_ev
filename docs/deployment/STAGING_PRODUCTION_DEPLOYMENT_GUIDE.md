@@ -59,7 +59,7 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 
 ```
 /var/www/
-├── nda-analyzer/                           # Production Environment
+├── {PROJECT_NAME}/                           # Production Environment
 │   ├── releases/                           # All production releases
 │   │   ├── 20240810-001/                  # Previous release (rollback ready)
 │   │   ├── 20240810-002/                  # Current release
@@ -74,7 +74,7 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 │   │   └── .env.production                # Production config
 │   └── current → releases/20240810-003/   # Symlink to active release
 │
-├── nda-analyzer-staging/                   # Staging Environment  
+├── {PROJECT_NAME}-staging/                   # Staging Environment  
 │   ├── releases/                           # All staging releases
 │   │   ├── 20240810-dev-001/              # Previous staging
 │   │   └── 20240810-dev-002/              # Current staging
@@ -115,8 +115,8 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 module.exports = {
   apps: [
     {
-      name: 'nda-analyzer-prod',
-      script: '/var/www/nda-analyzer/current/server.js',
+      name: '{PROJECT_NAME}-prod',
+      script: '/var/www/{PROJECT_NAME}/current/server.js',
       instances: 4,                        // Scale across CPU cores
       exec_mode: 'cluster',                // Enable cluster mode
       port: 3000,                          // Internal port
@@ -125,14 +125,14 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
-        NEXTAUTH_URL: 'https://legal.vtc.systems/nda-analyzer'
+        NEXTAUTH_URL: 'https://department.vtc.systems/{PROJECT_NAME}'
       },
       // Comprehensive Logging
       log_type: 'json',
       log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
-      log_file: '/var/www/nda-analyzer/shared/logs/combined.log',
-      error_file: '/var/www/nda-analyzer/shared/logs/error.log',  
-      out_file: '/var/www/nda-analyzer/shared/logs/out.log',
+      log_file: '/var/www/{PROJECT_NAME}/shared/logs/combined.log',
+      error_file: '/var/www/{PROJECT_NAME}/shared/logs/error.log',  
+      out_file: '/var/www/{PROJECT_NAME}/shared/logs/out.log',
       
       // Log Rotation
       rotate_logs: true,
@@ -149,8 +149,8 @@ module.exports = {
       listen_timeout: 3000
     },
     {
-      name: 'nda-analyzer-staging',
-      script: '/var/www/nda-analyzer-staging/current/server.js',
+      name: '{PROJECT_NAME}-staging',
+      script: '/var/www/{PROJECT_NAME}-staging/current/server.js',
       instances: 2,                        // Fewer instances for staging
       exec_mode: 'cluster',
       port: 4000,                          // Different port from production
@@ -160,14 +160,14 @@ module.exports = {
       env: {
         NODE_ENV: 'staging', 
         PORT: 4000,
-        NEXTAUTH_URL: 'https://legal.vtc.systems/nda-analyzer-staging'
+        NEXTAUTH_URL: 'https://department.vtc.systems/{PROJECT_NAME}-staging'
       },
       // Staging Logging
       log_type: 'json',
       log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
-      log_file: '/var/www/nda-analyzer-staging/shared/logs/combined.log',
-      error_file: '/var/www/nda-analyzer-staging/shared/logs/error.log',
-      out_file: '/var/www/nda-analyzer-staging/shared/logs/out.log',
+      log_file: '/var/www/{PROJECT_NAME}-staging/shared/logs/combined.log',
+      error_file: '/var/www/{PROJECT_NAME}-staging/shared/logs/error.log',
+      out_file: '/var/www/{PROJECT_NAME}-staging/shared/logs/out.log',
       
       // Staging Log Rotation
       rotate_logs: true,
@@ -193,10 +193,10 @@ module.exports = {
 pm2 start ecosystem.config.js
 
 # Zero-downtime reload (production)
-pm2 reload nda-analyzer-prod
+pm2 reload {PROJECT_NAME}-prod
 
 # Restart specific application
-pm2 restart nda-analyzer-staging
+pm2 restart {PROJECT_NAME}-staging
 
 # View real-time logs
 pm2 logs
@@ -219,21 +219,21 @@ pm2 startup
 ### Complete Nginx Configuration
 
 ```nginx
-# /etc/nginx/sites-available/legal.vtc.systems
+# /etc/nginx/sites-available/department.vtc.systems
 server {
     # HTTP to HTTPS redirect
     listen 80;
-    server_name legal.vtc.systems;
+    server_name department.vtc.systems;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name legal.vtc.systems;
+    server_name department.vtc.systems;
     
     # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/legal.vtc.systems/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/legal.vtc.systems/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/department.vtc.systems/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/department.vtc.systems/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
@@ -255,7 +255,7 @@ server {
     gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
     
     # Production Application
-    location /nda-analyzer/ {
+    location /{PROJECT_NAME}/ {
         # Remove trailing slash from location and add to proxy_pass
         proxy_pass http://localhost:3000/;
         
@@ -285,7 +285,7 @@ server {
     }
     
     # Staging Application  
-    location /nda-analyzer-staging/ {
+    location /{PROJECT_NAME}-staging/ {
         proxy_pass http://localhost:4000/;
         
         # WebSocket Support
@@ -336,7 +336,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 # Enable site
-sudo ln -s /etc/nginx/sites-available/legal.vtc.systems /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/department.vtc.systems /etc/nginx/sites-enabled/
 
 # View logs
 sudo tail -f /var/log/nginx/access.log
@@ -354,7 +354,7 @@ sudo tail -f /var/log/nginx/error.log
 set -e  # Exit on any error
 
 # Configuration
-APP_NAME="nda-analyzer-staging"
+APP_NAME="{PROJECT_NAME}-staging"
 DEPLOY_DIR="/var/www/$APP_NAME"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 RELEASE_DIR="$DEPLOY_DIR/releases/$TIMESTAMP"
@@ -434,7 +434,7 @@ fi
 echo "🩺 Performing health check..."
 sleep 5  # Give app time to start
 
-HEALTH_URL="https://legal.vtc.systems/nda-analyzer-staging/api/health"
+HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}-staging/api/health"
 if curl -f -s "$HEALTH_URL" > /dev/null; then
     echo "✅ Health check passed"
 else
@@ -451,7 +451,7 @@ echo "🧹 Cleaning up old releases..."
 cd "$DEPLOY_DIR/releases" && ls -t | tail -n +6 | xargs -r rm -rf
 
 echo "✅ Staging deployment complete!"
-echo "🌐 Staging URL: https://legal.vtc.systems/nda-analyzer-staging"
+echo "🌐 Staging URL: https://department.vtc.systems/{PROJECT_NAME}-staging"
 echo "📊 Current release: $TIMESTAMP"
 echo "📝 Previous release: ${PREVIOUS_RELEASE##*/}"
 ```
@@ -465,12 +465,12 @@ echo "📝 Previous release: ${PREVIOUS_RELEASE##*/}"
 set -e  # Exit on any error
 
 # Configuration
-STAGING_DIR="/var/www/nda-analyzer-staging"
-PROD_DIR="/var/www/nda-analyzer"
+STAGING_DIR="/var/www/{PROJECT_NAME}-staging"
+PROD_DIR="/var/www/{PROJECT_NAME}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 RELEASE_DIR="$PROD_DIR/releases/$TIMESTAMP"
-STAGING_APP="nda-analyzer-staging"
-PROD_APP="nda-analyzer-prod"
+STAGING_APP="{PROJECT_NAME}-staging"
+PROD_APP="{PROJECT_NAME}-prod"
 
 # Logging
 LOG_FILE="/var/www/deployment/logs/deployment.log"
@@ -495,7 +495,7 @@ if [ ! -d "$STAGING_DIR/current" ]; then
 fi
 
 # Verify staging is healthy
-STAGING_HEALTH_URL="https://legal.vtc.systems/nda-analyzer-staging/api/health"
+STAGING_HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}-staging/api/health"
 if ! curl -f -s "$STAGING_HEALTH_URL" > /dev/null; then
     echo "❌ Staging health check failed"
     exit 1
@@ -554,7 +554,7 @@ fi
 echo "🩺 Performing production health check..."
 sleep 10  # Give production more time to start
 
-PROD_HEALTH_URL="https://legal.vtc.systems/nda-analyzer/api/health"
+PROD_HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}/api/health"
 for i in {1..5}; do
     if curl -f -s "$PROD_HEALTH_URL" > /dev/null; then
         echo "✅ Production health check passed"
@@ -584,7 +584,7 @@ echo "📧 Sending deployment notification..."
 #     YOUR_SLACK_WEBHOOK_URL
 
 echo "✅ Production promotion complete!"
-echo "🌐 Production URL: https://legal.vtc.systems/nda-analyzer"
+echo "🌐 Production URL: https://department.vtc.systems/{PROJECT_NAME}"
 echo "📊 Current release: $TIMESTAMP"
 echo "📝 Previous release: ${PREVIOUS_PROD_RELEASE##*/}"
 echo "🎯 Deployed from staging at: $(date)"
@@ -599,8 +599,8 @@ echo "🎯 Deployed from staging at: $(date)"
 set -e
 
 # Configuration
-PROD_DIR="/var/www/nda-analyzer" 
-PROD_APP="nda-analyzer-prod"
+PROD_DIR="/var/www/{PROJECT_NAME}" 
+PROD_APP="{PROJECT_NAME}-prod"
 
 # Logging
 LOG_FILE="/var/www/deployment/logs/deployment.log"
@@ -650,7 +650,7 @@ pm2 reload "$PROD_APP" --wait-ready
 echo "🩺 Performing health check..."
 sleep 10
 
-PROD_HEALTH_URL="https://legal.vtc.systems/nda-analyzer/api/health"
+PROD_HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}/api/health"
 if curl -f -s "$PROD_HEALTH_URL" > /dev/null; then
     echo "✅ Rollback successful - Production is healthy"
 else
@@ -681,7 +681,7 @@ sudo npm install -g pm2
 sudo apt install nginx -y
 
 # Create directory structure
-sudo mkdir -p /var/www/{nda-analyzer,nda-analyzer-staging}/{releases,shared/{logs,uploads,storage}}
+sudo mkdir -p /var/www/{{PROJECT_NAME},{PROJECT_NAME}-staging}/{releases,shared/{logs,uploads,storage}}
 sudo mkdir -p /var/www/deployment/{scripts,configs,logs}
 
 # Set proper permissions
@@ -711,10 +711,10 @@ pm2 startup
 
 ```bash
 # Copy Nginx site configuration
-sudo cp nginx-sites.conf /etc/nginx/sites-available/legal.vtc.systems
+sudo cp nginx-sites.conf /etc/nginx/sites-available/department.vtc.systems
 
 # Enable site
-sudo ln -s /etc/nginx/sites-available/legal.vtc.systems /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/department.vtc.systems /etc/nginx/sites-enabled/
 
 # Test configuration
 sudo nginx -t
@@ -730,7 +730,7 @@ sudo systemctl reload nginx
 sudo apt install certbot python3-certbot-nginx -y
 
 # Obtain SSL certificate
-sudo certbot --nginx -d legal.vtc.systems
+sudo certbot --nginx -d department.vtc.systems
 
 # Test auto-renewal
 sudo certbot renew --dry-run
@@ -748,18 +748,18 @@ cp rollback-production.sh /var/www/deployment/scripts/
 chmod +x /var/www/deployment/scripts/*.sh
 
 # Create environment files
-touch /var/www/nda-analyzer/shared/.env.production
-touch /var/www/nda-analyzer-staging/shared/.env.staging
+touch /var/www/{PROJECT_NAME}/shared/.env.production
+touch /var/www/{PROJECT_NAME}-staging/shared/.env.staging
 ```
 
 ### 6. Environment Configuration
 
 ```bash
 # Production environment variables
-cat > /var/www/nda-analyzer/shared/.env.production << EOF
+cat > /var/www/{PROJECT_NAME}/shared/.env.production << EOF
 NODE_ENV=production
 PORT=3000
-NEXTAUTH_URL=https://legal.vtc.systems/nda-analyzer
+NEXTAUTH_URL=https://department.vtc.systems/{PROJECT_NAME}
 
 # Add your production-specific variables here
 DATABASE_URL=your_production_database_url
@@ -770,10 +770,10 @@ AZURE_AD_TENANT_ID=your_tenant_id
 EOF
 
 # Staging environment variables  
-cat > /var/www/nda-analyzer-staging/shared/.env.staging << EOF
+cat > /var/www/{PROJECT_NAME}-staging/shared/.env.staging << EOF
 NODE_ENV=staging
 PORT=4000
-NEXTAUTH_URL=https://legal.vtc.systems/nda-analyzer-staging
+NEXTAUTH_URL=https://department.vtc.systems/{PROJECT_NAME}-staging
 
 # Add your staging-specific variables here
 DATABASE_URL=your_staging_database_url
@@ -794,7 +794,7 @@ cd /var/www/deployment/scripts
 ./deploy-staging.sh
 
 # 2. Test staging environment
-curl https://legal.vtc.systems/nda-analyzer-staging/api/health
+curl https://department.vtc.systems/{PROJECT_NAME}-staging/api/health
 
 # 3. Run manual testing on staging
 # (UI testing, API testing, etc.)
@@ -815,7 +815,7 @@ curl https://legal.vtc.systems/nda-analyzer-staging/api/health
 # Check application health
 pm2 status
 pm2 logs
-curl https://legal.vtc.systems/nda-analyzer/api/health
+curl https://department.vtc.systems/{PROJECT_NAME}/api/health
 ```
 
 ### Maintenance Operations
@@ -832,7 +832,7 @@ df -h
 du -sh /var/www/*/releases/*
 
 # Manual cleanup (if needed)
-cd /var/www/nda-analyzer/releases && ls -t | tail -n +3 | xargs rm -rf
+cd /var/www/{PROJECT_NAME}/releases && ls -t | tail -n +3 | xargs rm -rf
 ```
 
 ## 📊 Monitoring & Maintenance
@@ -844,8 +844,8 @@ cd /var/www/nda-analyzer/releases && ls -t | tail -n +3 | xargs rm -rf
 pm2 monit
 
 # View logs
-pm2 logs nda-analyzer-prod
-pm2 logs nda-analyzer-staging
+pm2 logs {PROJECT_NAME}-prod
+pm2 logs {PROJECT_NAME}-staging
 
 # System resources
 htop
@@ -857,8 +857,8 @@ free -h
 
 ```bash
 # Application health
-curl https://legal.vtc.systems/nda-analyzer/api/health
-curl https://legal.vtc.systems/nda-analyzer-staging/api/health
+curl https://department.vtc.systems/{PROJECT_NAME}/api/health
+curl https://department.vtc.systems/{PROJECT_NAME}-staging/api/health
 
 # PM2 process status
 pm2 jlist
@@ -872,8 +872,8 @@ sudo nginx -t
 
 ```bash
 # View application logs
-tail -f /var/www/nda-analyzer/shared/logs/combined.log
-tail -f /var/www/nda-analyzer/shared/logs/error.log
+tail -f /var/www/{PROJECT_NAME}/shared/logs/combined.log
+tail -f /var/www/{PROJECT_NAME}/shared/logs/error.log
 
 # View Nginx logs
 sudo tail -f /var/log/nginx/access.log
@@ -902,7 +902,7 @@ if [ $DISK_USAGE -gt 80 ]; then
 fi
 
 # Check application health
-for url in "https://legal.vtc.systems/nda-analyzer/api/health" "https://legal.vtc.systems/nda-analyzer-staging/api/health"; do
+for url in "https://department.vtc.systems/{PROJECT_NAME}/api/health" "https://department.vtc.systems/{PROJECT_NAME}-staging/api/health"; do
     if ! curl -f -s "$url" > /dev/null; then
         echo "⚠️  Alert: $url health check failed"
     fi
@@ -944,20 +944,20 @@ sudo systemctl reload nginx
 
 ```bash
 # Check current symlink
-ls -la /var/www/nda-analyzer/current
+ls -la /var/www/{PROJECT_NAME}/current
 
 # Manually fix symlink
-ln -nfs /var/www/nda-analyzer/releases/latest /var/www/nda-analyzer/current
+ln -nfs /var/www/{PROJECT_NAME}/releases/latest /var/www/{PROJECT_NAME}/current
 ```
 
 #### Database Connection Issues
 
 ```bash
 # Check environment variables
-cat /var/www/nda-analyzer/shared/.env.production
+cat /var/www/{PROJECT_NAME}/shared/.env.production
 
 # Test database connection
-cd /var/www/nda-analyzer/current
+cd /var/www/{PROJECT_NAME}/current
 node -e "require('./lib/db').testConnection()"
 ```
 
@@ -971,7 +971,7 @@ sudo certbot certificates
 sudo certbot renew
 
 # Test SSL configuration
-curl -I https://legal.vtc.systems/nda-analyzer
+curl -I https://department.vtc.systems/{PROJECT_NAME}
 ```
 
 ### Debugging Commands
@@ -990,8 +990,8 @@ netstat -tulpn
 ss -tulpn
 
 # Test application endpoints
-curl -v https://legal.vtc.systems/nda-analyzer/api/health
-curl -v https://legal.vtc.systems/nda-analyzer-staging/api/health
+curl -v https://department.vtc.systems/{PROJECT_NAME}/api/health
+curl -v https://department.vtc.systems/{PROJECT_NAME}-staging/api/health
 ```
 
 ### Recovery Procedures

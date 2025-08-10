@@ -231,7 +231,7 @@ if (!deletionValidation.canDelete) {
 ### 6. Duplicate Route Handler Removal
 
 #### NextAuth Route Consolidation
-**Removed**: Duplicate `/app/nda-analyzer/api/auth/[...nextauth]/route.ts`
+**Removed**: Duplicate `/app/{PROJECT_NAME}/api/auth/[...nextauth]/route.ts`
 **Kept**: Single source of truth at `/app/api/auth/[...nextauth]/route.ts`
 
 #### Azure AD Callback Consolidation
@@ -269,7 +269,7 @@ if (!deletionValidation.canDelete) {
 
 ### Files Removed
 ```
-/app/nda-analyzer/          # Entire duplicate directory removed
+/app/{PROJECT_NAME}/          # Entire duplicate directory removed
 ├── api/auth/[...nextauth]/route.ts
 └── other duplicate routes...
 ```

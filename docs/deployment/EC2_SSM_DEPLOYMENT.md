@@ -58,7 +58,7 @@ AZURE_AD_TENANT_ID=your-tenant-id
 
 # NextAuth Configuration - PRODUCTION URLs
 # Domain confirmed from MASTER.md
-NEXTAUTH_URL=https://legal.vtc.systems/{PROJECT_NAME}
+NEXTAUTH_URL=https://department.vtc.systems/{PROJECT_NAME}
 NEXTAUTH_SECRET=your-nextauth-secret-generate-with-openssl-rand-base64-32
 
 # Database Configuration (Production - via private network)
@@ -66,7 +66,7 @@ MYSQL_HOST=your-mysql-host
 MYSQL_PORT=3306
 MYSQL_USER=your-mysql-user
 MYSQL_PASSWORD="your-mysql-password"
-MYSQL_DATABASE=nda_analyzer
+MYSQL_DATABASE={project_name}
 
 # Storage Configuration - Production S3
 S3_ACCESS=true
@@ -106,9 +106,9 @@ BASE_PATH=/{PROJECT_NAME}
 NEXT_PUBLIC_BASE_PATH=/{PROJECT_NAME}
 
 # IMPORTANT DEPLOYMENT NOTES:
-# 1. NEXTAUTH_URL is set correctly for legal.vtc.systems domain
+# 1. NEXTAUTH_URL is set correctly for department.vtc.systems domain
 # 2. Azure AD callback URL must be registered:
-#    https://legal.vtc.systems/{PROJECT_NAME}/api/auth/callback/azure-ad
+#    https://department.vtc.systems/{PROJECT_NAME}/api/auth/callback/azure-ad
 # 3. For HTTPS in production, set up SSL certificate and load balancer
 # 4. Consider using environment-specific secrets management
 EOF
@@ -169,7 +169,7 @@ docker-compose -f docker-compose.production.yml logs --tail=50
 
 ```bash
 # Check if Nginx config exists
-sudo cat /etc/nginx/sites-available/legal.vtc.systems
+sudo cat /etc/nginx/sites-available/department.vtc.systems
 
 # The /{PROJECT_NAME} location should already exist and point to port 3000
 ```

@@ -20,9 +20,9 @@ NC='\033[0m' # No Color
 if [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <project-name> [zone] [instance-name]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
-    echo -e "  $0 invoice-analyzer"
-    echo -e "  $0 legal-processor us-west2-b my-dev-vm"
-    echo -e "  $0 contract-parser europe-west1-a"
+    echo -e "  $0 {PROJECT_NAME}"
+    echo -e "  $0 your-app us-west2-b my-dev-vm"
+    echo -e "  $0 {PROJECT_NAME} europe-west1-a"
     exit 1
 fi
 
@@ -293,8 +293,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/mast
 
 # Create project directory
 echo "📁 Creating project directory..."
-mkdir -p ~/PROJECT_NAME_PLACEHOLDER
-cd ~/PROJECT_NAME_PLACEHOLDER
+mkdir -p ~/{PROJECT_NAME}
+cd ~/{PROJECT_NAME}
 
 # Setup git
 echo "📝 Configuring git..."
@@ -315,8 +315,8 @@ alias gl='git log --oneline -10'
 alias pm2logs='pm2 logs'
 alias pm2status='pm2 status'
 alias pm2restart='pm2 restart'
-alias proj='cd ~/PROJECT_NAME_PLACEHOLDER'
-alias logs='cd ~/PROJECT_NAME_PLACEHOLDER/logs && tail -f *.log'
+alias proj='cd ~/{PROJECT_NAME}'
+alias logs='cd ~/{PROJECT_NAME}/logs && tail -f *.log'
 alias dc='docker-compose'
 alias dps='docker ps'
 alias dimages='docker images'
@@ -329,12 +329,12 @@ gitpush() {
 }
 
 quickstart() {
-    echo "☁️ VVG GCP Development for PROJECT_NAME_PLACEHOLDER"
+    echo "☁️ VVG GCP Development for {PROJECT_NAME}"
     echo "=================================="
-    echo "📁 Project: cd ~/PROJECT_NAME_PLACEHOLDER"
+    echo "📁 Project: cd ~/{PROJECT_NAME}"
     echo "📊 PM2: pm2 status"
     echo "📝 Logs: pm2 logs"
-    echo "🔄 Restart: pm2 restart PROJECT_NAME_PLACEHOLDER"
+    echo "🔄 Restart: pm2 restart {PROJECT_NAME}"
     echo "🌿 Git: gs, gb, gc, gp"
     echo "🤖 Claude: claude"
     echo "🐳 Docker: dc, dps, dimages"
@@ -342,7 +342,7 @@ quickstart() {
 }
 
 # Auto-cd to project on login
-cd ~/PROJECT_NAME_PLACEHOLDER
+cd ~/{PROJECT_NAME}
 ALIASES
 
 echo "✅ GCP development environment setup complete!"
@@ -407,7 +407,7 @@ set -g default-terminal "screen-256color"
 set -g status-bg blue
 set -g status-fg white
 set -g status-left '#[fg=green]#H:'
-set -g status-right '#[fg=yellow]PROJECT_NAME_PLACEHOLDER #[fg=white]%Y-%m-%d %H:%M'
+set -g status-right '#[fg=yellow]{PROJECT_NAME} #[fg=white]%Y-%m-%d %H:%M'
 
 # Window status
 setw -g window-status-current-style 'fg=black bg=white bold'
@@ -501,7 +501,7 @@ PACKAGE_JSON
 # Create simple index.js
 cat > src/index.js << 'INDEX_JS'
 // VVG Project Entry Point
-console.log('🚀 VVG PROJECT_NAME_PLACEHOLDER starting...');
+console.log('🚀 VVG {PROJECT_NAME} starting...');
 console.log('📁 Project directory:', __dirname);
 console.log('⏰ Started at:', new Date().toISOString());
 
@@ -512,7 +512,7 @@ const port = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
-        project: 'PROJECT_NAME_PLACEHOLDER',
+        project: '{PROJECT_NAME}',
         environment: 'gcp-development',
         timestamp: new Date().toISOString(),
         url: req.url,

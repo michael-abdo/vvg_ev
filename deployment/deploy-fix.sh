@@ -54,7 +54,7 @@ echo "Connecting to EC2 instance and applying fix..."
 aws ssm send-command \
     --instance-ids your-instance-id \
     --document-name "AWS-RunShellScript" \
-    --region us-west-2 \
+    --region ${AWS_REGION:-us-east-1} \
     --profile vvg \
     --parameters '{"commands":["sudo -u ubuntu bash -s < /tmp/nextauth-fix.sh"]}' \
     --comment "Deploy NextAuth basePath fix"

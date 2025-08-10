@@ -217,7 +217,7 @@ function displayEnvironmentInfo() {
   log('\n🔍 Environment Information:', 'info')
   log(`NODE_ENV: ${process.env.NODE_ENV || 'development'}`)
   log(`ENABLE_EMAIL_IN_DEV: ${process.env.ENABLE_EMAIL_IN_DEV || 'false'}`)
-  log(`AWS_REGION: ${process.env.AWS_REGION || 'us-west-2'}`)
+  log(`AWS_REGION: ${process.env.AWS_REGION || 'us-east-1'}`)
   log(`Project Name: ${config.app.name || 'Not set'}`)
 }
 

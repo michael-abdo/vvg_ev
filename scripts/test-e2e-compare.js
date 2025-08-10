@@ -15,7 +15,7 @@ const http = require('http');
 const https = require('https');
 
 // Configuration
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const DEV_BYPASS_HEADER = 'X-Dev-Bypass';
 const TIMEOUT_MS = 30000;
 

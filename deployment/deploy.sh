@@ -227,7 +227,8 @@ test_application() {
     sleep 10
     
     # Test local connection
-    if curl -s http://localhost:3000/health > /dev/null; then
+    PORT=${PORT_PRODUCTION:-3000}
+    if curl -s http://localhost:$PORT/health > /dev/null; then
         log "Local health check passed ✓"
     else
         warn "Local health check failed"

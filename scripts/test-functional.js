@@ -28,7 +28,7 @@ function log(message, color = colors.reset) {
 class FunctionalTester {
   constructor() {
     this.serverProcess = null;
-    this.baseUrl = 'http://localhost:3001';
+    this.baseUrl = process.env.TEST_BASE_URL || 'http://localhost:3001';
     this.results = {
       pages: {},
       apis: {},
@@ -364,7 +364,7 @@ class FunctionalTester {
     // Test CORS headers
     const corsResponse = await this.httpRequest('/api/health', {
       method: 'OPTIONS',
-      headers: { 'Origin': 'http://localhost:3000' }
+      headers: { 'Origin': process.env.TEST_BASE_URL || 'http://localhost:3000' }
     });
     
     if (corsResponse) {

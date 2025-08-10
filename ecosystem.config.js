@@ -14,7 +14,7 @@ module.exports = {
       name: 'vvg-template-staging',
       script: './node_modules/.bin/next',
       args: 'start',
-      cwd: '/home/ubuntu/vvg-template',
+      cwd: process.env.APP_DIR || '/home/ubuntu/vvg-template',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
@@ -24,7 +24,7 @@ module.exports = {
       // Environment Configuration
       env: {
         NODE_ENV: 'production',
-        PORT: 3001,
+        PORT: process.env.PORT_STAGING || 3001,
         ENVIRONMENT: 'staging',
         // Comprehensive logging flags
         DEBUG: 'app:*,auth:*,db:*,api:*',
@@ -34,7 +34,7 @@ module.exports = {
       },
       env_staging: {
         NODE_ENV: 'production',
-        PORT: 3001,
+        PORT: process.env.PORT_STAGING || 3001,
         ENVIRONMENT: 'staging',
         DEBUG: 'app:*,auth:*,db:*,api:*',
         LOG_LEVEL: 'debug',
@@ -84,7 +84,7 @@ module.exports = {
       name: 'vvg-template-production',
       script: './node_modules/.bin/next',
       args: 'start',
-      cwd: '/home/ubuntu/vvg-template',
+      cwd: process.env.APP_DIR || '/home/ubuntu/vvg-template',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
@@ -94,7 +94,7 @@ module.exports = {
       // Environment Configuration
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: process.env.PORT_PRODUCTION || 3000,
         ENVIRONMENT: 'production',
         // Production logging (less verbose but comprehensive)
         DEBUG: 'app:error,auth:*,db:error,api:error',
@@ -149,7 +149,7 @@ module.exports = {
       host: 'your-production-server',
       ref: 'origin/main',
       repo: 'https://github.com/your-org/vvg-template.git',
-      path: '/home/ubuntu/vvg-template',
+      path: process.env.APP_DIR || '/home/ubuntu/vvg-template',
       'pre-deploy-local': '',
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''

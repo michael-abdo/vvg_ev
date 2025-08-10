@@ -28,7 +28,7 @@ function log(message, color = colors.reset) {
 class CompleteTestRunner {
   constructor() {
     this.serverProcess = null;
-    this.baseUrl = 'http://localhost:3001';
+    this.baseUrl = process.env.TEST_BASE_URL || 'http://localhost:3001';
     this.results = {
       build: null,
       server: null,

@@ -51,7 +51,7 @@ echo -e "${GREEN}✅ AWS Account: $AWS_ACCOUNT_ID${NC}"
 # =================================================================
 echo -e "\n${BLUE}📦 Creating S3 Bucket${NC}"
 
-BUCKET_NAME="${PROJECT_NAME}-${ENVIRONMENT}-documents-$(date +%s)"
+BUCKET_NAME="${S3_BUCKET_NAME:-${PROJECT_NAME}-${ENVIRONMENT}-documents-$(date +%s)}"
 BUCKET_POLICY_FILE="/tmp/${PROJECT_NAME}-bucket-policy.json"
 
 # Create bucket

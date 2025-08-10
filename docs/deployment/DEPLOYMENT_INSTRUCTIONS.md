@@ -4,7 +4,7 @@
 - **All TypeScript errors fixed**: 29 compilation errors resolved
 - **Database schema updated**: Now matches TypeScript interfaces
 - **Environment configured**: Production variables corrected
-- **S3 integration**: Working with bucket `template-documents-20250706165230`
+- **S3 integration**: Working with bucket configured via `S3_BUCKET_NAME` environment variable
 - **Code committed**: Latest changes pushed to `develop/document-features-refactored` branch
 
 ## EC2 Deployment Steps
@@ -38,11 +38,11 @@ npm run build
 ```bash
 # Connect to MySQL and create the document_analyzer database
 # This replaces the temporary truck_scrape database
-mysql -h your-mysql-host.cluster-xxxxx.region.rds.amazonaws.com -u your-username -p
+mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p
 
 # In MySQL prompt:
-CREATE DATABASE IF NOT EXISTS template_app;
-USE template_app;
+CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+USE ${MYSQL_DATABASE};
 # Exit MySQL
 ```
 
@@ -58,7 +58,7 @@ curl -X POST http://localhost:3000/api/migrate-db
 cp .env.production.example .env.production
 # Verify these key settings:
 NODE_ENV=production
-MYSQL_DATABASE=template_app
+MYSQL_DATABASE=${MYSQL_DATABASE:-your-database-name}
 S3_BUCKET_NAME=your-storage-bucket
 ```
 
@@ -102,7 +102,7 @@ curl https://your-domain.com/template/api/storage-health
 
 ### Environment Configuration
 - ✅ Updated S3 bucket name to `your-storage-bucket`
-- ✅ Updated database name to `template_app`
+- ✅ Updated database name to value from `MYSQL_DATABASE` environment variable
 - ✅ Added missing environment variables
 
 ## Rollback Plan (If Needed)
@@ -120,7 +120,7 @@ pm2 restart template
 3. **Text Extraction**: Automatic background processing
 4. **AI Comparison**: Real OpenAI GPT-4 integration
 5. **S3 Storage**: All files stored in dedicated bucket
-6. **Database**: All data in new `template_app` database
+6. **Database**: All data in database configured via `MYSQL_DATABASE` environment variable
 
 ## Contact for Issues
 - **Developer**: Technical questions about the code changes

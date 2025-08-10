@@ -9,7 +9,7 @@ const http = require('http');
 const fs = require('fs');
 
 class PageContentValidator {
-  constructor(baseUrl = 'http://localhost:3001') {
+  constructor(baseUrl = process.env.TEST_BASE_URL || 'http://localhost:3001') {
     this.baseUrl = baseUrl;
     this.results = [];
   }

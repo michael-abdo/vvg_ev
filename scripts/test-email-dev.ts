@@ -10,7 +10,7 @@ async function testEmailToDeveloper() {
   console.log('🧪 Testing email in development mode...\n')
   
   const testMessage = {
-    to: 'michaelabdo@vvgtruck.com',
+    to: process.env.TEST_EMAIL_RECIPIENT || 'test@example.com',
     subject: 'Test Email from VVG Template',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -44,7 +44,7 @@ async function testEmailToDeveloper() {
   // Also test the notification method
   console.log('\n🔔 Testing notification email...')
   const notificationResult = await emailService.sendNotification(
-    'michaelabdo@vvgtruck.com',
+    process.env.TEST_EMAIL_RECIPIENT || 'test@example.com',
     'VVG Template Notification Test',
     'This is a test notification from the VVG Template email service.',
     false

@@ -8,7 +8,7 @@
 const http = require('http');
 
 class ApiResponseValidator {
-  constructor(baseUrl = 'http://localhost:3001') {
+  constructor(baseUrl = process.env.TEST_BASE_URL || 'http://localhost:3001') {
     this.baseUrl = baseUrl;
     this.results = [];
   }

@@ -57,20 +57,23 @@ aws ssm start-session --target i-1234567890abcdef0
 
 ### Deployment Process
 
-1. Set environment variables:
-```bash
-export EC2_INSTANCE_ID="i-1234567890abcdef0"
-export S3_DEPLOYMENT_BUCKET="your-deployment-bucket"
-```
-
-2. Create production environment file:
+1. Create production environment file:
 ```bash
 cp .env.example .env.production
 # Edit .env.production with your production values
 ```
 
-3. Deploy:
+2. Deploy with required environment variables:
 ```bash
+EC2_INSTANCE_ID="i-your-instance-id" \
+S3_DEPLOYMENT_BUCKET="your-deployment-bucket" \
+./scripts/deploy-to-ec2.sh
+```
+
+Or export them first:
+```bash
+export EC2_INSTANCE_ID="i-your-instance-id"
+export S3_DEPLOYMENT_BUCKET="your-deployment-bucket"
 ./scripts/deploy-to-ec2.sh
 ```
 

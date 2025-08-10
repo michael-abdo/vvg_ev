@@ -14,7 +14,22 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Validate required environment variables
+if [ -z "$EC2_INSTANCE_ID" ]; then
+    echo -e "${RED}ERROR: EC2_INSTANCE_ID environment variable is not set${NC}"
+    echo "Usage: EC2_INSTANCE_ID=i-xxxxx S3_DEPLOYMENT_BUCKET=bucket-name ./deploy-to-ec2.sh"
+    exit 1
+fi
+
+if [ -z "$S3_DEPLOYMENT_BUCKET" ]; then
+    echo -e "${RED}ERROR: S3_DEPLOYMENT_BUCKET environment variable is not set${NC}"
+    echo "Usage: EC2_INSTANCE_ID=i-xxxxx S3_DEPLOYMENT_BUCKET=bucket-name ./deploy-to-ec2.sh"
+    exit 1
+fi
+
 echo -e "${GREEN}Starting deployment to EC2...${NC}"
+echo "Instance ID: ${INSTANCE_ID}"
+echo "S3 Bucket: ${S3_DEPLOYMENT_BUCKET}"
 
 # Step 1: Build Docker image
 echo "Building Docker image..."

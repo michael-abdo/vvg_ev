@@ -1,20 +1,22 @@
 # Staging & Production Deployment Architecture Guide
 
 **Enterprise-Grade Zero-Downtime Deployment System**  
-*Version 2024 - For Same-Server Staging/Production Environments*
+*Version 2024 - For Same-Server Staging/Production Environments with Git-Based Workflow*
 
 ## 🎯 Executive Summary
 
 This guide implements a production-ready deployment architecture that enables:
 - **Zero-downtime deployments** using PM2 cluster mode
+- **Git-based version control** for all deployments
 - **Atomic deployments** via symlink switching
-- **One-step promotion** from staging to production
+- **One-step promotion** from staging to production using Git tags
 - **Instant rollbacks** to previous versions
 - **Complete isolation** between environments
 
 ## 📋 Table of Contents
 
 - [Architecture Overview](#architecture-overview)
+- [Git Workflow](#git-workflow)
 - [Directory Structure](#directory-structure)
 - [PM2 Configuration](#pm2-configuration)
 - [Nginx Reverse Proxy](#nginx-reverse-proxy)
@@ -43,14 +45,62 @@ This guide implements a production-ready deployment architecture that enables:
 └─────────────────┘    └──────────────────┘    └────────────────────┘
 ```
 
-### Deployment Flow
+### Git-Based Deployment Flow
 
 ```
-Developer → Git Push → Staging Deploy → Test → One-Click Promote → Production
-     │           │            │          │           │               │
-     ▼           ▼            ▼          ▼           ▼               ▼
-   Code      Automated    Symlink    Manual      Symlink        Live
-  Changes     Deploy      Switch      QA         Switch         Site
+Developer → Git Push → Staging Deploy → Test → Git Tag → Production Deploy
+     │           │            │          │         │              │
+     ▼           ▼            ▼          ▼         ▼              ▼
+   Feature    develop      Automated   Manual   Tagged         Live Site
+   Branch     Branch       Deploy       QA      Release       (from tag)
+```
+
+## 🌿 Git Workflow
+
+### Branch Strategy
+
+```
+main (production-ready)
+├── develop (staging)
+│   ├── feature/new-feature
+│   ├── feature/bug-fix
+│   └── feature/enhancement
+└── hotfix/urgent-fix
+```
+
+### Tagging Strategy
+
+```bash
+# Staging tags (optional)
+staging-v1.2.0-beta.1
+staging-v1.2.0-beta.2
+
+# Production tags (required)
+v1.0.0
+v1.1.0
+v1.2.0
+```
+
+### Git Flow Example
+
+```bash
+# 1. Feature development
+git checkout -b feature/new-feature
+# ... make changes ...
+git commit -m "Add new feature"
+git push origin feature/new-feature
+
+# 2. Merge to develop (triggers staging deployment)
+git checkout develop
+git merge feature/new-feature
+git push origin develop
+
+# 3. Tag for production after testing
+git checkout develop
+git tag -a v1.2.0 -m "Release version 1.2.0"
+git push origin v1.2.0
+
+# 4. Production deployment uses the tag
 ```
 
 ## 📁 Directory Structure
@@ -59,11 +109,11 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 
 ```
 /var/www/
-├── {PROJECT_NAME}/                           # Production Environment
+├── {PROJECT_NAME}/                         # Production Environment
 │   ├── releases/                           # All production releases
-│   │   ├── 20240810-001/                  # Previous release (rollback ready)
-│   │   ├── 20240810-002/                  # Current release
-│   │   └── 20240810-003/                  # Latest deployment
+│   │   ├── v1.0.0/                        # Tagged release
+│   │   ├── v1.1.0/                        # Tagged release
+│   │   └── v1.2.0/                        # Latest tagged release
 │   ├── shared/                             # Persistent shared resources
 │   │   ├── logs/                          # Application logs
 │   │   │   ├── combined.log
@@ -72,12 +122,12 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 │   │   ├── uploads/                       # User uploaded files
 │   │   ├── storage/                       # Persistent storage
 │   │   └── .env.production                # Production config
-│   └── current → releases/20240810-003/   # Symlink to active release
+│   └── current → releases/v1.2.0/         # Symlink to active release
 │
-├── {PROJECT_NAME}-staging/                   # Staging Environment  
+├── {PROJECT_NAME}-staging/                 # Staging Environment  
 │   ├── releases/                           # All staging releases
-│   │   ├── 20240810-dev-001/              # Previous staging
-│   │   └── 20240810-dev-002/              # Current staging
+│   │   ├── 20240810-dev-001/              # Timestamp-based releases
+│   │   └── 20240810-dev-002/              # Latest staging
 │   ├── shared/                             # Staging shared resources
 │   │   ├── logs/
 │   │   ├── uploads/
@@ -87,8 +137,9 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
 │
 └── deployment/                             # Deployment automation
     ├── scripts/
-    │   ├── deploy-staging.sh              # Deploy to staging
-    │   ├── promote-to-production.sh       # Staging → Production
+    │   ├── deploy-staging.sh              # Deploy develop branch to staging
+    │   ├── deploy-production.sh           # Deploy tagged version to production
+    │   ├── promote-to-production.sh       # Create tag and deploy
     │   ├── rollback-production.sh         # Emergency rollback
     │   └── rollback-staging.sh            # Staging rollback
     ├── configs/
@@ -97,14 +148,6 @@ Developer → Git Push → Staging Deploy → Test → One-Click Promote → Pro
     └── logs/
         └── deployment.log                 # Deployment history
 ```
-
-### Key Benefits of This Structure
-
-✅ **Atomic Deployments**: Symlinks enable instant, zero-downtime switches  
-✅ **Easy Rollbacks**: Previous releases remain ready for instant activation  
-✅ **Shared Resources**: Uploads and logs persist across deployments  
-✅ **Environment Isolation**: Complete separation between staging and production  
-✅ **Version History**: Full audit trail of all deployments  
 
 ## ⚙️ PM2 Configuration
 
@@ -154,8 +197,7 @@ module.exports = {
       instances: 2,                        // Fewer instances for staging
       exec_mode: 'cluster',
       port: 4000,                          // Different port from production
-      watch: true,                         // Enable file watching for development
-      ignore_watch: ['logs', 'uploads'],   // Ignore non-critical files
+      watch: false,                        // Disable file watching
       max_memory_restart: '512M',          // Lower memory limit for staging
       env: {
         NODE_ENV: 'staging', 
@@ -184,34 +226,6 @@ module.exports = {
     }
   ]
 };
-```
-
-### PM2 Process Management Commands
-
-```bash
-# Start all applications
-pm2 start ecosystem.config.js
-
-# Zero-downtime reload (production)
-pm2 reload {PROJECT_NAME}-prod
-
-# Restart specific application
-pm2 restart {PROJECT_NAME}-staging
-
-# View real-time logs
-pm2 logs
-
-# Monitor process health
-pm2 monit
-
-# Process status
-pm2 status
-
-# Save PM2 configuration
-pm2 save
-
-# Setup auto-startup on reboot
-pm2 startup
 ```
 
 ## 🌐 Nginx Reverse Proxy
@@ -326,26 +340,9 @@ server {
 }
 ```
 
-### Nginx Management Commands
-
-```bash
-# Test configuration
-sudo nginx -t
-
-# Reload configuration
-sudo systemctl reload nginx
-
-# Enable site
-sudo ln -s /etc/nginx/sites-available/department.vtc.systems /etc/nginx/sites-enabled/
-
-# View logs
-sudo tail -f /var/log/nginx/access.log
-sudo tail -f /var/log/nginx/error.log
-```
-
 ## 🚀 Deployment Scripts
 
-### 1. Deploy to Staging Script
+### 1. Deploy to Staging Script (Git-Based)
 
 ```bash
 #!/bin/bash
@@ -358,7 +355,7 @@ APP_NAME="{PROJECT_NAME}-staging"
 DEPLOY_DIR="/var/www/$APP_NAME"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 RELEASE_DIR="$DEPLOY_DIR/releases/$TIMESTAMP"
-GIT_REPO="${GIT_REPO:-/path/to/your/repo.git}"  # Set this to your repo
+GIT_REPO="${GIT_REPO:-https://github.com/your-org/{PROJECT_NAME}.git}"
 BRANCH="${BRANCH:-develop}"  # Deploy from develop branch
 
 # Logging
@@ -389,10 +386,15 @@ mkdir -p "$DEPLOY_DIR/shared/logs"
 mkdir -p "$DEPLOY_DIR/shared/uploads" 
 mkdir -p "$DEPLOY_DIR/shared/storage"
 
-# Clone latest code
-echo "⬇️  Cloning latest code..."
+# Clone latest code from develop branch
+echo "⬇️  Cloning latest code from $BRANCH..."
 git clone --branch "$BRANCH" --depth 1 "$GIT_REPO" "$RELEASE_DIR"
 cd "$RELEASE_DIR"
+
+# Get commit information
+COMMIT_HASH=$(git rev-parse --short HEAD)
+COMMIT_MSG=$(git log -1 --pretty=%B)
+echo "📌 Deploying commit: $COMMIT_HASH - $COMMIT_MSG"
 
 # Install dependencies
 echo "📦 Installing dependencies..."
@@ -415,6 +417,11 @@ if npm run test:staging > /dev/null 2>&1; then
 else
     echo "⚠️  No staging tests available"
 fi
+
+# Store deployment metadata
+echo "$COMMIT_HASH" > "$RELEASE_DIR/.deployment"
+echo "$BRANCH" >> "$RELEASE_DIR/.deployment"
+echo "$TIMESTAMP" >> "$RELEASE_DIR/.deployment"
 
 # Atomic symlink switch
 echo "🔄 Switching to new release..."
@@ -453,78 +460,100 @@ cd "$DEPLOY_DIR/releases" && ls -t | tail -n +6 | xargs -r rm -rf
 echo "✅ Staging deployment complete!"
 echo "🌐 Staging URL: https://department.vtc.systems/{PROJECT_NAME}-staging"
 echo "📊 Current release: $TIMESTAMP"
+echo "📝 Git commit: $COMMIT_HASH"
 echo "📝 Previous release: ${PREVIOUS_RELEASE##*/}"
 ```
 
-### 2. Promote to Production Script
+### 2. Deploy to Production Script (Tag-Based)
 
 ```bash
 #!/bin/bash
-# /var/www/deployment/scripts/promote-to-production.sh
+# /var/www/deployment/scripts/deploy-production.sh
 
 set -e  # Exit on any error
 
 # Configuration
-STAGING_DIR="/var/www/{PROJECT_NAME}-staging"
-PROD_DIR="/var/www/{PROJECT_NAME}"
-TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-RELEASE_DIR="$PROD_DIR/releases/$TIMESTAMP"
-STAGING_APP="{PROJECT_NAME}-staging"
+APP_NAME="{PROJECT_NAME}"
+DEPLOY_DIR="/var/www/$APP_NAME"
+GIT_REPO="${GIT_REPO:-https://github.com/your-org/{PROJECT_NAME}.git}"
+TAG="${TAG:-}"  # Git tag to deploy (required)
 PROD_APP="{PROJECT_NAME}-prod"
+
+# Validate tag parameter
+if [ -z "$TAG" ]; then
+    echo "❌ Error: TAG parameter is required"
+    echo "Usage: TAG=v1.2.0 $0"
+    exit 1
+fi
+
+# Use tag as release directory name
+RELEASE_DIR="$DEPLOY_DIR/releases/$TAG"
 
 # Logging
 LOG_FILE="/var/www/deployment/logs/deployment.log"
 exec 1> >(tee -a "$LOG_FILE")
 exec 2> >(tee -a "$LOG_FILE" >&2)
 
-echo "🚀 Starting production promotion: $TIMESTAMP"
+echo "🚀 Starting production deployment: $TAG"
+echo "📁 Deploying to: $RELEASE_DIR"
+echo "🏷️  Tag: $TAG"
 
-# Confirmation prompt (comment out for automated deployments)
-read -p "🔴 This will deploy to PRODUCTION. Are you sure? [y/N] " -n 1 -r
+# Confirmation prompt
+read -p "🔴 Deploy $TAG to PRODUCTION? [y/N] " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "❌ Deployment cancelled"
     exit 1
 fi
 
-# Pre-promotion checks
-echo "🔍 Pre-promotion checks..."
-if [ ! -d "$STAGING_DIR/current" ]; then
-    echo "❌ Staging deployment not found"
-    exit 1
-fi
-
-# Verify staging is healthy
-STAGING_HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}-staging/api/health"
-if ! curl -f -s "$STAGING_HEALTH_URL" > /dev/null; then
-    echo "❌ Staging health check failed"
-    exit 1
-fi
-
+# Pre-deployment checks
+echo "🔍 Pre-deployment checks..."
 if ! pm2 status > /dev/null 2>&1; then
     echo "❌ PM2 is not running"
     exit 1
 fi
 
+if ! nginx -t > /dev/null 2>&1; then
+    echo "❌ Nginx configuration is invalid"
+    exit 1
+fi
+
+# Check if tag exists in remote
+echo "🔍 Verifying tag exists in repository..."
+if ! git ls-remote --tags "$GIT_REPO" | grep -q "refs/tags/$TAG"; then
+    echo "❌ Tag $TAG not found in repository"
+    exit 1
+fi
+
 # Create production directories
 echo "📂 Preparing production directories..."
-mkdir -p "$PROD_DIR/releases"
-mkdir -p "$PROD_DIR/shared/logs"
-mkdir -p "$PROD_DIR/shared/uploads"
-mkdir -p "$PROD_DIR/shared/storage"
+mkdir -p "$DEPLOY_DIR/releases"
+mkdir -p "$DEPLOY_DIR/shared/logs"
+mkdir -p "$DEPLOY_DIR/shared/uploads"
+mkdir -p "$DEPLOY_DIR/shared/storage"
 
-# Copy staging release to production
-echo "📋 Copying staging release to production..."
-cp -r "$STAGING_DIR/current" "$RELEASE_DIR"
+# Clone specific tag
+echo "⬇️  Cloning tag $TAG..."
+git clone --branch "$TAG" --depth 1 "$GIT_REPO" "$RELEASE_DIR"
 cd "$RELEASE_DIR"
 
-# Update environment configurations for production
-echo "🔧 Configuring production environment..."
-ln -nfs "$PROD_DIR/shared/.env.production" "$RELEASE_DIR/.env"
-ln -nfs "$PROD_DIR/shared/uploads" "$RELEASE_DIR/public/uploads" 
-ln -nfs "$PROD_DIR/shared/storage" "$RELEASE_DIR/storage"
+# Get tag information
+TAG_MSG=$(git tag -l -n1 "$TAG" | sed "s/^$TAG[[:space:]]*//")
+COMMIT_HASH=$(git rev-parse --short HEAD)
+echo "📌 Deploying tag: $TAG - $TAG_MSG"
+echo "📌 Commit: $COMMIT_HASH"
 
-# Production build (if different from staging)
+# Install dependencies
+echo "📦 Installing production dependencies..."
+npm ci --production --silent
+
+# Link shared resources
+echo "🔗 Linking shared resources..."
+ln -nfs "$DEPLOY_DIR/shared/.env.production" "$RELEASE_DIR/.env"
+ln -nfs "$DEPLOY_DIR/shared/uploads" "$RELEASE_DIR/public/uploads"
+ln -nfs "$DEPLOY_DIR/shared/storage" "$RELEASE_DIR/storage"
+
+# Production build
 echo "🏗️  Building for production..."
 NODE_ENV=production npm run build
 
@@ -536,10 +565,15 @@ else
     echo "⚠️  No production tests available"
 fi
 
+# Store deployment metadata
+echo "$TAG" > "$RELEASE_DIR/.deployment"
+echo "$COMMIT_HASH" >> "$RELEASE_DIR/.deployment"
+echo "$(date +%Y%m%d-%H%M%S)" >> "$RELEASE_DIR/.deployment"
+
 # Atomic symlink switch
 echo "🔄 Switching production to new release..."
-PREVIOUS_PROD_RELEASE=$(readlink "$PROD_DIR/current" 2>/dev/null || echo "none")
-ln -nfs "$RELEASE_DIR" "$PROD_DIR/current"
+PREVIOUS_PROD_RELEASE=$(readlink "$DEPLOY_DIR/current" 2>/dev/null || echo "none")
+ln -nfs "$RELEASE_DIR" "$DEPLOY_DIR/current"
 
 # Zero-downtime PM2 reload
 echo "♻️  Reloading production PM2 application..."
@@ -564,7 +598,7 @@ for i in {1..5}; do
         if [ $i -eq 5 ]; then
             echo "❌ Production health check failed, rolling back..."
             if [ "$PREVIOUS_PROD_RELEASE" != "none" ]; then
-                ln -nfs "$PREVIOUS_PROD_RELEASE" "$PROD_DIR/current"
+                ln -nfs "$PREVIOUS_PROD_RELEASE" "$DEPLOY_DIR/current"
                 pm2 reload "$PROD_APP" --wait-ready
             fi
             exit 1
@@ -573,24 +607,134 @@ for i in {1..5}; do
     fi
 done
 
-# Cleanup old production releases (keep last 5)
-echo "🧹 Cleaning up old production releases..."
-cd "$PROD_DIR/releases" && ls -t | tail -n +6 | xargs -r rm -rf
+# Cleanup old releases (keep last 10 for production)
+echo "🧹 Cleaning up old releases..."
+cd "$DEPLOY_DIR/releases" && ls -t | tail -n +11 | xargs -r rm -rf
 
 # Send deployment notification (customize as needed)
 echo "📧 Sending deployment notification..."
 # curl -X POST -H 'Content-type: application/json' \
-#     --data '{"text":"🚀 Production deployment successful: '"$TIMESTAMP"'"}' \
+#     --data '{"text":"🚀 Production deployment successful: '"$TAG"'"}' \
 #     YOUR_SLACK_WEBHOOK_URL
 
-echo "✅ Production promotion complete!"
+echo "✅ Production deployment complete!"
 echo "🌐 Production URL: https://department.vtc.systems/{PROJECT_NAME}"
-echo "📊 Current release: $TIMESTAMP"
+echo "📊 Current release: $TAG"
 echo "📝 Previous release: ${PREVIOUS_PROD_RELEASE##*/}"
-echo "🎯 Deployed from staging at: $(date)"
+echo "🎯 Deployed at: $(date)"
 ```
 
-### 3. Emergency Rollback Script
+### 3. Promote to Production Script (Create Tag and Deploy)
+
+```bash
+#!/bin/bash
+# /var/www/deployment/scripts/promote-to-production.sh
+
+set -e  # Exit on any error
+
+# Configuration
+STAGING_DIR="/var/www/{PROJECT_NAME}-staging"
+GIT_REPO="${GIT_REPO:-https://github.com/your-org/{PROJECT_NAME}.git}"
+VERSION="${VERSION:-}"  # Version to tag (required)
+
+# Validate version parameter
+if [ -z "$VERSION" ]; then
+    echo "❌ Error: VERSION parameter is required"
+    echo "Usage: VERSION=v1.2.0 $0"
+    echo ""
+    echo "Recent tags:"
+    git ls-remote --tags "$GIT_REPO" | grep -o 'refs/tags/v[0-9]*\.[0-9]*\.[0-9]*' | sed 's/refs\/tags\///' | sort -V | tail -5
+    exit 1
+fi
+
+# Ensure version starts with 'v'
+if [[ ! "$VERSION" =~ ^v ]]; then
+    VERSION="v$VERSION"
+fi
+
+# Logging
+LOG_FILE="/var/www/deployment/logs/deployment.log"
+exec 1> >(tee -a "$LOG_FILE")
+exec 2> >(tee -a "$LOG_FILE" >&2)
+
+echo "🚀 Starting production promotion process"
+echo "🏷️  Version to tag: $VERSION"
+
+# Pre-promotion checks
+echo "🔍 Pre-promotion checks..."
+if [ ! -d "$STAGING_DIR/current" ]; then
+    echo "❌ Staging deployment not found"
+    exit 1
+fi
+
+# Get staging deployment info
+cd "$STAGING_DIR/current"
+STAGING_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+echo "📌 Staging is at commit: $STAGING_COMMIT"
+
+# Verify staging is healthy
+STAGING_HEALTH_URL="https://department.vtc.systems/{PROJECT_NAME}-staging/api/health"
+echo "🩺 Checking staging health..."
+if ! curl -f -s "$STAGING_HEALTH_URL" > /dev/null; then
+    echo "❌ Staging health check failed"
+    exit 1
+fi
+echo "✅ Staging is healthy"
+
+# Check if tag already exists
+echo "🔍 Checking if tag already exists..."
+if git ls-remote --tags "$GIT_REPO" | grep -q "refs/tags/$VERSION"; then
+    echo "❌ Tag $VERSION already exists"
+    echo "Existing tags:"
+    git ls-remote --tags "$GIT_REPO" | grep -o 'refs/tags/v[0-9]*\.[0-9]*\.[0-9]*' | sed 's/refs\/tags\///' | sort -V | tail -10
+    exit 1
+fi
+
+# Create temporary directory for git operations
+TEMP_DIR=$(mktemp -d)
+cd "$TEMP_DIR"
+
+# Clone repository
+echo "📥 Cloning repository..."
+git clone "$GIT_REPO" repo
+cd repo
+
+# Checkout the commit that's currently in staging
+echo "📌 Checking out staging commit: $STAGING_COMMIT"
+git checkout "$STAGING_COMMIT"
+
+# Create and push tag
+echo "🏷️  Creating tag $VERSION..."
+read -p "📝 Enter tag message (or press Enter for default): " TAG_MSG
+if [ -z "$TAG_MSG" ]; then
+    TAG_MSG="Release $VERSION"
+fi
+
+git tag -a "$VERSION" -m "$TAG_MSG"
+echo "📤 Pushing tag to remote..."
+git push origin "$VERSION"
+
+# Cleanup
+cd /
+rm -rf "$TEMP_DIR"
+
+echo "✅ Tag $VERSION created successfully!"
+echo ""
+echo "📋 Next steps:"
+echo "1. Review the tag on GitHub: $GIT_REPO/releases/tag/$VERSION"
+echo "2. Deploy to production: TAG=$VERSION /var/www/deployment/scripts/deploy-production.sh"
+echo ""
+echo "Or deploy immediately? (y/N)"
+read -p "" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    TAG="$VERSION" /var/www/deployment/scripts/deploy-production.sh
+else
+    echo "ℹ️  Tag created but not deployed. Run production deployment when ready."
+fi
+```
+
+### 4. Emergency Rollback Script
 
 ```bash
 #!/bin/bash
@@ -629,6 +773,12 @@ fi
 
 echo "🔄 Rolling back from: ${CURRENT_RELEASE##*/}"  
 echo "🔄 Rolling back to: $PREVIOUS_RELEASE"
+
+# Show deployment info if available
+if [ -f "$PROD_DIR/releases/$PREVIOUS_RELEASE/.deployment" ]; then
+    echo "📋 Previous release info:"
+    cat "$PROD_DIR/releases/$PREVIOUS_RELEASE/.deployment"
+fi
 
 # Confirmation
 read -p "🔴 Confirm PRODUCTION rollback? [y/N] " -n 1 -r
@@ -680,6 +830,9 @@ sudo npm install -g pm2
 # Install Nginx
 sudo apt install nginx -y
 
+# Install Git
+sudo apt install git -y
+
 # Create directory structure
 sudo mkdir -p /var/www/{{PROJECT_NAME},{PROJECT_NAME}-staging}/{releases,shared/{logs,uploads,storage}}
 sudo mkdir -p /var/www/deployment/{scripts,configs,logs}
@@ -689,7 +842,18 @@ sudo chown -R $USER:$USER /var/www/
 sudo chmod -R 755 /var/www/
 ```
 
-### 2. Configure PM2
+### 2. Git Configuration
+
+```bash
+# Configure Git credentials for private repositories
+git config --global credential.helper store
+
+# Or use SSH keys (recommended)
+ssh-keygen -t ed25519 -C "deploy@department.vtc.systems"
+# Add the public key to your GitHub/GitLab deploy keys
+```
+
+### 3. Configure PM2
 
 ```bash
 # Copy PM2 configuration
@@ -707,7 +871,7 @@ pm2 startup
 # Run the command that PM2 outputs
 ```
 
-### 3. Configure Nginx
+### 4. Configure Nginx
 
 ```bash
 # Copy Nginx site configuration
@@ -723,7 +887,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-### 4. SSL Certificate (Let's Encrypt)
+### 5. SSL Certificate (Let's Encrypt)
 
 ```bash
 # Install Certbot
@@ -736,11 +900,12 @@ sudo certbot --nginx -d department.vtc.systems
 sudo certbot renew --dry-run
 ```
 
-### 5. Setup Deployment Scripts
+### 6. Setup Deployment Scripts
 
 ```bash
 # Copy deployment scripts
 cp deploy-staging.sh /var/www/deployment/scripts/
+cp deploy-production.sh /var/www/deployment/scripts/
 cp promote-to-production.sh /var/www/deployment/scripts/
 cp rollback-production.sh /var/www/deployment/scripts/
 
@@ -752,7 +917,7 @@ touch /var/www/{PROJECT_NAME}/shared/.env.production
 touch /var/www/{PROJECT_NAME}-staging/shared/.env.staging
 ```
 
-### 6. Environment Configuration
+### 7. Environment Configuration
 
 ```bash
 # Production environment variables
@@ -789,18 +954,42 @@ EOF
 ### Daily Development Workflow
 
 ```bash
-# 1. Deploy latest changes to staging
+# 1. Feature development
+git checkout -b feature/new-feature
+# ... make changes ...
+git add .
+git commit -m "Add new feature"
+git push origin feature/new-feature
+
+# 2. Create pull request and merge to develop
+
+# 3. Deploy to staging (automatic or manual)
 cd /var/www/deployment/scripts
 ./deploy-staging.sh
 
-# 2. Test staging environment
+# 4. Test staging environment
 curl https://department.vtc.systems/{PROJECT_NAME}-staging/api/health
 
-# 3. Run manual testing on staging
-# (UI testing, API testing, etc.)
+# 5. When ready, create production tag and deploy
+VERSION=v1.2.0 ./promote-to-production.sh
+```
 
-# 4. When ready, promote to production
-./promote-to-production.sh
+### Production Deployment Workflow
+
+```bash
+# Option 1: Promote from staging (recommended)
+VERSION=v1.2.0 ./promote-to-production.sh
+
+# Option 2: Deploy specific tag directly
+TAG=v1.2.0 ./deploy-production.sh
+
+# Option 3: Emergency hotfix
+git checkout -b hotfix/urgent-fix main
+# ... make fix ...
+git commit -m "Fix critical issue"
+git push origin hotfix/urgent-fix
+# Merge to main, then:
+VERSION=v1.2.1 ./promote-to-production.sh
 ```
 
 ### Emergency Procedures
@@ -809,30 +998,32 @@ curl https://department.vtc.systems/{PROJECT_NAME}-staging/api/health
 # Emergency rollback production
 ./rollback-production.sh
 
-# Emergency rollback staging  
-./rollback-staging.sh
+# View deployment history
+tail -f /var/www/deployment/logs/deployment.log
 
 # Check application health
 pm2 status
 pm2 logs
 curl https://department.vtc.systems/{PROJECT_NAME}/api/health
+
+# View Git tags
+git ls-remote --tags origin
 ```
 
 ### Maintenance Operations
 
 ```bash
-# View deployment history
-tail -f /var/www/deployment/logs/deployment.log
+# List all releases
+ls -la /var/www/{PROJECT_NAME}/releases/
 
-# Monitor applications
-pm2 monit
+# Check current version
+readlink /var/www/{PROJECT_NAME}/current
 
-# Check disk usage
-df -h
-du -sh /var/www/*/releases/*
+# View deployment metadata
+cat /var/www/{PROJECT_NAME}/current/.deployment
 
 # Manual cleanup (if needed)
-cd /var/www/{PROJECT_NAME}/releases && ls -t | tail -n +3 | xargs rm -rf
+cd /var/www/{PROJECT_NAME}/releases && ls -t | tail -n +11 | xargs rm -rf
 ```
 
 ## 📊 Monitoring & Maintenance
@@ -851,6 +1042,20 @@ pm2 logs {PROJECT_NAME}-staging
 htop
 df -h
 free -h
+```
+
+### Git Repository Status
+
+```bash
+# Check staging deployment
+cd /var/www/{PROJECT_NAME}-staging/current
+git log -1 --oneline
+git status
+
+# Check production deployment
+cd /var/www/{PROJECT_NAME}/current
+git describe --tags
+cat .deployment
 ```
 
 ### Health Checks
@@ -927,6 +1132,18 @@ pm2 kill
 pm2 start ecosystem.config.js
 ```
 
+#### Git Authentication Issues
+
+```bash
+# For HTTPS repositories
+git config --global credential.helper store
+# Enter credentials once
+
+# For SSH repositories
+ssh -T git@github.com
+# Check SSH key is added
+```
+
 #### Nginx Configuration Issues
 
 ```bash
@@ -947,7 +1164,7 @@ sudo systemctl reload nginx
 ls -la /var/www/{PROJECT_NAME}/current
 
 # Manually fix symlink
-ln -nfs /var/www/{PROJECT_NAME}/releases/latest /var/www/{PROJECT_NAME}/current
+ln -nfs /var/www/{PROJECT_NAME}/releases/v1.2.0 /var/www/{PROJECT_NAME}/current
 ```
 
 #### Database Connection Issues
@@ -1023,6 +1240,8 @@ pm2 resurrect
 
 This deployment architecture provides:
 
+✅ **Git-Based Version Control** - All deployments tracked through Git  
+✅ **Tag-Based Production Deployments** - Reliable, versioned releases  
 ✅ **Zero-Downtime Deployments** - PM2 cluster mode ensures continuous service  
 ✅ **Atomic Deployments** - Symlink switching enables instant, safe deployments  
 ✅ **Easy Rollbacks** - Previous releases ready for instant activation  
@@ -1034,9 +1253,10 @@ This deployment architecture provides:
 
 **Next Steps:**
 1. Follow setup instructions to implement this architecture
-2. Customize environment variables for your specific application
-3. Set up monitoring and alerting according to your needs
-4. Test deployment procedures in a safe environment first
-5. Document any application-specific deployment requirements
+2. Configure Git repository access (SSH keys or HTTPS credentials)
+3. Customize environment variables for your specific application
+4. Set up monitoring and alerting according to your needs
+5. Test deployment procedures in a safe environment first
+6. Document any application-specific deployment requirements
 
-This system provides enterprise-grade deployment capabilities while maintaining simplicity and reliability for your staging/production workflow.
+This system provides enterprise-grade deployment capabilities with Git-based version control, ensuring reliable and traceable deployments for your staging/production workflow.

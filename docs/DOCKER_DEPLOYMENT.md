@@ -2,6 +2,10 @@
 
 This guide covers deploying the VVG Template using Docker with PM2 process management inside containers and Nginx as a reverse proxy.
 
+## Related Guides
+
+- **Manual EC2 Deployment**: See [EC2_SSM_DEPLOYMENT.md](deployment/EC2_SSM_DEPLOYMENT.md) for step-by-step manual deployment via SSM sessions
+
 ## Architecture
 
 ```

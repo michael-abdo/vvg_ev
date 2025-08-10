@@ -1,5 +1,7 @@
 # EC2 Deployment via AWS SSM with tmux
 
+This guide covers **manual deployment** via SSM sessions. For **automated Docker deployment**, see [DOCKER_DEPLOYMENT.md](../DOCKER_DEPLOYMENT.md).
+
 ## Step 1: Connect to EC2 via SSM
 
 ```bash

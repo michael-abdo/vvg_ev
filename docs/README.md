@@ -34,9 +34,13 @@
 
 ```
 docs/
-├── README.md                    # This file
-├── TEMPLATE-UPDATES.md          # Complete automation documentation
-├── OPTIMIZED-SOP.md             # Streamlined workflow guide
+├── README.md                    # This file - automation scripts overview
+├── PROJECT_README.md            # Original project README (moved from root)
+├── DOCKER_DEPLOYMENT.md         # Docker deployment guide (moved from root)
+├── MASTER.md                    # Master project documentation
+├── API_REFERENCE.md             # API documentation
+├── BEARER_TOKEN_AUTH_IMPLEMENTATION.md # Auth implementation guide
+├── DOCKER_DEVELOPMENT_WORKFLOW.md # Docker development workflow
 │
 ├── automation/                  # 🎯 Main automation scripts
 │   └── vvg-master-automation.sh # Complete project lifecycle automation
@@ -53,16 +57,20 @@ docs/
 │   ├── workflow-launcher.sh    # Tmux development environment
 │   └── hotfix-workflow.sh      # Production hotfix automation
 │
+├── deployment/                  # 🚀 Deployment guides
+│   ├── OAUTH_CONFIGURATION.md  # OAuth/Azure AD setup
+│   ├── EC2_SSM_DEPLOYMENT.md   # Manual EC2 deployment via SSM
+│   ├── LOCAL_TO_PRODUCTION_DEPLOYMENT_GUIDE.md # Deployment best practices
+│   ├── OAUTH_ROLLBACK_PROCEDURES.md # OAuth rollback procedures
+│   ├── OAUTH_TEST_RESULTS.md   # OAuth testing results
+│   └── [other deployment guides]
+│
 ├── analysis/                    # 📊 Analysis and gap documentation
 │   ├── SOP-GAP-ANALYSIS.md     # Infrastructure gaps analysis
 │   └── PARALLEL-DEVELOPMENT-ANALYSIS.md # Worktree compatibility
 │
 └── legacy/                      # 📚 Historical documentation
-    ├── DRY-REFACTORING-*.md     # DRY consolidation history
-    ├── MASTER.md                # Original master documentation
-    ├── STATUS.md                # Previous status tracking
-    ├── UX.md                    # User experience notes
-    └── git-workflow.md          # Git workflow documentation
+    └── DRY-REFACTORING-*.md     # DRY consolidation history and architecture evolution
 ```
 
 ## 🎯 Core Scripts by Category

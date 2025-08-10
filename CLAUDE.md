@@ -235,3 +235,111 @@ File: upload-completed document.pdf [abc-123-def]
 ✅ **Scalable**: Log rotation and retention policies  
 
 This comprehensive logging strategy provides complete visibility into application behavior while maintaining security and performance standards.
+
+---
+
+# NGINX Reverse Proxy Configuration
+
+## 🌐 Production-Ready Reverse Proxy Setup
+
+This template includes a complete, production-ready NGINX reverse proxy configuration that properly handles Next.js basePath routing.
+
+### **Configuration File**
+
+**File**: `/deployment/nginx.vvg-template-enhanced.conf`
+
+This is the **ONLY** nginx configuration you need. All other nginx configs have been removed to avoid confusion.
+
+### **Key Features**
+
+#### **✅ BasePath Routing**
+- **Production**: Routes `https://your-domain.com/template/*` → `http://localhost:3000/template/`
+- **Staging**: Routes `https://your-domain.com/template-staging/*` → `http://localhost:3001/template-staging/`
+- **Correct trailing slash handling**: Both `/template` and `/template/` work properly
+
+#### **✅ SSL/HTTPS Support**
+- **Production**: Port 443 with Let's Encrypt certificates
+- **Staging**: Port 8443 with same certificates
+- **HTTP → HTTPS redirect**: Automatic redirect from port 80
+
+#### **✅ Azure AD Authentication Optimized**
+- **Large Buffer Sizes**: Prevents auth failures with 5+ users
+- **Proxy Buffer Configuration**: `128k` buffer size, `4 256k` buffers
+- **Upload Limits**: 10MB production, 20MB staging
+
+#### **✅ Security Headers**
+- Content Security Policy (CSP)
+- X-Frame-Options, X-XSS-Protection
+- X-Content-Type-Options: nosniff
+- Referrer-Policy: strict-origin-when-cross-origin
+
+#### **✅ Performance Optimization**
+- **Gzip Compression**: Enabled for all text/JS/CSS assets
+- **Static Asset Caching**: 1-year cache for images, fonts, etc.
+- **Proper Timeouts**: 60s connect/send/read timeouts
+
+### **URL Structure Explained**
+
+#### **Why `/template/` URLs?**
+
+This is **NORMAL Next.js behavior** with basePath configuration:
+
+- ✅ `http://localhost:3000/template/dashboard` → **200 OK**
+- ❌ `http://localhost:3000/dashboard` → **404 Not Found (Expected)**
+
+The 404 on root paths is **intentional design** that enables:
+- **Multi-app deployments** on same domain
+- **Path isolation** between different services
+- **Corporate architecture** compliance
+- **No URL conflicts** with other applications
+
+### **Production URLs**
+
+In production, users will access:
+```
+https://your-domain.com/template/dashboard
+https://your-domain.com/template/documents
+https://your-domain.com/template/api/auth/session
+```
+
+### **Staging URLs**
+
+In staging environment:
+```
+https://your-domain.com:8443/template-staging/dashboard  
+https://your-domain.com:8443/template-staging/documents
+```
+
+### **Port Configuration**
+
+- **Development**: localhost:3000
+- **Production**: localhost:3000 (via nginx proxy)
+- **Staging**: localhost:3001 (via nginx proxy)
+
+### **Deployment Instructions**
+
+1. **Copy config file**:
+   ```bash
+   sudo cp deployment/nginx.vvg-template-enhanced.conf /etc/nginx/sites-available/vvg-template
+   ```
+
+2. **Enable site**:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/vvg-template /etc/nginx/sites-enabled/
+   ```
+
+3. **Test and reload**:
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
+
+### **Key Benefits**
+
+✅ **Enterprise-Grade**: Handles multiple environments  
+✅ **Security-First**: Complete security headers and CSP  
+✅ **Performance**: Optimized caching and compression  
+✅ **Azure AD Ready**: Large buffers prevent auth issues  
+✅ **Maintenance**: Single config file, no redundancy  
+
+This nginx configuration is designed for **enterprise production environments** and follows 2024 industry best practices for Next.js applications with basePath routing.

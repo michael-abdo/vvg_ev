@@ -59,7 +59,7 @@ async function testSmtpConnection() {
     log(`Port: ${smtpConfig.port}`)
     log(`Username: ${smtpConfig.auth.user ? '***' + smtpConfig.auth.user.slice(-4) : 'Not set'}`)
 
-    const transporter = nodemailer.createTransporter(smtpConfig)
+    const transporter = nodemailer.createTransport(smtpConfig)
 
     // Verify connection
     await transporter.verify()

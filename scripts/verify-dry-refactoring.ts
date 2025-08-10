@@ -14,7 +14,6 @@
 
 import { execSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
 
 // ANSI color codes for output
 const colors = {

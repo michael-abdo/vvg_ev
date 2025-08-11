@@ -118,8 +118,8 @@ The deploy workflow includes automatic rollback on health check failure:
 # Deploy to staging
 git push origin main-staging
 
-# Test thoroughly
-curl https://staging.your-domain.com:8443/vvg-template-staging/health
+# Test thoroughly (replace {BASE_PATH} with your configured basePath)
+curl https://staging.your-domain.com:8443/{BASE_PATH}/health
 
 # If successful, tag for production
 git tag -a v1.0.1 -m "Tested in staging"

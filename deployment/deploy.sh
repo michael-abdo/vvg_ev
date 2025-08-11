@@ -228,7 +228,7 @@ test_application() {
     
     # Test local connection
     PORT=${PORT_PRODUCTION:-3000}
-    if curl -s http://localhost:$PORT/health > /dev/null; then
+    if curl -s http://localhost:$PORT/${PROJECT_NAME:-vvg-app}/api/health > /dev/null; then
         log "Local health check passed ✓"
     else
         warn "Local health check failed"

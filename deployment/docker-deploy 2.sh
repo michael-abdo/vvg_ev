@@ -24,6 +24,11 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
+# Load environment variables for health check
+if [ -f "$ENV_FILE" ]; then
+    export $(grep -E '^(PORT|BASE_PATH)=' "$ENV_FILE" | xargs)
+fi
+
 if [ ! -f "$COMPOSE_FILE" ]; then
     echo "❌ Error: $COMPOSE_FILE not found!"
     exit 1
@@ -47,7 +52,7 @@ MAX_ATTEMPTS=30
 ATTEMPT=0
 
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-    if curl -f http://localhost:3000/api/health >/dev/null 2>&1; then
+    if curl -f http://localhost:${PORT:-3000}/${BASE_PATH:+$BASE_PATH/}api/health >/dev/null 2>&1; then
         echo "✅ Application is healthy!"
         break
     fi

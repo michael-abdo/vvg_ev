@@ -1,0 +1,84 @@
+# .env - Base Configuration (Safe to commit)
+# This file contains non-sensitive defaults used across all environments
+# DO NOT PUT SECRETS IN THIS FILE
+
+# =================================================================
+# CORE CONFIGURATION
+# =================================================================
+NODE_ENV=development
+ENVIRONMENT=development
+PROJECT_NAME=vvg-template
+PROJECT_DISPLAY_NAME="VVG Template"
+
+# =================================================================
+# APPLICATION SETTINGS
+# =================================================================
+PORT=3000
+LOG_LEVEL=info
+MAX_UPLOAD_SIZE=10485760
+ENABLE_CACHE=true
+
+# =================================================================
+# PATHS AND URLS (Defaults)
+# =================================================================
+
+# Base path configuration for subdirectory deployments
+# Development: Empty (runs at root) 
+# Staging: /vvg-template-staging
+# Production: /vvg-template
+BASE_PATH=/template
+NEXT_PUBLIC_BASE_PATH=/template
+
+# Application configuration
+NEXT_PUBLIC_APP_NAME=Template App
+APP_DOMAIN=localhost:3001
+SIGNIN_PAGE=/sign-in
+SIGNOUT_PAGE=/auth/signout
+DASHBOARD_PATH=/dashboard
+DEFAULT_REDIRECT_PATH=/dashboard
+
+# =================================================================
+# FEATURE FLAGS
+# =================================================================
+FEATURE_DEV_BYPASS=false
+IS_DEVELOPMENT=false
+DEV_BYPASS_ENABLED=false
+
+# =================================================================
+# DATABASE CONFIGURATION (Non-sensitive)
+# =================================================================
+MYSQL_PORT=3306
+MYSQL_DATABASE=vvg_template
+DB_CREATE_ACCESS=false
+
+# =================================================================
+# STORAGE CONFIGURATION (Non-sensitive)
+# =================================================================
+STORAGE_PROVIDER=local
+LOCAL_UPLOAD_DIR=./uploads
+LOCAL_STORAGE_PATH=./storage
+S3_ACCESS=false
+AWS_REGION=us-east-1
+S3_FOLDER_PREFIX=vvg-template/
+
+# =================================================================
+# EMAIL CONFIGURATION (Non-sensitive)
+# =================================================================
+AWS_SES_SMTP_HOST=email-smtp.us-west-2.amazonaws.com
+AWS_SES_SMTP_PORT=587
+SES_FROM_EMAIL=noreply@example.com
+SES_TEST_RECIPIENT=test@example.com
+ADMIN_EMAIL=admin@example.com
+ENABLE_EMAIL_IN_DEV=false
+
+# =================================================================
+# SECURITY DEFAULTS
+# =================================================================
+SECURE_COOKIES=false
+TRUST_PROXY=false
+
+# =================================================================
+# TEST USERS (Non-sensitive defaults)
+# =================================================================
+TEST_USER_EMAIL=test@example.com
+DEV_SEED_USER=developer@example.com

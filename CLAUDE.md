@@ -343,3 +343,171 @@ https://your-domain.com:8443/template-staging/documents
 ✅ **Maintenance**: Single config file, no redundancy  
 
 This nginx configuration is designed for **enterprise production environments** and follows 2024 industry best practices for Next.js applications with basePath routing.
+
+---
+
+# BasePath Configuration - Complete Implementation Guide
+
+## 🌐 Comprehensive BasePath Support
+
+This template implements industry-standard basePath configuration for subdirectory deployments, enabling deployment at any URL path (e.g., `domain.com/your-app`).
+
+### **Environment Variable Configuration**
+
+#### **✅ Development (.env)**
+```bash
+BASE_PATH=/template
+NEXT_PUBLIC_BASE_PATH=/template
+PORT=3000
+```
+
+#### **✅ Production (.env.production)**
+```bash
+BASE_PATH=/template
+NEXT_PUBLIC_BASE_PATH=/template
+NEXTAUTH_URL=https://your-domain.com/template
+APP_URL=https://your-domain.com/template
+```
+
+#### **✅ Staging (.env.staging)**
+```bash
+BASE_PATH=/template-staging
+NEXT_PUBLIC_BASE_PATH=/template-staging
+NEXTAUTH_URL=https://your-domain.com/template-staging
+APP_URL=https://your-domain.com/template-staging
+```
+
+### **Next.js Configuration (next.config.mjs)**
+
+```javascript
+const nextConfig = {
+  basePath: process.env.BASE_PATH || '',
+  assetPrefix: process.env.BASE_PATH || '',
+  // ... other config
+};
+```
+
+### **Path Utilities (lib/utils/path-utils.ts)**
+
+The template provides comprehensive path utilities for consistent basePath handling:
+
+```typescript
+import { pagePath, apiPath, assetPath } from '@/lib/utils/path-utils';
+
+// Navigation
+router.push(pagePath('/dashboard'));
+
+// API calls
+fetch(apiPath('/documents'));
+
+// Assets
+<img src={assetPath('/logo.svg')} />
+```
+
+### **Client-Side Hook (lib/hooks/use-basepath.ts)**
+
+For React components:
+
+```typescript
+import { useBasePath } from '@/lib/hooks';
+
+const { pagePath, apiPath, assetPath } = useBasePath();
+```
+
+### **NextAuth.js Integration**
+
+Authentication automatically handles basePath through:
+
+1. **Automatic NEXTAUTH_URL**: Constructed from BASE_PATH + domain
+2. **Redirect Logic**: `lib/auth-options.ts` handles basePath in redirects
+3. **Provider Configuration**: SessionProvider uses `getAuthBasePath()`
+
+### **URL Structure**
+
+#### **Development**
+- Base: `http://localhost:3000/template`
+- Pages: `http://localhost:3000/template/dashboard`
+- API: `http://localhost:3000/template/api/auth/session`
+- Assets: `http://localhost:3000/template/logo.svg`
+
+#### **Production**
+- Base: `https://your-domain.com/template`
+- Pages: `https://your-domain.com/template/dashboard`
+- API: `https://your-domain.com/template/api/auth/session`
+- Assets: `https://your-domain.com/template/logo.svg`
+
+### **Verification Checklist**
+
+✅ **Environment Variables**: BASE_PATH and NEXT_PUBLIC_BASE_PATH match  
+✅ **Navigation**: All `<Link>` components use `pagePath()`  
+✅ **API Calls**: All fetch() calls use `apiPath()`  
+✅ **Assets**: All images/icons use `assetPath()`  
+✅ **Authentication**: NextAuth redirects include basePath  
+✅ **Nginx**: Proxy configuration handles basePath routing  
+✅ **Static Assets**: All public files accessible via basePath  
+
+### **Common Patterns**
+
+#### **Component Navigation**
+```tsx
+import { useBasePath } from '@/lib/hooks';
+
+const { pagePath } = useBasePath();
+<Link href={pagePath('/dashboard')}>Dashboard</Link>
+```
+
+#### **API Integration**
+```tsx
+import { apiPath } from '@/lib/utils/path-utils';
+
+const response = await fetch(apiPath('/documents'));
+```
+
+#### **Asset References**
+```tsx
+import { useBasePath } from '@/lib/hooks';
+
+const { assetPath } = useBasePath();
+<img src={assetPath('/logo.svg')} alt="Logo" />
+```
+
+#### **Router Navigation**
+```tsx
+import { useRouter } from 'next/navigation';
+import { useBasePath } from '@/lib/hooks';
+
+const router = useRouter();
+const { pagePath } = useBasePath();
+router.push(pagePath('/documents'));
+```
+
+### **Deployment Scenarios**
+
+#### **Root Deployment** (`domain.com`)
+```bash
+BASE_PATH=
+NEXT_PUBLIC_BASE_PATH=
+```
+
+#### **Subdirectory Deployment** (`domain.com/app`)
+```bash
+BASE_PATH=/app
+NEXT_PUBLIC_BASE_PATH=/app
+```
+
+#### **Multi-Environment** (`domain.com/app-staging`)
+```bash
+BASE_PATH=/app-staging
+NEXT_PUBLIC_BASE_PATH=/app-staging
+```
+
+### **Key Benefits**
+
+✅ **Universal Compatibility**: Works in any deployment context  
+✅ **Zero Hardcoding**: No hardcoded URLs anywhere in codebase  
+✅ **Environment Aware**: Automatically adapts to deployment environment  
+✅ **Authentication Ready**: Full NextAuth.js basePath support  
+✅ **Asset Optimization**: Correct CDN and static asset handling  
+✅ **SEO Friendly**: Proper canonical URLs and metadata  
+
+This basePath implementation follows **Next.js 14+ best practices** and supports enterprise deployment scenarios including subdirectories, reverse proxies, and multi-tenant environments.

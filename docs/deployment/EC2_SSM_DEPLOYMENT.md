@@ -1,6 +1,6 @@
 # EC2 Deployment via AWS SSM with tmux
 
-This guide covers **manual deployment** via SSM sessions. For **automated Docker deployment**, see [DOCKER_DEPLOYMENT.md](../DOCKER_DEPLOYMENT.md).
+This guide covers **manual deployment** via SSM sessions. For **automated Docker deployment**, see [docker.md](docker.md).
 
 ## Step 1: Connect to EC2 via SSM
 
@@ -57,7 +57,7 @@ AZURE_AD_CLIENT_SECRET=your-client-secret
 AZURE_AD_TENANT_ID=your-tenant-id
 
 # NextAuth Configuration - PRODUCTION URLs
-# Domain confirmed from MASTER.md
+# Production domain configuration
 NEXTAUTH_URL=https://department.vtc.systems/{PROJECT_NAME}
 NEXTAUTH_SECRET=your-nextauth-secret-generate-with-openssl-rand-base64-32
 

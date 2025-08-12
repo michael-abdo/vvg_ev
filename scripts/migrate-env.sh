@@ -143,5 +143,5 @@ fi
 
 echo ""
 echo "For more information, see:"
-echo "  docs/deployment/ENVIRONMENT_CONFIGURATION_GUIDE.md"
-echo "  docs/deployment/ENVIRONMENT_MIGRATION_PLAN.md"
+echo "  docs/getting-started/configuration.md"
+echo "  docs/deployment/overview.md"

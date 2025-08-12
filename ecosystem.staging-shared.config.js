@@ -1,10 +1,8 @@
 /**
- * PM2 Ecosystem Configuration - Staging Environment
+ * PM2 Ecosystem Configuration - Staging Environment (Shared Build)
  * 
- * Environment Loading Order:
- * 1. NODE_ENV=staging → Next.js loads .env.staging
- * 2. next.config.mjs → BASE_PATH resolution
- * 3. lib/config.ts → comprehensive validation
+ * This configuration runs staging with the same build as production
+ * but on a different port (3001) for rapid development and testing.
  */
 
 module.exports = {
@@ -22,6 +20,9 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3001,
         ENVIRONMENT: 'staging',
+        // Override basePath to match production build
+        BASE_PATH: '/template',
+        NEXT_PUBLIC_BASE_PATH: '/template',
       },
       
       // Environment file loading
@@ -44,6 +45,7 @@ module.exports = {
       
       // Memory and CPU
       max_memory_restart: '500M',
+      node_args: '--max-old-space-size=512',
       
       // Health Monitoring
       min_uptime: '10s',
@@ -59,24 +61,10 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3001,
         ENVIRONMENT: 'staging',
-        // These will be loaded from .env.staging
-        BASE_PATH: '/template-staging',
-        NEXT_PUBLIC_BASE_PATH: '/template-staging',
+        // Override to use production basePath
+        BASE_PATH: '/template',
+        NEXT_PUBLIC_BASE_PATH: '/template',
       }
     }
-  ],
-  
-  deploy: {
-    staging: {
-      user: 'deploy',
-      host: 'your-staging-server.com',
-      ref: 'origin/staging',
-      repo: 'https://github.com/your-username/vvg-template.git',
-      path: '/var/www/vvg-template-staging',
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.staging.config.js --env staging',
-      env: {
-        NODE_ENV: 'staging'
-      }
-    }
-  }
+  ]
 };

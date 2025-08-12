@@ -8,6 +8,8 @@
  */
 
 import { executeQuery } from '@/lib/db';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 async function runMigrations() {
   console.log('🚀 Starting database migrations...\n');
@@ -35,8 +37,47 @@ async function runMigrations() {
     
     // Run migrations
     console.log('📊 Creating database tables...');
-    // TODO: Implement generic table creation
-    console.log('✅ All tables created successfully\n');
+    
+    // Read and execute migration file
+    const migrationPath = join(process.cwd(), 'database', 'migrations', '001_create_tables.sql');
+    console.log(`📄 Reading migration file: ${migrationPath}`);
+    
+    const migrationSQL = readFileSync(migrationPath, 'utf8');
+    
+    // Split SQL by statements and execute each one
+    const statements = migrationSQL
+      .split(';')
+      .map(stmt => stmt.trim())
+      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
+    
+    console.log(`📝 Executing ${statements.length} SQL statements...\n`);
+    
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i];
+      if (statement.toLowerCase().includes('create table')) {
+        const tableName = statement.match(/create table\s+(?:if not exists\s+)?(\w+)/i)?.[1];
+        console.log(`🔨 Creating table: ${tableName}`);
+      }
+      
+      try {
+        await executeQuery({ query: statement });
+        
+        // Show progress for major operations
+        if (statement.toLowerCase().includes('create table')) {
+          console.log(`✅ Table created successfully`);
+        }
+      } catch (error: any) {
+        // Ignore harmless errors
+        if (error.message.includes('already exists') || 
+            error.message.includes('SHOW TABLES') ||
+            error.message.includes('DESCRIBE')) {
+          continue;
+        }
+        throw error;
+      }
+    }
+    
+    console.log('\n✅ All migration statements executed successfully\n');
     
     // Verify tables exist
     console.log('🔍 Verifying tables...');
@@ -50,14 +91,19 @@ async function runMigrations() {
       });
       
       if ((result as any[])[0].count > 0) {
-        console.log(`✅ Table ${table} exists`);
+        console.log(`✅ Table ${table} exists and ready`);
       } else {
         console.error(`❌ Table ${table} not found`);
       }
     }
     
+    // Show final table summary
+    console.log('\n📊 Database Summary:');
+    const tableResult = await executeQuery({ query: 'SHOW TABLES' });
+    console.log(`📝 Total tables: ${(tableResult as any[]).length}`);
+    
     console.log('\n🎉 Database migration completed successfully!');
-    console.log('You can now use the full database functionality.\n');
+    console.log('✨ Your MySQL database is now ready for the application.\n');
     
   } catch (error) {
     console.error('❌ Migration failed:', error);

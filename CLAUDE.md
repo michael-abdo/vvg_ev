@@ -511,3 +511,113 @@ NEXT_PUBLIC_BASE_PATH=/app-staging
 ✅ **SEO Friendly**: Proper canonical URLs and metadata  
 
 This basePath implementation follows **Next.js 14+ best practices** and supports enterprise deployment scenarios including subdirectories, reverse proxies, and multi-tenant environments.
+
+---
+
+# Environment Resource Sharing - Rapid Shipping Configuration
+
+## ⚡ Shared Resources Strategy
+
+**IMPORTANT**: For rapid shipping and development velocity, this template is configured to share database and storage resources between staging and production environments.
+
+### **⚠️ Production Consideration**
+This configuration prioritizes **speed of deployment** over environment isolation. While not recommended for enterprise production applications, it enables:
+- **Faster deployment cycles**
+- **Reduced infrastructure complexity** 
+- **Shared resource costs**
+- **Simplified data management**
+
+### **Shared Resource Configuration**
+
+#### **✅ Database Sharing**
+Both staging and production use the same database with table prefixes for isolation:
+
+```bash
+# Both .env.staging and .env.production
+DATABASE_URL=mysql://user:password@shared-db-host:3306/template_shared_db
+MYSQL_HOST=shared-db-host
+MYSQL_PORT=3306
+MYSQL_USER=template_user
+MYSQL_PASSWORD=shared-mysql-password
+MYSQL_DATABASE=template_shared
+```
+
+**Table Isolation Strategy**:
+- Production tables: `documents`, `users`, `comparisons`
+- Staging tables: `staging_documents`, `staging_users`, `staging_comparisons`
+
+#### **✅ S3 Storage Sharing**
+Both environments use the same S3 bucket with different folder prefixes:
+
+```bash
+# Both .env.staging and .env.production  
+S3_BUCKET_NAME=shared-template-bucket
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=shared-aws-access-key-id
+AWS_SECRET_ACCESS_KEY=shared-aws-secret-access-key
+
+# Different folder prefixes for isolation
+# .env.production
+S3_FOLDER_PREFIX=template-production/
+
+# .env.staging  
+S3_FOLDER_PREFIX=template-staging/
+```
+
+**File Isolation**:
+- Production files: `s3://shared-bucket/template-production/documents/`
+- Staging files: `s3://shared-bucket/template-staging/documents/`
+
+#### **✅ Shared AWS Credentials**
+Both environments use the same AWS IAM credentials with permissions for:
+- S3 bucket read/write access
+- CloudWatch logging (if enabled)
+- SES email sending (if configured)
+
+### **Benefits for Rapid Shipping**
+
+✅ **Single Infrastructure**: One database, one S3 bucket to manage  
+✅ **Cost Effective**: Shared resources reduce AWS billing  
+✅ **Simple Deployment**: Same connection strings, minimal config differences  
+✅ **Fast Iteration**: No environment provisioning delays  
+✅ **Shared Monitoring**: Unified logging and metrics  
+
+### **Risk Mitigation**
+
+While sharing resources, we maintain isolation through:
+
+1. **Folder/Table Prefixes**: Data segregation at application level
+2. **Different Base Paths**: `/template` vs `/template-staging`
+3. **Separate Application Instances**: Different ports and processes
+4. **Environment Variables**: Staging vs production configuration flags
+
+### **Future Migration Path**
+
+When ready to separate environments:
+
+1. **Database**: Export staging tables → new staging database
+2. **Storage**: Copy `template-staging/` folder → new staging bucket  
+3. **Credentials**: Create separate AWS IAM users
+4. **Update Environment Files**: Point to separate resources
+
+### **Environment File Configuration**
+
+Update your `.env.staging` and `.env.production` files to use shared resources:
+
+```bash
+# .env.staging
+DATABASE_URL=mysql://user:password@your-shared-db-host:3306/template_shared
+S3_BUCKET_NAME=your-shared-s3-bucket
+S3_FOLDER_PREFIX=template-staging/
+AWS_ACCESS_KEY_ID=your-shared-aws-key
+AWS_SECRET_ACCESS_KEY=your-shared-aws-secret
+
+# .env.production  
+DATABASE_URL=mysql://user:password@your-shared-db-host:3306/template_shared
+S3_BUCKET_NAME=your-shared-s3-bucket  
+S3_FOLDER_PREFIX=template-production/
+AWS_ACCESS_KEY_ID=your-shared-aws-key
+AWS_SECRET_ACCESS_KEY=your-shared-aws-secret
+```
+
+This configuration enables **rapid shipping** while maintaining basic data isolation through application-level prefixes.

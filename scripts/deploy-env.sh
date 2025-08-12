@@ -38,7 +38,7 @@ STEPS_COMPLETED=0
 STEPS_TOTAL=8
 
 step_status() {
-    ((STEPS_COMPLETED++))
+    ((++STEPS_COMPLETED))
     echo -e "${BLUE}[$STEPS_COMPLETED/$STEPS_TOTAL]${NC} $1"
 }
 
@@ -166,8 +166,8 @@ step_status "Setting up database connection"
 if [ ! -z "${MYSQL_HOST:-}" ]; then
     echo "🗄️ Testing database connection..."
     
-    # Create a simple connection test script
-    cat > /tmp/test-db.js << 'EOF'
+    # Create a simple connection test script (CommonJS format)
+    cat > /tmp/test-db.cjs << 'EOF'
 const mysql = require('mysql2/promise');
 
 async function testConnection() {
@@ -194,7 +194,8 @@ async function testConnection() {
 testConnection();
 EOF
 
-    if node /tmp/test-db.js; then
+    # Use local node_modules for mysql2
+    if NODE_PATH=$PWD/node_modules node /tmp/test-db.cjs; then
         echo -e "${GREEN}✅ Database connection verified${NC}"
     else
         echo -e "${YELLOW}⚠️ Database connection failed - check credentials${NC}"
@@ -218,13 +219,22 @@ if [ "$HOST" = "localhost" ]; then
         npm install -g pm2
     fi
     
+    # Set PM2 config path
+    PM2_CONFIG="config/ecosystem/${ENVIRONMENT}.config.js"
+    
+    # Check if PM2 config exists
+    if [ ! -f "$PM2_CONFIG" ]; then
+        echo -e "${RED}❌ PM2 config not found: $PM2_CONFIG${NC}"
+        exit 1
+    fi
+    
     # Check if process is already running
     if pm2 describe "$PM2_APP" >/dev/null 2>&1; then
         echo "🔄 Reloading existing PM2 process..."
-        pm2 reload ecosystem.config.js --env "$ENVIRONMENT"
+        pm2 reload "$PM2_CONFIG" --env "$ENVIRONMENT"
     else
         echo "🚀 Starting new PM2 process..."
-        pm2 start ecosystem.config.js --env "$ENVIRONMENT"
+        pm2 start "$PM2_CONFIG" --env "$ENVIRONMENT"
     fi
     
     # Save PM2 configuration for startup

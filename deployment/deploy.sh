@@ -185,8 +185,8 @@ start_application() {
     cd "$APP_DIR"
     
     # Copy PM2 ecosystem file to app root
-    if [ -f "deployment/ecosystem.config.js" ]; then
-        cp deployment/ecosystem.config.js .
+    if [ -f "config/ecosystem/production.config.js" ]; then
+        cp config/ecosystem/production.config.js ecosystem.config.js
     else
         error "PM2 ecosystem configuration not found"
     fi

@@ -11,7 +11,7 @@
 
 import dotenv from 'dotenv'
 import * as nodemailer from 'nodemailer'
-import { config } from '../lib/config'
+import { config } from '../src/lib/config'
 
 // Load environment variables
 dotenv.config({ path: '.env.local' })
@@ -175,7 +175,7 @@ async function testEmailServiceIntegration() {
 
   try {
     // Import the email service
-    const { emailService } = await import('../lib/services/email-service')
+    const { emailService } = await import('../src/lib/services/email-service')
 
     // Test connection
     const connectionOk = await emailService.verifyConnection()

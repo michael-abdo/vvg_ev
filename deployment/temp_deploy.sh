@@ -233,7 +233,7 @@ EOF
     pm2 delete $APP_NAME 2>/dev/null || true
     
     # Start with ecosystem file
-    pm2 start deployment/ecosystem.config.js --env production
+    pm2 start config/ecosystem/production.config.js --env production
     check_step "Application started with PM2"
 
     # Step 15: Configure PM2 Startup

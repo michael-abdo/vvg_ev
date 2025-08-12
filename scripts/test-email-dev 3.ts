@@ -4,7 +4,7 @@
  * This script demonstrates email functionality in development mode
  */
 
-import { emailService } from '../lib/services/email-service'
+import { emailService } from '../src/lib/services/email-service'
 
 async function testEmailToDeveloper() {
   console.log('🧪 Testing email in development mode...\n')

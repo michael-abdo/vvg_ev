@@ -10,11 +10,11 @@ echo "🚀 Starting Docker deployment for Document Processing Template..."
 # Check if running on EC2 or local
 if [ "$1" == "production" ]; then
     ENV_FILE=".env.docker.production"
-    COMPOSE_FILE="docker-compose.production.yml"
+    COMPOSE_FILE="config/docker/docker-compose.production.yml"
     echo "📦 Using production configuration"
 else
     ENV_FILE=".env.docker.local"
-    COMPOSE_FILE="docker-compose.yml"
+    COMPOSE_FILE="config/docker/docker-compose.dev.yml"
     echo "📦 Using local/development configuration"
 fi
 

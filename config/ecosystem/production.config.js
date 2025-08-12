@@ -13,7 +13,7 @@ module.exports = {
       name: 'vvg-template-production',
       script: './node_modules/next/dist/bin/next',
       args: 'start',
-      cwd: __dirname,
+      cwd: __dirname.replace('/config/ecosystem', '/worktrees/production'),
       instances: 1,
       exec_mode: 'fork',
       

@@ -89,12 +89,12 @@ check_pm2() {
 check_env_files() {
     local missing_files=()
     
-    if [ "$SKIP_STAGING" = false ] && [ ! -f ".env.staging" ]; then
-        missing_files+=(".env.staging")
+    if [ "$SKIP_STAGING" = false ] && [ ! -f "env/.env.staging" ]; then
+        missing_files+=("env/.env.staging")
     fi
     
-    if [ "$SKIP_PRODUCTION" = false ] && [ ! -f ".env.production" ]; then
-        missing_files+=(".env.production")
+    if [ "$SKIP_PRODUCTION" = false ] && [ ! -f "env/.env.production" ]; then
+        missing_files+=("env/.env.production")
     fi
     
     if [ ${#missing_files[@]} -gt 0 ]; then

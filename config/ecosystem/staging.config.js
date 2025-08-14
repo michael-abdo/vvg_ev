@@ -10,6 +10,7 @@ module.exports = {
   apps: [{
     name: 'vvg-template-staging',
     script: './server-staging.js',
+    cwd: './worktrees/staging',
     
     // Environment is loaded by server-staging.js
     env: {

@@ -23,12 +23,12 @@ echo "================================="
 # Setup environment-specific variables
 if [ "$ENVIRONMENT" = "production" ]; then
     PORT=3000
-    ENV_FILE=".env.production"
+    ENV_FILE="env/.env.production"
     PM2_APP="vvg-template-production"
     BRANCH="main"
 else
     PORT=3001
-    ENV_FILE=".env.staging"
+    ENV_FILE="env/.env.staging"
     PM2_APP="vvg-template-staging"
     BRANCH="main-staging"
 fi
@@ -71,6 +71,9 @@ fi
 
 # Validate required environment variables
 echo "🔍 Checking required environment variables..."
+# First source the base .env file
+source ".env" 2>/dev/null || true
+# Then source the environment-specific overrides
 source "$ENV_FILE" 2>/dev/null || true
 
 REQUIRED_VARS=(

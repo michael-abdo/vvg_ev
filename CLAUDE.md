@@ -34,9 +34,15 @@ You are an LLM-based coding assistant. You must NEVER EVER DEVIATE from these fo
 
 # Azure AD Configuration - Industry Standard Setup
 
+## ⚠️ NextAuth v4 Known Limitation
+
+**IMPORTANT**: This template currently uses NextAuth v4.24.11, which has a known limitation with basePath handling for OAuth redirect URIs. A workaround is implemented in `src/lib/auth-nextauth-v4-workaround.ts` that manually constructs the redirect_uri with the basePath.
+
+**This workaround will be removed when upgrading to NextAuth v5**, which fixes this issue automatically.
+
 ## 🔗 Reply URLs (Redirect URIs) Configuration
 
-Following 2024 industry standards, this template uses NextAuth.js automatic redirect URI handling.
+Following 2024 industry standards, this template uses NextAuth.js automatic redirect URI handling (with v4 workaround applied).
 
 ### **Format Pattern:**
 ```
@@ -80,10 +86,11 @@ NEXTAUTH_URL=https://your-domain.com/template-staging
 ```
 
 ### **Key Principles:**
-- ✅ **Automatic**: NextAuth.js constructs redirect URIs automatically
-- ✅ **No Manual Override**: Never add `redirect_uri` parameter in code
+- ✅ **Automatic**: NextAuth.js constructs redirect URIs automatically *(v4 requires workaround)*
+- ⚠️ **Temporary Override**: v4 workaround manually adds `redirect_uri` parameter
 - ✅ **Exact Match**: Azure AD URLs must exactly match NextAuth.js construction
 - ✅ **Enhanced Scopes**: Uses `openid profile email offline_access User.Read`
+- 🔄 **Future**: Remove workaround when upgrading to NextAuth v5
 
 This follows 2024 industry standards and eliminates manual redirect URI configuration issues.
 

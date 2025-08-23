@@ -29,12 +29,11 @@ yarn-error.log*
 
 # Environment files - Security critical
 .env
-.env.local
-.env*.local
-.env.development
-.env.staging
-.env.test
-.env.production
+.env.*
+!.env.example
+!.env.*.example
+env/
+!env/*.example
 
 # vercel
 .vercel

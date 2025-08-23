@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { AlertCircle, Calculator, TrendingUp } from 'lucide-react';
+import { AlertCircle, Calculator as CalculatorIcon, TrendingUp } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   BEVCostCalculator as Calculator,
@@ -108,16 +107,23 @@ export default function BEVCostCalculator() {
   const [results, setResults] = useState<any>(null);
   const [preparedFor, setPreparedFor] = useState('');
   const [preparedBy, setPreparedBy] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    calculateResults();
-  }, [dieselInputs, bevInputs, lcfsInputs, enableLCFS]);
+    setMounted(true);
+  }, []);
 
-  const calculateResults = () => {
+  const calculateResults = useCallback(() => {
     const calculator = new Calculator(dieselInputs, bevInputs, enableLCFS ? lcfsInputs : undefined);
     const calculatedResults = calculator.calculate();
     setResults(calculatedResults);
-  };
+  }, [dieselInputs, bevInputs, lcfsInputs, enableLCFS]);
+
+  useEffect(() => {
+    if (mounted) {
+      calculateResults();
+    }
+  }, [mounted, calculateResults]);
 
   const updateDieselInput = (field: keyof VehicleInputs, value: string) => {
     setDieselInputs(prev => ({
@@ -163,7 +169,7 @@ export default function BEVCostCalculator() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-6 w-6" />
+            <CalculatorIcon className="h-6 w-6" />
             BEV Cost of Ownership Calculator
           </CardTitle>
           <CardDescription>
@@ -506,7 +512,11 @@ export default function BEVCostCalculator() {
         </TabsContent>
 
         <TabsContent value="results" className="space-y-6">
-          {results && (
+          {!mounted ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-gray-500">Loading calculator...</p>
+            </div>
+          ) : results ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -610,7 +620,7 @@ export default function BEVCostCalculator() {
                 </CardContent>
               </Card>
             </>
-          )}
+          ) : null}
         </TabsContent>
       </Tabs>
     </div>

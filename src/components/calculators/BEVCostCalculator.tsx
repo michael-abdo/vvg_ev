@@ -5,11 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { AlertCircle, Calculator as CalculatorIcon, TrendingUp } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
-  BEVCostCalculator,
+  BEVCostCalculator as Calculator,
   VehicleInputs,
   LCFSInputs,
   defaultDieselInputs,
@@ -115,7 +114,7 @@ export default function BEVCostCalculator() {
   }, []);
 
   const calculateResults = useCallback(() => {
-    const calculator = new BEVCostCalculator(dieselInputs, bevInputs, enableLCFS ? lcfsInputs : undefined);
+    const calculator = new Calculator(dieselInputs, bevInputs, enableLCFS ? lcfsInputs : undefined);
     const calculatedResults = calculator.calculate();
     setResults(calculatedResults);
   }, [dieselInputs, bevInputs, lcfsInputs, enableLCFS]);

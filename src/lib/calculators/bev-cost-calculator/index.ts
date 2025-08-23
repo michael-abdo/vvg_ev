@@ -92,7 +92,7 @@ export class BEVCostCalculator {
     return operatingCostPerMile * inputs.milesPerYear;
   }
   
-  calculateYearOneTotalCost(inputs: VehicleInputs, isDiesel: boolean): number {
+  calculateYearOneTotalCost(inputs: VehicleInputs, _isDiesel: boolean): number {
     // C31/E31: =SUM(C8,C9)-SUM(C11,C12,C14)
     const totalUpfront = inputs.truckCost + inputs.infrastructureCost;
     const totalDeductions = inputs.truckIncentive + inputs.infrastructureIncentive + inputs.residualValue;

@@ -1,0 +1,348 @@
+{
+  "Calculator": {
+    "E4": {
+      "formula": "=TODAY()",
+      "row": 4,
+      "col": 5
+    },
+    "C18": {
+      "formula": "=C16/C17",
+      "row": 18,
+      "col": 3
+    },
+    "E18": {
+      "formula": "=E16*E17",
+      "row": 18,
+      "col": 5
+    },
+    "C27": {
+      "formula": "=SUM(C8,C9)-SUM(C11+C12)",
+      "row": 27,
+      "col": 3
+    },
+    "E27": {
+      "formula": "=SUM(E8,E9)-SUM(E11+E12)",
+      "row": 27,
+      "col": 5
+    },
+    "C28": {
+      "formula": "=C14",
+      "row": 28,
+      "col": 3
+    },
+    "E28": {
+      "formula": "=E14",
+      "row": 28,
+      "col": 5
+    },
+    "C29": {
+      "formula": "=(SUM(C18,C19,C20,C21)-SUM(C23,C24))*C26",
+      "row": 29,
+      "col": 3
+    },
+    "E29": {
+      "formula": "=(SUM(E18,E19,E20,E21)-SUM(E23,E24))*E26",
+      "row": 29,
+      "col": 5
+    },
+    "C31": {
+      "formula": "=SUM(C8,C9)-SUM(C11,C12,C14)",
+      "row": 31,
+      "col": 3
+    },
+    "E31": {
+      "formula": "=SUM(E8,E9)-SUM(E11,E12,E14)",
+      "row": 31,
+      "col": 5
+    },
+    "C32": {
+      "formula": "=SUM(C31,C$29)",
+      "row": 32,
+      "col": 3
+    },
+    "E32": {
+      "formula": "=SUM(E31,E$29)",
+      "row": 32,
+      "col": 5
+    },
+    "C33": {
+      "formula": "=SUM(C32,C$29)",
+      "row": 33,
+      "col": 3
+    },
+    "E33": {
+      "formula": "=SUM(E32,E$29)",
+      "row": 33,
+      "col": 5
+    },
+    "C34": {
+      "formula": "=SUM(C33,C$29)",
+      "row": 34,
+      "col": 3
+    },
+    "E34": {
+      "formula": "=SUM(E33,E$29)",
+      "row": 34,
+      "col": 5
+    },
+    "C35": {
+      "formula": "=SUM(C34,C$29)",
+      "row": 35,
+      "col": 3
+    },
+    "E35": {
+      "formula": "=SUM(E34,E$29)",
+      "row": 35,
+      "col": 5
+    },
+    "C36": {
+      "formula": "=SUM(C35,C$29)",
+      "row": 36,
+      "col": 3
+    },
+    "E36": {
+      "formula": "=SUM(E35,E$29)",
+      "row": 36,
+      "col": 5
+    },
+    "C37": {
+      "formula": "=SUM(C36,C$29)",
+      "row": 37,
+      "col": 3
+    },
+    "E37": {
+      "formula": "=SUM(E36,E$29)",
+      "row": 37,
+      "col": 5
+    },
+    "C38": {
+      "formula": "=SUM(C37,C$29)",
+      "row": 38,
+      "col": 3
+    },
+    "E38": {
+      "formula": "=SUM(E37,E$29)",
+      "row": 38,
+      "col": 5
+    },
+    "C39": {
+      "formula": "=SUM(C38,C$29)",
+      "row": 39,
+      "col": 3
+    },
+    "E39": {
+      "formula": "=SUM(E38,E$29)",
+      "row": 39,
+      "col": 5
+    },
+    "C40": {
+      "formula": "=SUM(C39,C$29)",
+      "row": 40,
+      "col": 3
+    },
+    "E40": {
+      "formula": "=SUM(E39,E$29)",
+      "row": 40,
+      "col": 5
+    },
+    "C41": {
+      "formula": "=SUM(C40,C$29)",
+      "row": 41,
+      "col": 3
+    },
+    "E41": {
+      "formula": "=SUM(E40,E$29)",
+      "row": 41,
+      "col": 5
+    }
+  },
+  "Advanced": {
+    "B5": {
+      "formula": "=B3*B4",
+      "row": 5,
+      "col": 2
+    }
+  },
+  "LCFS and ISR": {
+    "D5": {
+      "formula": "=",
+      "row": 5,
+      "col": 4
+    },
+    "E5": {
+      "formula": "=B5/3.6",
+      "row": 5,
+      "col": 5
+    },
+    "B14": {
+      "formula": "=B13*B3",
+      "row": 14,
+      "col": 2
+    },
+    "C17": {
+      "formula": "=Q31",
+      "row": 17,
+      "col": 3
+    },
+    "D17": {
+      "formula": "=S31",
+      "row": 17,
+      "col": 4
+    },
+    "E17": {
+      "formula": "=D17-C17",
+      "row": 17,
+      "col": 5
+    },
+    "E18": {
+      "formula": "=E17/E5",
+      "row": 18,
+      "col": 5
+    },
+    "E19": {
+      "formula": "=E18/B6",
+      "row": 19,
+      "col": 5
+    },
+    "E20": {
+      "formula": "=E19*B7",
+      "row": 20,
+      "col": 5
+    },
+    "E21": {
+      "formula": "=-E20*150",
+      "row": 21,
+      "col": 5
+    },
+    "V27": {
+      "formula": "=S27-Q27",
+      "row": 27,
+      "col": 22
+    },
+    "S28": {
+      "formula": "=S27",
+      "row": 28,
+      "col": 19
+    },
+    "T28": {
+      "formula": "=T27",
+      "row": 28,
+      "col": 20
+    },
+    "V28": {
+      "formula": "=S28-Q28",
+      "row": 28,
+      "col": 22
+    },
+    "T29": {
+      "formula": "=T28",
+      "row": 29,
+      "col": 20
+    },
+    "V29": {
+      "formula": "=S29-Q29",
+      "row": 29,
+      "col": 22
+    },
+    "T30": {
+      "formula": "=T29",
+      "row": 30,
+      "col": 20
+    },
+    "V30": {
+      "formula": "=S30-Q30",
+      "row": 30,
+      "col": 22
+    },
+    "T31": {
+      "formula": "=T30",
+      "row": 31,
+      "col": 20
+    },
+    "V31": {
+      "formula": "=S31-Q31",
+      "row": 31,
+      "col": 22
+    },
+    "T32": {
+      "formula": "=T31",
+      "row": 32,
+      "col": 20
+    },
+    "V32": {
+      "formula": "=S32-Q32",
+      "row": 32,
+      "col": 22
+    },
+    "T33": {
+      "formula": "=T32",
+      "row": 33,
+      "col": 20
+    },
+    "V33": {
+      "formula": "=S33-Q33",
+      "row": 33,
+      "col": 22
+    },
+    "T34": {
+      "formula": "=T33",
+      "row": 34,
+      "col": 20
+    },
+    "V34": {
+      "formula": "=S34-Q34",
+      "row": 34,
+      "col": 22
+    },
+    "T35": {
+      "formula": "=T34",
+      "row": 35,
+      "col": 20
+    },
+    "V35": {
+      "formula": "=S35-Q35",
+      "row": 35,
+      "col": 22
+    },
+    "T36": {
+      "formula": "=T35",
+      "row": 36,
+      "col": 20
+    },
+    "V36": {
+      "formula": "=S36-Q36",
+      "row": 36,
+      "col": 22
+    },
+    "T37": {
+      "formula": "=T36",
+      "row": 37,
+      "col": 20
+    },
+    "V37": {
+      "formula": "=S37-Q37",
+      "row": 37,
+      "col": 22
+    },
+    "T38": {
+      "formula": "=T37",
+      "row": 38,
+      "col": 20
+    },
+    "V38": {
+      "formula": "=S38-Q38",
+      "row": 38,
+      "col": 22
+    },
+    "T39": {
+      "formula": "=T38",
+      "row": 39,
+      "col": 20
+    },
+    "V39": {
+      "formula": "=S39-Q39",
+      "row": 39,
+      "col": 22
+    }
+  }
+}

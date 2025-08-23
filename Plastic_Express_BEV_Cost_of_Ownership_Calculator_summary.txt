@@ -1,0 +1,41 @@
+Excel Formula Extraction Summary
+================================
+
+File: /Users/Mike/Downloads/Plastic_Express_BEV_Cost_of_Ownership_Calculator.xlsm
+Total Sheets: 3
+Total Named Ranges: 0
+
+Formulas by Sheet:
+-----------------
+Calculator: 31 formulas
+  Example formulas:
+    E4: =TODAY()
+    C18: =C16/C17
+    E18: =E16*E17
+    C27: =SUM(C8,C9)-SUM(C11+C12)
+    E27: =SUM(E8,E9)-SUM(E11+E12)
+    C28: =C14
+    E28: =E14
+    C29: =(SUM(C18,C19,C20,C21)-SUM(C23,C24))*C26
+    E29: =(SUM(E18,E19,E20,E21)-SUM(E23,E24))*E26
+    C31: =SUM(C8,C9)-SUM(C11,C12,C14)
+    ... and 21 more
+
+Advanced: 1 formulas
+  Example formulas:
+    B5: =B3*B4
+
+LCFS and ISR: 36 formulas
+  Example formulas:
+    D5: =
+    E5: =B5/3.6
+    B14: =B13*B3
+    C17: =Q31
+    D17: =S31
+    E17: =D17-C17
+    E18: =E17/E5
+    E19: =E18/B6
+    E20: =E19*B7
+    E21: =-E20*150
+    ... and 26 more
+

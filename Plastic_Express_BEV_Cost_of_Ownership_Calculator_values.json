@@ -1,0 +1,1003 @@
+{
+  "Calculator": {
+    "B1": {
+      "value": "CALCULATING A HIGH-LEVEL BUSEINSS CASE BY COMPARING COST OF OWNERSHIP BETWEEN POWERTRAINS:",
+      "row": 1,
+      "col": 2
+    },
+    "B3": {
+      "value": "Prepared for:",
+      "row": 3,
+      "col": 2
+    },
+    "C3": {
+      "value": "MGM Grand",
+      "row": 3,
+      "col": 3
+    },
+    "B4": {
+      "value": "Prepared by:",
+      "row": 4,
+      "col": 2
+    },
+    "C4": {
+      "value": "Kyle Crawford",
+      "row": 4,
+      "col": 3
+    },
+    "D4": {
+      "value": "Date: ",
+      "row": 4,
+      "col": 4
+    },
+    "B5": {
+      "value": "DO NOT CHANGE NUMBERS IN GRAY CELLS",
+      "row": 5,
+      "col": 2
+    },
+    "G5": {
+      "value": "<--- Macros need to be enabled in Excel to use button",
+      "row": 5,
+      "col": 7
+    },
+    "C6": {
+      "value": "Diesel",
+      "row": 6,
+      "col": 3
+    },
+    "E6": {
+      "value": "BEV",
+      "row": 6,
+      "col": 5
+    },
+    "G6": {
+      "value": "Alternatively, go to File --> Print --> Select \"Adobe PDF\" as printer --> Print",
+      "row": 6,
+      "col": 7
+    },
+    "B7": {
+      "value": "Upfront Cost \u2013 The initial cost to procure the vehicle. If a later sell of the vehicle is intended, deduct the expected resale value from the purchase price. There is no information yet on what a residual value of a used BEV truck will be. ",
+      "row": 7,
+      "col": 2
+    },
+    "B8": {
+      "value": "Truck",
+      "row": 8,
+      "col": 2
+    },
+    "C8": {
+      "value": "175853",
+      "row": 8,
+      "col": 3
+    },
+    "D8": {
+      "value": "BEVs are roughly 3x more expensive than a comparable diesel.",
+      "row": 8,
+      "col": 4
+    },
+    "E8": {
+      "value": "586525",
+      "row": 8,
+      "col": 5
+    },
+    "B9": {
+      "value": "Infrastructure",
+      "row": 9,
+      "col": 2
+    },
+    "C9": {
+      "value": "0",
+      "row": 9,
+      "col": 3
+    },
+    "D9": {
+      "value": "Currently very limited public charging infrastructure. Every charging project is different. ",
+      "row": 9,
+      "col": 4
+    },
+    "E9": {
+      "value": "0",
+      "row": 9,
+      "col": 5
+    },
+    "B10": {
+      "value": "Purchase Incentives \u2013 There are various incentives in the market; however, they are not guaranteed. Calculate your business case with an optimistic assumption for an incentive first. If it does not make sense for you, then stop. If it does, then look into exact incentives you qualify for.",
+      "row": 10,
+      "col": 2
+    },
+    "B11": {
+      "value": "Truck",
+      "row": 11,
+      "col": 2
+    },
+    "C11": {
+      "value": "0",
+      "row": 11,
+      "col": 3
+    },
+    "D11": {
+      "value": "Do not start by chasing incentives. Use assumptions first to determine if the Business Case makes sense for you. Incentives might be taxable. In CA, you will also generate WAIRE Credits.",
+      "row": 11,
+      "col": 4
+    },
+    "B12": {
+      "value": "Infrastructure",
+      "row": 12,
+      "col": 2
+    },
+    "C12": {
+      "value": "0",
+      "row": 12,
+      "col": 3
+    },
+    "D12": {
+      "value": "Some utility companies (e.g. SCE) have incentives for the build-out of charging infrastructure. Incentives might be taxable",
+      "row": 12,
+      "col": 4
+    },
+    "B13": {
+      "value": "Residual Value \u2013 If you plan to resell the vehicle, enter an expected resale or residual value. There is currently no information what the residual value of a used electric truck will be on the open market. If you are unsure, leave it blank as a conservative estimate.",
+      "row": 13,
+      "col": 2
+    },
+    "B14": {
+      "value": "Truck",
+      "row": 14,
+      "col": 2
+    },
+    "C14": {
+      "value": "80000",
+      "row": 14,
+      "col": 3
+    },
+    "E14": {
+      "value": "0",
+      "row": 14,
+      "col": 5
+    },
+    "B15": {
+      "value": "Operating Costs per mile",
+      "row": 15,
+      "col": 2
+    },
+    "B16": {
+      "value": "Fuel",
+      "row": 16,
+      "col": 2
+    },
+    "C16": {
+      "value": "4.23",
+      "row": 16,
+      "col": 3
+    },
+    "D16": {
+      "value": "$/gal                                                                                   $/kWH",
+      "row": 16,
+      "col": 4
+    },
+    "E16": {
+      "value": "0.4",
+      "row": 16,
+      "col": 5
+    },
+    "C17": {
+      "value": "5.5",
+      "row": 17,
+      "col": 3
+    },
+    "D17": {
+      "value": "MPG                                                                                    kWh/mi",
+      "row": 17,
+      "col": 4
+    },
+    "E17": {
+      "value": "2.2",
+      "row": 17,
+      "col": 5
+    },
+    "B18": {
+      "value": "Fuel cost/mile",
+      "row": 18,
+      "col": 2
+    },
+    "D18": {
+      "value": "Diesel: $/gal / MPG\nBEV: kWh/mi * $/kWh",
+      "row": 18,
+      "col": 4
+    },
+    "B19": {
+      "value": "Maintenance/mile",
+      "row": 19,
+      "col": 2
+    },
+    "C19": {
+      "value": "0.75",
+      "row": 19,
+      "col": 3
+    },
+    "D19": {
+      "value": "There is not enough data to tell for certain yet. However, there are 20-30% maintenance savings expected for a BEV due to the reduction in moving parts and fluids.",
+      "row": 19,
+      "col": 4
+    },
+    "E19": {
+      "value": "0.6",
+      "row": 19,
+      "col": 5
+    },
+    "B20": {
+      "value": "Insurance/mile",
+      "row": 20,
+      "col": 2
+    },
+    "C20": {
+      "value": "0.29",
+      "row": 20,
+      "col": 3
+    },
+    "D20": {
+      "value": "Enter insurance cost if they are different from your current vehicles.",
+      "row": 20,
+      "col": 4
+    },
+    "E20": {
+      "value": "0.29",
+      "row": 20,
+      "col": 5
+    },
+    "B21": {
+      "value": "Other/mile",
+      "row": 21,
+      "col": 2
+    },
+    "C21": {
+      "value": "0",
+      "row": 21,
+      "col": 3
+    },
+    "D21": {
+      "value": "Enter any other cost you want to include.",
+      "row": 21,
+      "col": 4
+    },
+    "E21": {
+      "value": "0",
+      "row": 21,
+      "col": 5
+    },
+    "B22": {
+      "value": "Operating Incentives - Some states grant incentives for ownership and operation of charging equipment through Low Carbon Fuel Standard (LCFS) credits (In place: CA, WA, OR; Considering: CO, IA, IL, MN, NY, PA, SD). For warehouse operators in California, there are also credits that can be accumulated as part of the Indirect Source Rule (ISR).",
+      "row": 22,
+      "col": 2
+    },
+    "D23": {
+      "value": "LCFS is administered by CARB and currently approved through 2030. Participation requires registration. One LCFS credit assumed at $150.",
+      "row": 23,
+      "col": 4
+    },
+    "D24": {
+      "value": "ISR (ONLY APPLICABLE TO WAREHOUSE OPERATORS IN CALIFORNIA) - Starts in 2022 for warehouses operated in CA with more than 250,000 sq ft.; 2023 over 150,000 sq. ft.; 2024 over 100,000 sq. ft.",
+      "row": 24,
+      "col": 4
+    },
+    "B25": {
+      "value": "Calculating Cost Parity",
+      "row": 25,
+      "col": 2
+    },
+    "B26": {
+      "value": "Miles driven per year",
+      "row": 26,
+      "col": 2
+    },
+    "C26": {
+      "value": "70000",
+      "row": 26,
+      "col": 3
+    },
+    "E26": {
+      "value": "70000",
+      "row": 26,
+      "col": 5
+    },
+    "B27": {
+      "value": "Total Upfront Costs",
+      "row": 27,
+      "col": 2
+    },
+    "B28": {
+      "value": "Residual Value",
+      "row": 28,
+      "col": 2
+    },
+    "B29": {
+      "value": "Total Yearly Operating Costs",
+      "row": 29,
+      "col": 2
+    },
+    "B31": {
+      "value": "Year 0",
+      "row": 31,
+      "col": 2
+    },
+    "B32": {
+      "value": "1",
+      "row": 32,
+      "col": 2
+    },
+    "B33": {
+      "value": "2",
+      "row": 33,
+      "col": 2
+    },
+    "B34": {
+      "value": "3",
+      "row": 34,
+      "col": 2
+    },
+    "B35": {
+      "value": "4",
+      "row": 35,
+      "col": 2
+    },
+    "B36": {
+      "value": "5",
+      "row": 36,
+      "col": 2
+    },
+    "B37": {
+      "value": "6",
+      "row": 37,
+      "col": 2
+    },
+    "B38": {
+      "value": "7",
+      "row": 38,
+      "col": 2
+    },
+    "B39": {
+      "value": "8",
+      "row": 39,
+      "col": 2
+    },
+    "B40": {
+      "value": "9",
+      "row": 40,
+      "col": 2
+    },
+    "B41": {
+      "value": "10",
+      "row": 41,
+      "col": 2
+    },
+    "B63": {
+      "value": "For more info: www.velocitytruckcenters.com/ ",
+      "row": 63,
+      "col": 2
+    },
+    "E63": {
+      "value": "\u00a9 Velocity Truck Centers \u2013 Version: 1.6 \u2013 August 2022 \u2013 Author: AV",
+      "row": 63,
+      "col": 5
+    }
+  },
+  "Advanced": {
+    "B2": {
+      "value": "LCFS - LCFS are generated based on the amount of kWh dispensed from a charger that is owned and operated by the customer. In order to receive a $/mi value, it is assumed that the operated vehicle is charging exclusively on this charger. If it charges at a different location, the value will be lower. It is assumed that the vehicle is the only vehicle charging at the charger. If there are additional vehicles, the value will be higher. The efficency (kWh/mi) is taken from customer input on \"Calculator\" sheet.",
+      "row": 2,
+      "col": 2
+    },
+    "B3": {
+      "value": "150",
+      "row": 3,
+      "col": 2
+    },
+    "C3": {
+      "value": "$ / LCFS Credit - https://www.arb.ca.gov/fuels/lcfs/credit/lrtmonthlycreditreports.htm - in recent years between $65 - $200",
+      "row": 3,
+      "col": 3
+    },
+    "B4": {
+      "value": "0.00135",
+      "row": 4,
+      "col": 2
+    },
+    "C4": {
+      "value": "Credits/kWh",
+      "row": 4,
+      "col": 3
+    },
+    "C5": {
+      "value": "$ / kWh",
+      "row": 5,
+      "col": 3
+    },
+    "B7": {
+      "value": "ISR",
+      "row": 7,
+      "col": 2
+    },
+    "B8": {
+      "value": "1000",
+      "row": 8,
+      "col": 2
+    },
+    "C8": {
+      "value": "Current mitigation fee per WAIRE point needed",
+      "row": 8,
+      "col": 3
+    },
+    "B9": {
+      "value": "55",
+      "row": 9,
+      "col": 2
+    },
+    "C9": {
+      "value": "Points for Class 8 NZE Truck",
+      "row": 9,
+      "col": 3
+    },
+    "B10": {
+      "value": "26",
+      "row": 10,
+      "col": 2
+    },
+    "C10": {
+      "value": "Points for Class 4-7 NZE Truck",
+      "row": 10,
+      "col": 3
+    },
+    "B11": {
+      "value": "126",
+      "row": 11,
+      "col": 2
+    },
+    "C11": {
+      "value": "Points for Class 8 ZE Truck",
+      "row": 11,
+      "col": 3
+    },
+    "B12": {
+      "value": "68",
+      "row": 12,
+      "col": 2
+    },
+    "C12": {
+      "value": "Points for Class 4-7 ZE Truck",
+      "row": 12,
+      "col": 3
+    },
+    "B13": {
+      "value": "14",
+      "row": 13,
+      "col": 2
+    },
+    "C13": {
+      "value": "Points for Class 2b-3 Truck",
+      "row": 13,
+      "col": 3
+    },
+    "B14": {
+      "value": "118",
+      "row": 14,
+      "col": 2
+    },
+    "C14": {
+      "value": "150-350 kW EVSE",
+      "row": 14,
+      "col": 3
+    },
+    "B15": {
+      "value": "51",
+      "row": 15,
+      "col": 2
+    },
+    "C15": {
+      "value": "51-149 kW EVSE",
+      "row": 15,
+      "col": 3
+    },
+    "B16": {
+      "value": "26",
+      "row": 16,
+      "col": 2
+    },
+    "C16": {
+      "value": "19.2-50 kW EVSE",
+      "row": 16,
+      "col": 3
+    },
+    "B17": {
+      "value": "5",
+      "row": 17,
+      "col": 2
+    },
+    "C17": {
+      "value": "Up to 19.2 kW EVSE",
+      "row": 17,
+      "col": 3
+    },
+    "B18": {
+      "value": "ISR Trip Calculation",
+      "row": 18,
+      "col": 2
+    },
+    "B19": {
+      "value": "150",
+      "row": 19,
+      "col": 2
+    },
+    "C19": {
+      "value": "mi between warehouses; assumed to translate driven miles to warehouse visits",
+      "row": 19,
+      "col": 3
+    },
+    "B20": {
+      "value": "0.1398",
+      "row": 20,
+      "col": 2
+    },
+    "C20": {
+      "value": "WAIRE Points for Class 8 ZE Truck Visit",
+      "row": 20,
+      "col": 3
+    },
+    "B21": {
+      "value": "0.1151",
+      "row": 21,
+      "col": 2
+    },
+    "C21": {
+      "value": "WAIRE Points for Class 8 NZE Truck Visit",
+      "row": 21,
+      "col": 3
+    },
+    "B22": {
+      "value": "0.0329",
+      "row": 22,
+      "col": 2
+    },
+    "C22": {
+      "value": "WAIRE Points for Class 4-7 ZE Truck Visit",
+      "row": 22,
+      "col": 3
+    },
+    "B23": {
+      "value": "0.0329",
+      "row": 23,
+      "col": 2
+    },
+    "C23": {
+      "value": "WAIRE Points for Class 4-7 NZE Truck Visit",
+      "row": 23,
+      "col": 3
+    }
+  },
+  "LCFS and ISR": {
+    "B3": {
+      "value": "150",
+      "row": 3,
+      "col": 2
+    },
+    "C3": {
+      "value": "$ / LCFS Credit - https://www.arb.ca.gov/fuels/lcfs/credit/lrtmonthlycreditreports.htm - in recent years between $65 - $200",
+      "row": 3,
+      "col": 3
+    },
+    "B4": {
+      "value": "1",
+      "row": 4,
+      "col": 2
+    },
+    "C4": {
+      "value": "LCFS Credit = 1 metric ton (2204.6 lbs) of carbon emission reduced",
+      "row": 4,
+      "col": 3
+    },
+    "B5": {
+      "value": "1",
+      "row": 5,
+      "col": 2
+    },
+    "C5": {
+      "value": "MJ",
+      "row": 5,
+      "col": 3
+    },
+    "F5": {
+      "value": "kWh",
+      "row": 5,
+      "col": 6
+    },
+    "B6": {
+      "value": "1000000",
+      "row": 6,
+      "col": 2
+    },
+    "C6": {
+      "value": "g/Mt",
+      "row": 6,
+      "col": 3
+    },
+    "B7": {
+      "value": "2.2",
+      "row": 7,
+      "col": 2
+    },
+    "C7": {
+      "value": "kWh/mi",
+      "row": 7,
+      "col": 3
+    },
+    "C10": {
+      "value": "CI measured in gCO2e/MJ (applicable to complete lifecycle)",
+      "row": 10,
+      "col": 3
+    },
+    "B12": {
+      "value": "Per GNA (https://www.gladstein.org/service/funding-incentives-lcfs-rin/) and PG&E (https://fleets.pge.com/lcfs/?kwhDisplacedForLcfs=140000&gridIntensityInGramsCO2ePerMJ=82.92&vehicleSets=%5B%5D&bevRateName=Business+High+Use+EV&bevBlocks=5&dieselPrice=3.1&gasolinePrice=3.3&lpgPrice=3.5&yearsOfOperation=10&btmConstructionCost=10000&btmEvseCost=10000&customVehicles=%5B%5D&customChargers=%5B%5D&isTaxExempt=Yes&isDAC=No&isPublic=No&replacesIceVehicle=Yes&organizationType=private_school_districts&zipCode=94108)",
+      "row": 12,
+      "col": 2
+    },
+    "B13": {
+      "value": "0.00135",
+      "row": 13,
+      "col": 2
+    },
+    "C13": {
+      "value": "Credits/kWh",
+      "row": 13,
+      "col": 3
+    },
+    "C14": {
+      "value": "$ / kWh",
+      "row": 14,
+      "col": 3
+    },
+    "C16": {
+      "value": "Diesel",
+      "row": 16,
+      "col": 3
+    },
+    "D16": {
+      "value": "BEV",
+      "row": 16,
+      "col": 4
+    },
+    "B17": {
+      "value": "2022",
+      "row": 17,
+      "col": 2
+    },
+    "F17": {
+      "value": "gCO2e/MJ",
+      "row": 17,
+      "col": 6
+    },
+    "F18": {
+      "value": "gCO2e/kWh",
+      "row": 18,
+      "col": 6
+    },
+    "F19": {
+      "value": "MtCO2e/kWh",
+      "row": 19,
+      "col": 6
+    },
+    "F20": {
+      "value": "MtCO2e/mi",
+      "row": 20,
+      "col": 6
+    },
+    "F21": {
+      "value": "$/mi",
+      "row": 21,
+      "col": 6
+    },
+    "P23": {
+      "value": "From GNA TCO Calculator",
+      "row": 23,
+      "col": 16
+    },
+    "P25": {
+      "value": "Year",
+      "row": 25,
+      "col": 16
+    },
+    "Q25": {
+      "value": "Standard (g/MJ)",
+      "row": 25,
+      "col": 17
+    },
+    "S25": {
+      "value": "Assumed CI (g/MJ)",
+      "row": 25,
+      "col": 19
+    },
+    "Q26": {
+      "value": "Diesel",
+      "row": 26,
+      "col": 17
+    },
+    "R26": {
+      "value": "Gasoline",
+      "row": 26,
+      "col": 18
+    },
+    "S26": {
+      "value": "Grid",
+      "row": 26,
+      "col": 19
+    },
+    "T26": {
+      "value": "Solar/PV",
+      "row": 26,
+      "col": 20
+    },
+    "V26": {
+      "value": "Delta",
+      "row": 26,
+      "col": 22
+    },
+    "P27": {
+      "value": "2018",
+      "row": 27,
+      "col": 16
+    },
+    "Q27": {
+      "value": "96.91",
+      "row": 27,
+      "col": 17
+    },
+    "R27": {
+      "value": "93.55",
+      "row": 27,
+      "col": 18
+    },
+    "S27": {
+      "value": "82.92",
+      "row": 27,
+      "col": 19
+    },
+    "T27": {
+      "value": "0",
+      "row": 27,
+      "col": 20
+    },
+    "P28": {
+      "value": "2019",
+      "row": 28,
+      "col": 16
+    },
+    "Q28": {
+      "value": "94.17",
+      "row": 28,
+      "col": 17
+    },
+    "R28": {
+      "value": "93.23",
+      "row": 28,
+      "col": 18
+    },
+    "P29": {
+      "value": "2020",
+      "row": 29,
+      "col": 16
+    },
+    "Q29": {
+      "value": "92.92",
+      "row": 29,
+      "col": 17
+    },
+    "R29": {
+      "value": "91.98",
+      "row": 29,
+      "col": 18
+    },
+    "S29": {
+      "value": "82.92",
+      "row": 29,
+      "col": 19
+    },
+    "P30": {
+      "value": "2021",
+      "row": 30,
+      "col": 16
+    },
+    "Q30": {
+      "value": "91.66",
+      "row": 30,
+      "col": 17
+    },
+    "R30": {
+      "value": "90.74",
+      "row": 30,
+      "col": 18
+    },
+    "S30": {
+      "value": "75.93",
+      "row": 30,
+      "col": 19
+    },
+    "P31": {
+      "value": "2022",
+      "row": 31,
+      "col": 16
+    },
+    "Q31": {
+      "value": "90.41",
+      "row": 31,
+      "col": 17
+    },
+    "R31": {
+      "value": "89.5",
+      "row": 31,
+      "col": 18
+    },
+    "S31": {
+      "value": "76.73",
+      "row": 31,
+      "col": 19
+    },
+    "P32": {
+      "value": "2023",
+      "row": 32,
+      "col": 16
+    },
+    "Q32": {
+      "value": "89.15",
+      "row": 32,
+      "col": 17
+    },
+    "R32": {
+      "value": "88.25",
+      "row": 32,
+      "col": 18
+    },
+    "S32": {
+      "value": "76.73",
+      "row": 32,
+      "col": 19
+    },
+    "P33": {
+      "value": "2024",
+      "row": 33,
+      "col": 16
+    },
+    "Q33": {
+      "value": "87.89",
+      "row": 33,
+      "col": 17
+    },
+    "R33": {
+      "value": "87.01",
+      "row": 33,
+      "col": 18
+    },
+    "S33": {
+      "value": "76.73",
+      "row": 33,
+      "col": 19
+    },
+    "P34": {
+      "value": "2025",
+      "row": 34,
+      "col": 16
+    },
+    "Q34": {
+      "value": "86.64",
+      "row": 34,
+      "col": 17
+    },
+    "R34": {
+      "value": "85.77",
+      "row": 34,
+      "col": 18
+    },
+    "S34": {
+      "value": "76.73",
+      "row": 34,
+      "col": 19
+    },
+    "P35": {
+      "value": "2026",
+      "row": 35,
+      "col": 16
+    },
+    "Q35": {
+      "value": "85.38",
+      "row": 35,
+      "col": 17
+    },
+    "R35": {
+      "value": "84.52",
+      "row": 35,
+      "col": 18
+    },
+    "S35": {
+      "value": "76.73",
+      "row": 35,
+      "col": 19
+    },
+    "P36": {
+      "value": "2027",
+      "row": 36,
+      "col": 16
+    },
+    "Q36": {
+      "value": "84.13",
+      "row": 36,
+      "col": 17
+    },
+    "R36": {
+      "value": "83.28",
+      "row": 36,
+      "col": 18
+    },
+    "S36": {
+      "value": "76.73",
+      "row": 36,
+      "col": 19
+    },
+    "P37": {
+      "value": "2028",
+      "row": 37,
+      "col": 16
+    },
+    "Q37": {
+      "value": "82.87",
+      "row": 37,
+      "col": 17
+    },
+    "R37": {
+      "value": "82.04",
+      "row": 37,
+      "col": 18
+    },
+    "S37": {
+      "value": "76.73",
+      "row": 37,
+      "col": 19
+    },
+    "P38": {
+      "value": "2029",
+      "row": 38,
+      "col": 16
+    },
+    "Q38": {
+      "value": "81.62",
+      "row": 38,
+      "col": 17
+    },
+    "R38": {
+      "value": "80.8",
+      "row": 38,
+      "col": 18
+    },
+    "S38": {
+      "value": "76.73",
+      "row": 38,
+      "col": 19
+    },
+    "P39": {
+      "value": "2030",
+      "row": 39,
+      "col": 16
+    },
+    "Q39": {
+      "value": "80.36",
+      "row": 39,
+      "col": 17
+    },
+    "R39": {
+      "value": "79.55",
+      "row": 39,
+      "col": 18
+    },
+    "S39": {
+      "value": "76.73",
+      "row": 39,
+      "col": 19
+    }
+  }
+}

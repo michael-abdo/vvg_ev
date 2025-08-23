@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button, StatNumber } from "@/components/ui";
 import { LoadingCard } from "@/components/ui/loading";
-import { FileUp, FileText, GitCompare, Download, RefreshCw } from "lucide-react";
+import { FileUp, FileText, GitCompare, Download, RefreshCw, Calculator } from "lucide-react";
 import { PageContainer } from "@/components/page-container";
 import { PageTitle } from "@/components/page-title";
 import { DashboardStats, DashboardStatsResponse } from "@/types/dashboard";
@@ -160,6 +160,15 @@ export default function DashboardClient() {
             >
               <Download className="mr-2 h-5 w-5" />
               Export Results
+            </Button>
+            <Button 
+              className="w-full justify-start" 
+              size="lg" 
+              variant="outline"
+              onClick={() => router.push('/calculator')}
+            >
+              <Calculator className="mr-2 h-5 w-5" />
+              BEV Cost Calculator
             </Button>
           </CardContent>
         </Card>

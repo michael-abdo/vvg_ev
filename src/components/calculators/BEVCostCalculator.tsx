@@ -5,8 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, Calculator as CalculatorIcon, TrendingUp, ChevronDown } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Calculator as CalculatorIcon, TrendingUp, ChevronDown } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -122,6 +121,8 @@ export default function BEVCostCalculator() {
   const [preparedBy, setPreparedBy] = useState('');
   const [mounted, setMounted] = useState(false);
   const [lcfsOpen, setLcfsOpen] = useState(false);
+  const [dieselOpen, setDieselOpen] = useState(true);
+  const [bevOpen, setBevOpen] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -212,13 +213,6 @@ export default function BEVCostCalculator() {
               />
             </div>
           </div>
-
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              This calculator provides a high-level business case comparison. Actual costs may vary based on specific circumstances.
-            </AlertDescription>
-          </Alert>
         </CardContent>
       </Card>
 
@@ -228,10 +222,20 @@ export default function BEVCostCalculator() {
         <div className="space-y-6">
           {/* Diesel Vehicle Inputs */}
           <Card>
-            <CardHeader>
-              <CardTitle>Diesel Vehicle</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <Collapsible open={dieselOpen} onOpenChange={setDieselOpen}>
+              <CardHeader>
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-between p-0 hover:bg-transparent"
+                  >
+                    <CardTitle>Diesel Vehicle</CardTitle>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${dieselOpen ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Upfront Costs</Label>
                 <div className="grid grid-cols-2 gap-2">
@@ -336,15 +340,27 @@ export default function BEVCostCalculator() {
                   onChange={(e) => updateDieselInput('milesPerYear', e.target.value)}
                 />
               </div>
-            </CardContent>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
 
           {/* BEV Inputs */}
           <Card>
-            <CardHeader>
-              <CardTitle>Battery Electric Vehicle</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <Collapsible open={bevOpen} onOpenChange={setBevOpen}>
+              <CardHeader>
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-between p-0 hover:bg-transparent"
+                  >
+                    <CardTitle>Battery Electric Vehicle</CardTitle>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${bevOpen ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Upfront Costs</Label>
                 <div className="grid grid-cols-2 gap-2">
@@ -449,7 +465,9 @@ export default function BEVCostCalculator() {
                   onChange={(e) => updateBEVInput('milesPerYear', e.target.value)}
                 />
               </div>
-            </CardContent>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
 
           {/* LCFS Section - Collapsible */}

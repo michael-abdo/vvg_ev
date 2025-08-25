@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, Shield, Zap } from "lucide-react";
+import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator } from "lucide-react";
 
 export default function Home() {
   return (
@@ -9,57 +9,116 @@ export default function Home() {
       <div className="container mx-auto px-4 pt-20 pb-16">
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Document Processing Template
+            BEV Cost Calculator
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            A production-ready Next.js template for document upload, processing, and comparison.
-            Built with TypeScript, Tailwind CSS, and enterprise-grade security.
+            Compare Battery Electric Vehicle (BEV) costs vs Diesel with multiple interactive UI approaches.
+            Explore 5 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/sign-in">
+            <Link href="/calculator">
               <Button size="lg" className="gap-2">
-                Get Started <ArrowRight className="w-4 h-4" />
+                Try Calculator <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link href="/api/health">
+            <Link href="/calculator/line-graph">
               <Button size="lg" variant="outline">
-                Check API Status
+                View Line Graph
               </Button>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
+      {/* UI Variations Showcase */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-blue-600" />
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Interface Style</h2>
+          <p className="text-lg text-gray-600">Same powerful calculations, 5 different visualization approaches</p>
+        </div>
+        
+        {/* First row - Line Graph and Dashboard */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <Link href="/calculator/line-graph" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
+                <TrendingUp className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Line Graph Analysis</h3>
+              <p className="text-gray-600 mb-4">
+                Interactive line charts showing cumulative costs over time with break-even analysis and savings visualization
+              </p>
+              <Button variant="outline" className="group-hover:bg-blue-50">
+                Try Line Graph <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Document Processing</h3>
-            <p className="text-gray-600">
-              Upload and process PDF, DOCX, and TXT files with automatic text extraction
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-green-600" />
+          </Link>
+          
+          <Link href="/calculator/dashboard" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
+                <BarChart3 className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Dynamic Dashboard</h3>
+              <p className="text-gray-600 mb-4">
+                Real-time sliders and controls with preset scenarios and interactive pie charts for instant cost adjustments
+              </p>
+              <Button variant="outline" className="group-hover:bg-green-50">
+                Try Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Enterprise Security</h3>
-            <p className="text-gray-600">
-              Azure AD authentication, secure storage, and comprehensive audit logging
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-8 h-8 text-purple-600" />
+          </Link>
+        </div>
+
+        {/* Second row - Comparison Cards and Stacked Chart */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <Link href="/calculator/comparison-cards" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-colors">
+                <Grid3X3 className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Comparison Cards</h3>
+              <p className="text-gray-600 mb-4">
+                Side-by-side metric cards with visual indicators and tabbed input controls for easy parameter comparison
+              </p>
+              <Button variant="outline" className="group-hover:bg-purple-50">
+                Try Cards View <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Production Ready</h3>
-            <p className="text-gray-600">
-              DRY architecture, comprehensive error handling, and automated testing
-            </p>
-          </div>
+          </Link>
+          
+          <Link href="/calculator/stacked-chart" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
+                <Layers className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Stacked Bar Charts</h3>
+              <p className="text-gray-600 mb-4">
+                Detailed cost breakdown by category with yearly analysis and configurable time periods up to 15 years
+              </p>
+              <Button variant="outline" className="group-hover:bg-orange-50">
+                Try Stacked View <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+        </div>
+
+        {/* Third row - Interactive Calculator (centered) */}
+        <div className="flex justify-center">
+          <Link href="/calculator/interactive" className="group max-w-md">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-colors">
+                <Calculator className="w-8 h-8 text-indigo-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Interactive Calculator</h3>
+              <p className="text-gray-600 mb-4">
+                Modern form interface with animated radial progress charts and real-time visual feedback
+              </p>
+              <Button variant="outline" className="group-hover:bg-indigo-50">
+                Try Interactive <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
         </div>
       </div>
 
@@ -70,13 +129,13 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-4">
             {[
               "Next.js 15",
-              "TypeScript 5",
+              "TypeScript",
               "Tailwind CSS",
+              "Recharts",
+              "Shadcn/UI",
               "Radix UI",
-              "NextAuth.js",
-              "MySQL",
-              "AWS S3",
-              "OpenAI API"
+              "Lucide Icons",
+              "LCFS Calculations"
             ].map((tech) => (
               <span
                 key={tech}
@@ -91,7 +150,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 text-center text-gray-600">
-        <p>VVG Template - A clean slate for your next project</p>
+        <p>BEV Cost Calculator - Compare Electric Vehicle economics with multiple visualization approaches</p>
       </footer>
     </div>
   );

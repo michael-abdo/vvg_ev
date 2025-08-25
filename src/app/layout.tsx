@@ -14,15 +14,15 @@ export const metadata: Metadata = {
     apple: `${basePath}/logo.svg`,
   },
   title: {
-    default: 'VVG Document Processing Template',
-    template: '%s | VVG Template'
+    default: 'VVG Document Processing Calculator',
+    template: '%s | VVG Calculator'
   },
-  description: 'Production-ready document processing template with upload, extraction, and comparison features',
-  keywords: ['document processing', 'template analysis', 'PDF extraction', 'document comparison'],
+  description: 'Production-ready document processing calculator with upload, extraction, and comparison features',
+  keywords: ['document processing', 'calculator', 'PDF extraction', 'document comparison', 'BEV cost analysis'],
   authors: [{ name: 'VVG Team' }],
   openGraph: {
-    title: 'VVG Document Processing Template',
-    description: 'Production-ready document processing template',
+    title: 'VVG Document Processing Calculator',
+    description: 'Production-ready document processing calculator',
     type: 'website',
   }
 }

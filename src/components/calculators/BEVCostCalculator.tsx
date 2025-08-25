@@ -122,11 +122,36 @@ export default function BEVCostCalculator() {
   const [mounted, setMounted] = useState(false);
   const [lcfsOpen, setLcfsOpen] = useState(false);
   const [dieselOpen, setDieselOpen] = useState(true);
-  const [bevOpen, setBevOpen] = useState(true);
+  const [bevOpen, setBevOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Accordion behavior handlers
+  const handleDieselToggle = (open: boolean) => {
+    setDieselOpen(open);
+    if (open) {
+      setBevOpen(false);
+      setLcfsOpen(false);
+    }
+  };
+
+  const handleBevToggle = (open: boolean) => {
+    setBevOpen(open);
+    if (open) {
+      setDieselOpen(false);
+      setLcfsOpen(false);
+    }
+  };
+
+  const handleLcfsToggle = (open: boolean) => {
+    setLcfsOpen(open);
+    if (open) {
+      setDieselOpen(false);
+      setBevOpen(false);
+    }
+  };
 
   const calculateResults = useCallback(() => {
     const calculator = new BEVCalculator(dieselInputs, bevInputs, enableLCFS ? lcfsInputs : undefined);
@@ -222,7 +247,7 @@ export default function BEVCostCalculator() {
         <div className="space-y-6">
           {/* Diesel Vehicle Inputs */}
           <Card>
-            <Collapsible open={dieselOpen} onOpenChange={setDieselOpen}>
+            <Collapsible open={dieselOpen} onOpenChange={handleDieselToggle}>
               <CardHeader>
                 <CollapsibleTrigger asChild>
                   <Button 
@@ -347,7 +372,7 @@ export default function BEVCostCalculator() {
 
           {/* BEV Inputs */}
           <Card>
-            <Collapsible open={bevOpen} onOpenChange={setBevOpen}>
+            <Collapsible open={bevOpen} onOpenChange={handleBevToggle}>
               <CardHeader>
                 <CollapsibleTrigger asChild>
                   <Button 
@@ -472,7 +497,7 @@ export default function BEVCostCalculator() {
 
           {/* LCFS Section - Collapsible */}
           <Card>
-            <Collapsible open={lcfsOpen} onOpenChange={setLcfsOpen}>
+            <Collapsible open={lcfsOpen} onOpenChange={handleLcfsToggle}>
               <CardHeader>
                 <CollapsibleTrigger asChild>
                   <Button 

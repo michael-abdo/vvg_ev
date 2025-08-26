@@ -59,7 +59,7 @@ export function Navbar() {
               <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
           </div>
-          <span className="text-[#152C5B] font-medium">{process.env.NEXT_PUBLIC_APP_NAME || 'Template App'}</span>
+          <span className="text-[#152C5B] font-medium">{process.env.NEXT_PUBLIC_APP_NAME || 'EV Calculator'}</span>
         </Link>
 
         {/* Center - Logo */}

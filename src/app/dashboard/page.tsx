@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator } from "lucide-react";
+import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator, Truck, DollarSign } from "lucide-react";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function Dashboard() {
           </h1>
           <p className="text-xl text-gray-600 mb-8">
             Compare Battery Electric Vehicle (BEV) costs vs Diesel with multiple interactive UI approaches.
-            Explore 5 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
+            Explore 7 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/calculator">
@@ -40,7 +40,7 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Interface Style</h2>
-          <p className="text-lg text-gray-600">Same powerful calculations, 5 different visualization approaches</p>
+          <p className="text-lg text-gray-600">Same powerful calculations, 7 different visualization approaches</p>
         </div>
         
         {/* First row - Line Graph and Dashboard */}
@@ -110,7 +110,7 @@ export default function Dashboard() {
         </div>
 
         {/* Third row - Interactive Calculator (centered) */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mb-8">
           <Link href="/calculator/interactive" className="group max-w-md">
             <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
               <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-colors">
@@ -122,6 +122,39 @@ export default function Dashboard() {
               </p>
               <Button variant="outline" className="group-hover:bg-indigo-50">
                 Try Interactive <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+        </div>
+
+        {/* Fourth row - Freightliner and Rizon HVIP */}
+        <div className="grid md:grid-cols-2 gap-8">
+          <Link href="/calculator/freightliner" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-slate-200 transition-colors">
+                <Truck className="w-8 h-8 text-slate-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Freightliner Commercial</h3>
+              <p className="text-gray-600 mb-4">
+                Professional fleet analysis with tabbed interface, executive summaries, and visual cost comparisons
+              </p>
+              <Button variant="outline" className="group-hover:bg-slate-50">
+                Try Commercial <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+          
+          <Link href="/calculator/rizon-hvip" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white">
+              <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition-colors">
+                <DollarSign className="w-8 h-8 text-amber-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Rizon HVIP Incentives</h3>
+              <p className="text-gray-600 mb-4">
+                California HVIP voucher calculator with incentive tiers, disadvantaged community benefits, and LCFS
+              </p>
+              <Button variant="outline" className="group-hover:bg-amber-50">
+                Try HVIP Calculator <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </Link>

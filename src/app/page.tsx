@@ -21,18 +21,6 @@ export default function Dashboard() {
             Compare Battery Electric Vehicle (BEV) costs vs Diesel with multiple interactive UI approaches.
             Explore 7 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/calculator/original">
-              <Button size="lg" className="gap-2">
-                Try Calculator <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link href="/calculator/line-graph">
-              <Button size="lg" variant="outline">
-                View Line Graph
-              </Button>
-            </Link>
-          </div>
         </div>
       </div>
 

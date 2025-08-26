@@ -524,7 +524,7 @@ export default function ToyotaStyleCalculator() {
                       className="h-4 bg-green-700"
                     />
                     <p className="text-sm text-green-100 mt-2">
-                      That's {savingsProgress.toFixed(0)}% savings over 10 years!
+                      That&apos;s {savingsProgress.toFixed(0)}% savings over 10 years!
                     </p>
                   </CardContent>
                 </Card>

@@ -81,7 +81,7 @@ export default function RizonHvipCalculator() {
     truckIncentive: 0,
     infrastructureIncentive: 0,
     residualValue: selectedDiesel.cost * 0.2, // 20% residual
-    fuelPrice: fuelPrice,
+    fuelPrice,
     efficiency: selectedDiesel.mpg,
     maintenancePerMile: selectedDiesel.maintenance,
     insurancePerMile: 0.15,
@@ -293,7 +293,7 @@ export default function RizonHvipCalculator() {
               Driving Habits
             </CardTitle>
             <CardDescription>
-              Enter your fleet's typical usage patterns
+              Enter your fleet&apos;s typical usage patterns
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -521,11 +521,11 @@ export default function RizonHvipCalculator() {
           <div className="grid md:grid-cols-2 gap-4">
             <Button variant="outline" className="w-full flex items-center gap-2">
               <Calculator className="h-5 w-5" />
-              Calculate Your Fleet's Incentives Now
+              Calculate Your Fleet&apos;s Incentives Now
             </Button>
             <Button variant="outline" className="w-full flex items-center gap-2 text-orange-600 border-orange-600 hover:bg-orange-50">
               <AlertCircle className="h-5 w-5" />
-              Don't Wait - HVIP Funding is Limited, Call Us Today
+              Don&apos;t Wait - HVIP Funding is Limited, Call Us Today
             </Button>
           </div>
         </div>

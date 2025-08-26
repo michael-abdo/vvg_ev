@@ -1,13 +1,9 @@
+'use client';
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExportButton } from "@/components/ui/export-button";
 import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator, Truck, DollarSign, FileSpreadsheet } from "lucide-react";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'BEV Cost Calculator',
-  description: 'Compare Battery Electric Vehicle costs vs Diesel with multiple interactive UI approaches',
-};
 
 function DashboardContent() {
   const handleExportPDF = async () => {

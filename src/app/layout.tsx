@@ -14,15 +14,15 @@ export const metadata: Metadata = {
     apple: `${basePath}/logo.svg`,
   },
   title: {
-    default: 'VVG Document Processing Calculator',
-    template: '%s | VVG Calculator'
+    default: 'BEV Cost Calculator',
+    template: '%s | BEV Cost Calculator'
   },
-  description: 'Production-ready document processing calculator with upload, extraction, and comparison features',
-  keywords: ['document processing', 'calculator', 'PDF extraction', 'document comparison', 'BEV cost analysis'],
+  description: 'Compare Battery Electric Vehicle costs vs Diesel with multiple interactive UI approaches',
+  keywords: ['BEV cost calculator', 'electric vehicle', 'diesel comparison', 'fleet analysis', 'TCO calculator'],
   authors: [{ name: 'VVG Team' }],
   openGraph: {
-    title: 'VVG Document Processing Calculator',
-    description: 'Production-ready document processing calculator',
+    title: 'BEV Cost Calculator',
+    description: 'Compare Battery Electric Vehicle costs vs Diesel with multiple interactive UI approaches',
     type: 'website',
   }
 }

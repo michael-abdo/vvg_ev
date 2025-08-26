@@ -92,7 +92,7 @@ export class BEVCostCalculator {
     return operatingCostPerMile * inputs.milesPerYear;
   }
   
-  calculateYearOneTotalCost(inputs: VehicleInputs, isDiesel: boolean): number {
+  calculateYearOneTotalCost(inputs: VehicleInputs): number {
     // C31/E31: =SUM(C8,C9)-SUM(C11,C12,C14)
     const totalUpfront = inputs.truckCost + inputs.infrastructureCost;
     const totalDeductions = inputs.truckIncentive + inputs.infrastructureIncentive + inputs.residualValue;
@@ -100,7 +100,7 @@ export class BEVCostCalculator {
   }
   
   calculateCumulativeCosts(inputs: VehicleInputs, isDiesel: boolean, years: number = 10): number[] {
-    const yearOneCost = this.calculateYearOneTotalCost(inputs, isDiesel);
+    const yearOneCost = this.calculateYearOneTotalCost(inputs);
     const annualOperatingCost = this.calculateAnnualOperatingCost(inputs, isDiesel);
     
     const costs: number[] = [];
@@ -156,7 +156,7 @@ export class BEVCostCalculator {
       
       // Recalculate with LCFS revenue included
       const adjustedAnnualCost = bevResults.annualOperatingCost - bevResults.lcfsRevenuePerYear;
-      const yearOneCost = this.calculateYearOneTotalCost(this.bevInputs, false);
+      const yearOneCost = this.calculateYearOneTotalCost(this.bevInputs);
       
       // Recalculate cumulative costs with LCFS savings
       bevResults.yearlyTotalCosts = [];

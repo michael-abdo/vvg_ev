@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { Car, Zap, DollarSign, Leaf, TrendingUp, Truck, ChevronDown } from 'lucide-react';
+import { Car, Zap, Leaf, TrendingUp, Truck } from 'lucide-react';
 import {
   Select,
   SelectContent,

@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -25,7 +24,6 @@ import {
   Calculator,
   CheckCircle,
   AlertCircle,
-  MapPin,
   ExternalLink
 } from 'lucide-react';
 import {
@@ -59,7 +57,6 @@ const RIZON_TRUCK = {
 export default function RizonHvipCalculator() {
   const [mounted, setMounted] = useState(false);
   const [results, setResults] = useState<any>(null);
-  const [selectedYears, setSelectedYears] = useState(5);
   
   // Vehicle selection
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
@@ -129,10 +126,6 @@ export default function RizonHvipCalculator() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
-  };
-
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat('en-US').format(Math.round(value));
   };
 
   if (!results) {

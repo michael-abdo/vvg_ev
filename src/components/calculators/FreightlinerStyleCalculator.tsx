@@ -163,7 +163,7 @@ export default function FreightlinerStyleCalculator() {
               {/* Diesel Specifications */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-amber-700">Diesel Vehicle</CardTitle>
+                  <CardTitle className="text-slate-700">Diesel Vehicle</CardTitle>
                   <CardDescription>Current fleet specifications</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -295,7 +295,7 @@ export default function FreightlinerStyleCalculator() {
               {/* Electric Specifications */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-emerald-700">Electric Vehicle</CardTitle>
+                  <CardTitle className="text-blue-700">Electric Vehicle</CardTitle>
                   <CardDescription>Proposed electric fleet specifications</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -503,8 +503,8 @@ export default function FreightlinerStyleCalculator() {
                   className="relative rounded-lg overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800 text-white p-8"
                   style={{
                     backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.95) 100%), 
-                                     radial-gradient(circle at 20% 80%, rgba(34,197,94,0.1) 0%, transparent 50%),
-                                     radial-gradient(circle at 80% 20%, rgba(59,130,246,0.1) 0%, transparent 50%)`,
+                                     radial-gradient(circle at 20% 80%, rgba(96,165,250,0.15) 0%, transparent 50%),
+                                     radial-gradient(circle at 80% 20%, rgba(59,130,246,0.15) 0%, transparent 50%)`,
                     backgroundBlendMode: 'overlay'
                   }}
                 >
@@ -552,11 +552,11 @@ export default function FreightlinerStyleCalculator() {
                           {/* Electric Bar */}
                           <div className="flex-1 flex flex-col items-center justify-end h-full">
                             <div 
-                              className="w-full bg-gradient-to-t from-emerald-600/80 to-emerald-400 rounded-t-2xl border border-emerald-400/20 flex items-center justify-center"
+                              className="w-full bg-gradient-to-t from-blue-600/80 to-blue-400 rounded-t-2xl border border-blue-400/20 flex items-center justify-center"
                               style={{
                                 height: `${beverHeight}%`,
                                 minHeight: '120px',
-                                boxShadow: '0 -10px 40px rgba(34,197,94,0.3), inset 0 2px 10px rgba(255,255,255,0.2)',
+                                boxShadow: '0 -10px 40px rgba(59,130,246,0.3), inset 0 2px 10px rgba(255,255,255,0.2)',
                                 transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
                               }}
                             >
@@ -576,11 +576,11 @@ export default function FreightlinerStyleCalculator() {
                           {/* Diesel Bar */}
                           <div className="flex-1 flex flex-col items-center justify-end h-full">
                             <div 
-                              className="w-full bg-gradient-to-t from-amber-700/80 to-amber-500 rounded-t-2xl border border-amber-400/20 flex items-center justify-center"
+                              className="w-full bg-gradient-to-t from-slate-700/80 to-slate-500 rounded-t-2xl border border-slate-400/20 flex items-center justify-center"
                               style={{
                                 height: `${dieselHeight}%`,
                                 minHeight: '120px',
-                                boxShadow: '0 -10px 40px rgba(217,119,6,0.3), inset 0 2px 10px rgba(255,255,255,0.2)',
+                                boxShadow: '0 -10px 40px rgba(71,85,105,0.3), inset 0 2px 10px rgba(255,255,255,0.2)',
                                 transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
                               }}
                             >
@@ -619,8 +619,8 @@ export default function FreightlinerStyleCalculator() {
                           <YAxis tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`} />
                           <Tooltip formatter={(value: number) => formatCurrency(value)} />
                           <Legend />
-                          <Bar dataKey="diesel" fill="#d97706" name="Diesel Fleet" />
-                          <Bar dataKey="bev" fill="#059669" name="Electric Fleet" />
+                          <Bar dataKey="diesel" fill="#64748b" name="Diesel Fleet" />
+                          <Bar dataKey="bev" fill="#3b82f6" name="Electric Fleet" />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -643,7 +643,7 @@ export default function FreightlinerStyleCalculator() {
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse border border-slate-300">
                         <thead>
-                          <tr className="bg-slate-100">
+                          <tr className="bg-slate-200">
                             <th className="border border-slate-300 p-3 text-left font-semibold">Cost Category</th>
                             <th className="border border-slate-300 p-3 text-right font-semibold">Diesel</th>
                             <th className="border border-slate-300 p-3 text-right font-semibold">Electric</th>
@@ -663,7 +663,7 @@ export default function FreightlinerStyleCalculator() {
                             <td className="border border-slate-300 p-3">Fuel Cost per Mile</td>
                             <td className="border border-slate-300 p-3 text-right">{formatPerMile(results.diesel.fuelCostPerMile)}</td>
                             <td className="border border-slate-300 p-3 text-right">{formatPerMile(results.bev.fuelCostPerMile)}</td>
-                            <td className="border border-slate-300 p-3 text-right text-green-600">
+                            <td className="border border-slate-300 p-3 text-right text-blue-600">
                               -{formatPerMile(results.diesel.fuelCostPerMile - results.bev.fuelCostPerMile)}
                             </td>
                           </tr>
@@ -671,7 +671,7 @@ export default function FreightlinerStyleCalculator() {
                             <td className="border border-slate-300 p-3">Total Operating Cost per Mile</td>
                             <td className="border border-slate-300 p-3 text-right">{formatPerMile(results.diesel.totalOperatingCostPerMile)}</td>
                             <td className="border border-slate-300 p-3 text-right">{formatPerMile(results.bev.totalOperatingCostPerMile)}</td>
-                            <td className="border border-slate-300 p-3 text-right text-green-600">
+                            <td className="border border-slate-300 p-3 text-right text-blue-600">
                               -{formatPerMile(results.diesel.totalOperatingCostPerMile - results.bev.totalOperatingCostPerMile)}
                             </td>
                           </tr>
@@ -679,7 +679,7 @@ export default function FreightlinerStyleCalculator() {
                             <td className="border border-slate-300 p-3">Annual Operating Cost</td>
                             <td className="border border-slate-300 p-3 text-right">{formatCurrency(results.diesel.annualOperatingCost)}</td>
                             <td className="border border-slate-300 p-3 text-right">{formatCurrency(results.bev.annualOperatingCost)}</td>
-                            <td className="border border-slate-300 p-3 text-right text-green-600">
+                            <td className="border border-slate-300 p-3 text-right text-blue-600">
                               -{formatCurrency(results.diesel.annualOperatingCost - results.bev.annualOperatingCost)}
                             </td>
                           </tr>
@@ -687,18 +687,18 @@ export default function FreightlinerStyleCalculator() {
                             <tr>
                               <td className="border border-slate-300 p-3">LCFS Revenue per Year</td>
                               <td className="border border-slate-300 p-3 text-right">-</td>
-                              <td className="border border-slate-300 p-3 text-right text-green-600">+{formatCurrency(results.bev.lcfsRevenuePerYear)}</td>
-                              <td className="border border-slate-300 p-3 text-right text-green-600">
+                              <td className="border border-slate-300 p-3 text-right text-blue-600">+{formatCurrency(results.bev.lcfsRevenuePerYear)}</td>
+                              <td className="border border-slate-300 p-3 text-right text-blue-600">
                                 +{formatCurrency(results.bev.lcfsRevenuePerYear)}
                               </td>
                             </tr>
                           )}
-                          <tr className="bg-slate-50 font-semibold">
+                          <tr className="bg-slate-100 font-semibold">
                             <td className="border border-slate-300 p-3">10-Year Total Cost</td>
                             <td className="border border-slate-300 p-3 text-right">{formatCurrency(results.diesel.yearlyTotalCosts[9])}</td>
                             <td className="border border-slate-300 p-3 text-right">{formatCurrency(results.bev.yearlyTotalCosts[9])}</td>
                             <td className={`border border-slate-300 p-3 text-right font-bold ${
-                              results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] > 0 ? 'text-green-600' : 'text-red-600'
+                              results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] > 0 ? 'text-blue-600' : 'text-red-600'
                             }`}>
                               {results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] > 0 ? '-' : '+'}{formatCurrency(Math.abs(results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9]))}
                             </td>
@@ -715,10 +715,10 @@ export default function FreightlinerStyleCalculator() {
                     <CardTitle>Executive Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="p-4 bg-emerald-50 rounded-lg">
-                      <h4 className="font-semibold text-emerald-800 mb-2">10-Year Savings</h4>
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-semibold text-blue-800 mb-2">10-Year Savings</h4>
                       <p className={`text-2xl font-bold ${
-                        results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] > 0 ? 'text-emerald-600' : 'text-red-600'
+                        results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] > 0 ? 'text-blue-600' : 'text-red-600'
                       }`}>
                         {formatCurrency(results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9])}
                       </p>
@@ -736,17 +736,17 @@ export default function FreightlinerStyleCalculator() {
                       </p>
                     </div>
 
-                    <div className="p-4 bg-amber-50 rounded-lg">
-                      <h4 className="font-semibold text-amber-800 mb-2">Annual Fuel Savings</h4>
-                      <p className="text-2xl font-bold text-amber-600">
+                    <div className="p-4 bg-slate-50 rounded-lg">
+                      <h4 className="font-semibold text-slate-800 mb-2">Annual Fuel Savings</h4>
+                      <p className="text-2xl font-bold text-slate-600">
                         {formatCurrency((results.diesel.fuelCostPerMile - results.bev.fuelCostPerMile) * dieselInputs.milesPerYear)}
                       </p>
                     </div>
 
                     {results.bev.lcfsRevenuePerYear && (
-                      <div className="p-4 bg-green-50 rounded-lg">
-                        <h4 className="font-semibold text-green-800 mb-2">Annual LCFS Revenue</h4>
-                        <p className="text-2xl font-bold text-green-600">
+                      <div className="p-4 bg-blue-50 rounded-lg">
+                        <h4 className="font-semibold text-blue-800 mb-2">Annual LCFS Revenue</h4>
+                        <p className="text-2xl font-bold text-blue-600">
                           {formatCurrency(results.bev.lcfsRevenuePerYear)}
                         </p>
                       </div>

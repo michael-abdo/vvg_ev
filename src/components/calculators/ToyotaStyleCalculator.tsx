@@ -4,12 +4,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight, ArrowLeft, Car, Zap, DollarSign, CheckCircle2, Leaf } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Car, Zap, DollarSign, Leaf, TrendingUp, Truck, ChevronDown } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   BEVCostCalculator as BEVCalculator,
   VehicleInputs,
@@ -19,98 +23,103 @@ import {
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
 
-const COLORS = ['#ef4444', '#22c55e', '#3b82f6', '#f59e0b'];
-
 export default function ToyotaStyleCalculator() {
-  const [currentStep, setCurrentStep] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [results, setResults] = useState<any>(null);
   
-  // Consumer-friendly inputs
-  const [selectedVehicleType, setSelectedVehicleType] = useState('midsize-suv');
-  const [currentVehicle, setCurrentVehicle] = useState('');
-  const [dailyMiles, setDailyMiles] = useState([40]);
-  const [gasPrice, setGasPrice] = useState([4.25]);
-  const [electricityPrice, setElectricityPrice] = useState([0.15]);
-  const [homeCharging, setHomeCharging] = useState('yes');
-  const [governmentIncentives, setGovernmentIncentives] = useState('yes');
+  // Header information
+  const [preparedFor, setPreparedFor] = useState('');
+  const [preparedBy, setPreparedBy] = useState('');
   
-  // Vehicle inputs with consumer defaults
-  const [dieselInputs, setDieselInputs] = useState<VehicleInputs>({
-    ...defaultDieselInputs,
-    truckCost: 35000,
-    milesPerYear: 15000,
-    fuelPrice: 4.25,
-    efficiency: 28,
-    maintenancePerMile: 0.08
-  });
+  // Vehicle inputs using original calculator defaults
+  const [dieselInputs, setDieselInputs] = useState<VehicleInputs>(defaultDieselInputs);
+  const [bevInputs, setBevInputs] = useState<VehicleInputs>(defaultBEVInputs);
   
-  const [bevInputs, setBevInputs] = useState<VehicleInputs>({
-    ...defaultBEVInputs,
-    truckCost: 42000,
-    infrastructureCost: 1200, // Home charger
-    truckIncentive: 7500, // Federal tax credit
-    milesPerYear: 15000,
-    fuelPrice: 0.15,
-    efficiency: 0.28, // kWh/mile equivalent
-    maintenancePerMile: 0.04
-  });
-
+  // LCFS
   const [lcfsInputs, setLcfsInputs] = useState<LCFSInputs>(defaultLCFSInputs);
+  const [enableLCFS, setEnableLCFS] = useState(false);
 
-  const steps = [
-    { title: 'Your Current Vehicle', icon: Car },
-    { title: 'Driving Habits', icon: Zap },
-    { title: 'Energy Costs', icon: DollarSign },
-    { title: 'Your Savings', icon: CheckCircle2 }
-  ];
+  // Vehicle selection
+  const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
+  const [selectedElectricTruck, setSelectedElectricTruck] = useState('lightning-emotors');
 
-  const vehicleTypes = {
-    'compact-car': { name: 'Compact Car', cost: 28000, mpg: 32, evCost: 35000, evEfficiency: 0.24 },
-    'midsize-sedan': { name: 'Midsize Sedan', cost: 32000, mpg: 30, evCost: 38000, evEfficiency: 0.26 },
-    'midsize-suv': { name: 'Midsize SUV', cost: 35000, mpg: 28, evCost: 42000, evEfficiency: 0.28 },
-    'full-size-suv': { name: 'Full-size SUV', cost: 45000, mpg: 24, evCost: 55000, evEfficiency: 0.32 },
-    'pickup-truck': { name: 'Pickup Truck', cost: 40000, mpg: 22, evCost: 60000, evEfficiency: 0.35 }
+  // Truck data
+  const truckModels = {
+    diesel: [
+      { id: 'isuzu-n-series', name: 'Isuzu N Series', cost: 65000, mpg: 8.5, maintenance: 0.65 },
+      { id: 'hino-m5', name: 'Hino M5', cost: 72000, mpg: 7.8, maintenance: 0.68 },
+      { id: 'freightliner-m2', name: 'Freightliner M2 Class 6', cost: 85000, mpg: 7.2, maintenance: 0.72 },
+    ],
+    electric: [
+      { id: 'lightning-emotors', name: 'Lightning eMotors', cost: 185000, efficiency: 1.8, maintenance: 0.35 },
+      { id: 'workhorse-c1000', name: 'Workhorse C1000', cost: 175000, efficiency: 2.0, maintenance: 0.38 },
+      { id: 'byd-6f', name: 'BYD 6F', cost: 165000, efficiency: 1.9, maintenance: 0.36 },
+    ]
+  };
+
+  // Update inputs when truck selection changes
+  const updateDieselTruck = (truckId: string) => {
+    const truck = truckModels.diesel.find(t => t.id === truckId);
+    if (truck) {
+      setSelectedDieselTruck(truckId);
+      setDieselInputs(prev => ({
+        ...prev,
+        truckCost: truck.cost,
+        efficiency: truck.mpg,
+        maintenancePerMile: truck.maintenance
+      }));
+    }
+  };
+
+  const updateElectricTruck = (truckId: string) => {
+    const truck = truckModels.electric.find(t => t.id === truckId);
+    if (truck) {
+      setSelectedElectricTruck(truckId);
+      setBevInputs(prev => ({
+        ...prev,
+        truckCost: truck.cost,
+        efficiency: truck.efficiency,
+        maintenancePerMile: truck.maintenance
+      }));
+    }
   };
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const vehicle = vehicleTypes[selectedVehicleType as keyof typeof vehicleTypes];
-    if (vehicle) {
-      setDieselInputs(prev => ({
-        ...prev,
-        truckCost: vehicle.cost,
-        efficiency: vehicle.mpg,
-        fuelPrice: gasPrice[0],
-        milesPerYear: dailyMiles[0] * 365
-      }));
-      
-      setBevInputs(prev => ({
-        ...prev,
-        truckCost: vehicle.evCost,
-        efficiency: vehicle.evEfficiency,
-        fuelPrice: electricityPrice[0],
-        milesPerYear: dailyMiles[0] * 365,
-        truckIncentive: governmentIncentives === 'yes' ? 7500 : 0,
-        infrastructureCost: homeCharging === 'yes' ? 1200 : 0
-      }));
-    }
-  }, [selectedVehicleType, dailyMiles, gasPrice, electricityPrice, homeCharging, governmentIncentives]);
-
   const calculateResults = useCallback(() => {
-    const calculator = new BEVCalculator(dieselInputs, bevInputs, lcfsInputs);
+    const calculator = new BEVCalculator(dieselInputs, bevInputs, enableLCFS ? lcfsInputs : undefined);
     const calculatedResults = calculator.calculate();
     setResults(calculatedResults);
-  }, [dieselInputs, bevInputs, lcfsInputs]);
+  }, [dieselInputs, bevInputs, lcfsInputs, enableLCFS]);
 
   useEffect(() => {
     if (mounted) {
       calculateResults();
     }
   }, [mounted, calculateResults]);
+
+  const updateDieselInput = (field: keyof VehicleInputs, value: string) => {
+    setDieselInputs(prev => ({
+      ...prev,
+      [field]: parseFloat(value) || 0
+    }));
+  };
+
+  const updateBEVInput = (field: keyof VehicleInputs, value: string) => {
+    setBevInputs(prev => ({
+      ...prev,
+      [field]: parseFloat(value) || 0
+    }));
+  };
+
+  const updateLCFSInput = (field: keyof LCFSInputs, value: string) => {
+    setLcfsInputs(prev => ({
+      ...prev,
+      [field]: parseFloat(value) || 0
+    }));
+  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -121,426 +130,530 @@ export default function ToyotaStyleCalculator() {
     }).format(value);
   };
 
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
+  const formatPerMile = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
   };
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const progress = ((currentStep + 1) / steps.length) * 100;
-
-  // Prepare savings data for charts
-  const savingsData = results ? [
-    { name: 'Gas Vehicle', value: results.diesel.yearlyTotalCosts[9], color: COLORS[0] },
-    { name: 'Electric Vehicle', value: results.bev.yearlyTotalCosts[9], color: COLORS[1] }
-  ] : [];
-
-  const annualSavingsData = results ? Array.from({ length: 10 }, (_, i) => ({
+  // Prepare chart data
+  const chartData = results ? Array.from({ length: 10 }, (_, i) => ({
     year: `Year ${i + 1}`,
-    gasSavings: results.diesel.yearlyTotalCosts[i] - results.bev.yearlyTotalCosts[i],
-    cumulative: Array.from({ length: i + 1 }).reduce((sum, _, j) => 
-      sum + (results.diesel.yearlyTotalCosts[j] - results.bev.yearlyTotalCosts[j]), 0
-    )
+    'Gas Vehicle': results.diesel.yearlyTotalCosts[i],
+    'Electric Vehicle': results.bev.yearlyTotalCosts[i],
   })) : [];
 
+  const savingsProgress = results 
+    ? Math.max(0, Math.min(100, ((results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9]) / results.diesel.yearlyTotalCosts[9]) * 100))
+    : 0;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-green-50">
-      {/* Header with Progress */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Electric Vehicle Savings Calculator</h1>
-              <p className="text-gray-600">Discover your potential savings in just a few simple steps</p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">Step {currentStep + 1} of {steps.length}</div>
-              <Progress value={progress} className="w-32" />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      {/* Consumer-friendly Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Electric Vehicle Savings Calculator
+          </h1>
+          <p className="text-xl text-gray-600">
+            See how much you can save by switching to electric
+          </p>
           
-          {/* Step Indicator */}
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-              const isActive = index === currentStep;
-              const isCompleted = index < currentStep;
-              
-              return (
-                <div key={index} className="flex items-center">
-                  <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
-                    isActive ? 'bg-red-100 text-red-700' : 
-                    isCompleted ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    <Icon className="h-4 w-4" />
-                    <span className="font-medium">{step.title}</span>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <ArrowRight className="h-4 w-4 text-gray-400 mx-2" />
-                  )}
-                </div>
-              );
-            })}
+          {/* Prepared for/by section */}
+          <div className="mt-4 grid grid-cols-2 gap-4 max-w-md">
+            <div>
+              <Label htmlFor="prepared-for" className="text-gray-700 text-sm">Name</Label>
+              <Input
+                id="prepared-for"
+                value={preparedFor}
+                onChange={(e) => setPreparedFor(e.target.value)}
+                placeholder="Your name"
+                className="bg-gray-50"
+              />
+            </div>
+            <div>
+              <Label htmlFor="prepared-by" className="text-gray-700 text-sm">Prepared by</Label>
+              <Input
+                id="prepared-by"
+                value={preparedBy}
+                onChange={(e) => setPreparedBy(e.target.value)}
+                placeholder="Dealer/Company name"
+                className="bg-gray-50"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        {/* Step 1: Current Vehicle */}
-        {currentStep === 0 && (
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-gray-900">What type of vehicle do you currently drive?</CardTitle>
-              <CardDescription className="text-lg">
-                Help us understand your current vehicle so we can show you comparable electric options
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(vehicleTypes).map(([key, vehicle]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedVehicleType(key)}
-                    className={`p-6 rounded-lg border-2 transition-all hover:shadow-md ${
-                      selectedVehicleType === key
-                        ? 'border-red-500 bg-red-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-left">
-                        <h3 className="font-semibold text-lg">{vehicle.name}</h3>
-                        <p className="text-gray-600">~{vehicle.mpg} MPG</p>
-                        <p className="text-sm text-gray-500">Starting at {formatCurrency(vehicle.cost)}</p>
-                      </div>
-                      <Car className="h-8 w-8 text-gray-400" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-              
-              <div className="mt-8">
-                <Label htmlFor="current-vehicle" className="text-lg">What specific vehicle do you drive? (Optional)</Label>
-                <Input
-                  id="current-vehicle"
-                  value={currentVehicle}
-                  onChange={(e) => setCurrentVehicle(e.target.value)}
-                  placeholder="e.g., 2020 Toyota Camry, 2019 Honda CR-V"
-                  className="mt-2 text-lg py-6"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 2: Driving Habits */}
-        {currentStep === 1 && (
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-gray-900">Tell us about your driving habits</CardTitle>
-              <CardDescription className="text-lg">
-                This helps us calculate your potential fuel savings more accurately
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div>
-                <Label className="text-lg font-medium">How many miles do you drive per day?</Label>
-                <div className="mt-4">
-                  <Slider
-                    value={dailyMiles}
-                    onValueChange={setDailyMiles}
-                    max={150}
-                    min={10}
-                    step={5}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-gray-500 mt-2">
-                    <span>10 miles</span>
-                    <span className="font-medium text-lg text-red-600">{dailyMiles[0]} miles per day</span>
-                    <span>150+ miles</span>
-                  </div>
-                  <div className="text-center mt-2">
-                    <span className="text-gray-600">That's about {(dailyMiles[0] * 365 / 1000).toFixed(1)}k miles per year</span>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Vehicle Comparison Selector */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-center mb-8">Choose Your Vehicles to Compare</h2>
+          <div className="flex items-center justify-center gap-4 md:gap-8">
+            {/* Diesel Truck */}
+            <div className="flex-1 max-w-xs">
+              <div className="relative bg-white rounded-xl shadow-lg p-6 border-2 border-red-100">
+                <div className="flex justify-center mb-4">
+                  <div className="w-32 h-32 bg-red-50 rounded-lg flex items-center justify-center">
+                    <Truck className="w-20 h-20 text-red-500" />
                   </div>
                 </div>
+                <Select value={selectedDieselTruck} onValueChange={updateDieselTruck}>
+                  <SelectTrigger className="w-full bg-red-50 border-red-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {truckModels.diesel.map(truck => (
+                      <SelectItem key={truck.id} value={truck.id}>
+                        {truck.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-3 text-sm text-gray-600 text-center">
+                  <p>Starting at {formatCurrency(dieselInputs.truckCost)}</p>
+                  <p>{dieselInputs.efficiency} MPG</p>
+                </div>
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label className="text-lg font-medium">Do you have a garage or dedicated parking spot?</Label>
-                  <Select value={homeCharging} onValueChange={setHomeCharging}>
-                    <SelectTrigger className="mt-2 text-lg py-6">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes, I can install a home charger</SelectItem>
-                      <SelectItem value="no">No, I'll use public charging</SelectItem>
-                    </SelectContent>
-                  </Select>
+            {/* VS Widget */}
+            <div className="flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-green-400 blur-xl opacity-20"></div>
+                <div className="relative bg-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg border-2 border-gray-200">
+                  <span className="font-bold text-gray-700">VS</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Electric Truck */}
+            <div className="flex-1 max-w-xs">
+              <div className="relative bg-white rounded-xl shadow-lg p-6 border-2 border-green-100">
+                <div className="flex justify-center mb-4">
+                  <div className="w-32 h-32 bg-green-50 rounded-lg flex items-center justify-center">
+                    <Zap className="w-20 h-20 text-green-500" />
+                  </div>
+                </div>
+                <Select value={selectedElectricTruck} onValueChange={updateElectricTruck}>
+                  <SelectTrigger className="w-full bg-green-50 border-green-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {truckModels.electric.map(truck => (
+                      <SelectItem key={truck.id} value={truck.id}>
+                        {truck.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-3 text-sm text-gray-600 text-center">
+                  <p>Starting at {formatCurrency(bevInputs.truckCost)}</p>
+                  <p>{bevInputs.efficiency} kWh/mile</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Input Section */}
+          <div className="space-y-6">
+            {/* Gas Vehicle Card */}
+            <Card className="border-2 border-red-100 shadow-lg">
+              <CardHeader className="bg-red-50">
+                <CardTitle className="flex items-center gap-2 text-red-700">
+                  <Car className="h-5 w-5" />
+                  Your Current Gas Vehicle
+                </CardTitle>
+                <CardDescription>Tell us about your current vehicle</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="diesel-truck-cost">Purchase Price</Label>
+                    <Input
+                      id="diesel-truck-cost"
+                      type="number"
+                      value={dieselInputs.truckCost}
+                      onChange={(e) => updateDieselInput('truckCost', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="diesel-residual">Trade-in Value</Label>
+                    <Input
+                      id="diesel-residual"
+                      type="number"
+                      value={dieselInputs.residualValue}
+                      onChange={(e) => updateDieselInput('residualValue', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
+                  </div>
                 </div>
                 
-                <div>
-                  <Label className="text-lg font-medium">Are you eligible for government incentives?</Label>
-                  <Select value={governmentIncentives} onValueChange={setGovernmentIncentives}>
-                    <SelectTrigger className="mt-2 text-lg py-6">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes, I qualify for incentives</SelectItem>
-                      <SelectItem value="no">No, or not sure</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 3: Energy Costs */}
-        {currentStep === 2 && (
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-gray-900">What do you pay for energy?</CardTitle>
-              <CardDescription className="text-lg">
-                Local energy prices help us calculate your exact savings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div>
-                <Label className="text-lg font-medium">Current gas price (per gallon)</Label>
-                <div className="mt-4">
-                  <Slider
-                    value={gasPrice}
-                    onValueChange={setGasPrice}
-                    max={6.00}
-                    min={2.50}
-                    step={0.05}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-gray-500 mt-2">
-                    <span>$2.50</span>
-                    <span className="font-medium text-lg text-red-600">${gasPrice[0].toFixed(2)} per gallon</span>
-                    <span>$6.00+</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="diesel-fuel-price">Gas Price ($/gallon)</Label>
+                    <Input
+                      id="diesel-fuel-price"
+                      type="number"
+                      step="0.01"
+                      value={dieselInputs.fuelPrice}
+                      onChange={(e) => updateDieselInput('fuelPrice', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="diesel-efficiency">Fuel Economy (MPG)</Label>
+                    <Input
+                      id="diesel-efficiency"
+                      type="number"
+                      step="0.1"
+                      value={dieselInputs.efficiency}
+                      onChange={(e) => updateDieselInput('efficiency', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <Label className="text-lg font-medium">Your electricity rate (per kWh)</Label>
-                <div className="mt-4">
-                  <Slider
-                    value={electricityPrice}
-                    onValueChange={setElectricityPrice}
-                    max={0.35}
-                    min={0.08}
-                    step={0.01}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-gray-500 mt-2">
-                    <span>$0.08</span>
-                    <span className="font-medium text-lg text-green-600">${electricityPrice[0].toFixed(2)} per kWh</span>
-                    <span>$0.35+</span>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="diesel-maintenance">Maintenance ($/mile)</Label>
+                    <Input
+                      id="diesel-maintenance"
+                      type="number"
+                      step="0.01"
+                      value={dieselInputs.maintenancePerMile}
+                      onChange={(e) => updateDieselInput('maintenancePerMile', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
                   </div>
-                  <div className="text-center mt-2">
-                    <span className="text-gray-600">Check your electric bill for your exact rate</span>
+                  <div>
+                    <Label htmlFor="diesel-miles">Miles per Year</Label>
+                    <Input
+                      id="diesel-miles"
+                      type="number"
+                      value={dieselInputs.milesPerYear}
+                      onChange={(e) => updateDieselInput('milesPerYear', e.target.value)}
+                      className="border-red-200 focus:ring-red-500"
+                    />
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-blue-50 p-6 rounded-lg">
-                <div className="flex items-center gap-3 mb-3">
-                  <Leaf className="h-6 w-6 text-blue-600" />
-                  <h3 className="font-semibold text-blue-800">Environmental Impact</h3>
-                </div>
-                <p className="text-blue-700">
-                  Beyond savings, you'll also reduce your carbon footprint significantly. 
-                  Electric vehicles produce zero direct emissions and become cleaner as the grid gets greener.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 4: Results */}
-        {currentStep === 3 && results && (
-          <div className="space-y-6">
-            {/* Hero Savings Card */}
-            <Card className="border-0 shadow-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-              <CardContent className="p-8 text-center">
-                <h2 className="text-3xl font-bold mb-2">Your 10-Year Savings</h2>
-                <div className="text-6xl font-bold mb-4">
-                  {formatCurrency(results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9])}
-                </div>
-                <p className="text-xl text-green-100">
-                  That's {formatCurrency((results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9]) / 10)} per year in savings!
-                </p>
               </CardContent>
             </Card>
 
-            {/* Detailed Breakdown */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cost Comparison</CardTitle>
-                  <CardDescription>Total cost of ownership over 10 years</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={savingsData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {savingsData.map((entry, index) => (
-                            <Cell key={index} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
+            {/* Electric Vehicle Card */}
+            <Card className="border-2 border-green-100 shadow-lg">
+              <CardHeader className="bg-green-50">
+                <CardTitle className="flex items-center gap-2 text-green-700">
+                  <Zap className="h-5 w-5" />
+                  New Electric Vehicle
+                </CardTitle>
+                <CardDescription>Configure your electric vehicle</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="bev-truck-cost">Vehicle Price</Label>
+                    <Input
+                      id="bev-truck-cost"
+                      type="number"
+                      value={bevInputs.truckCost}
+                      onChange={(e) => updateBEVInput('truckCost', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Annual Savings</CardTitle>
-                  <CardDescription>How your savings accumulate over time</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={annualSavingsData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="year" />
-                        <YAxis tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`} />
-                        <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                        <Bar dataKey="cumulative" fill="#22c55e" name="Cumulative Savings" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Facts */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-1">
-                    {formatCurrency(results.diesel.annualOperatingCost - results.bev.annualOperatingCost)}
-                  </div>
-                  <div className="text-sm text-gray-600">Annual Fuel Savings</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-blue-600 mb-1">
-                    {(() => {
-                      const breakEvenIndex = results.bev.yearlyTotalCosts.findIndex(
-                        (cost: number, i: number) => cost < results.diesel.yearlyTotalCosts[i]
-                      );
-                      return breakEvenIndex === -1 ? '10+' : breakEvenIndex + 1;
-                    })()}
-                  </div>
-                  <div className="text-sm text-gray-600">Break-even (Years)</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-purple-600 mb-1">
-                    {governmentIncentives === 'yes' ? formatCurrency(7500) : '$0'}
-                  </div>
-                  <div className="text-sm text-gray-600">Tax Incentives</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-orange-600 mb-1">
-                    ${(results.diesel.fuelCostPerMile - results.bev.fuelCostPerMile).toFixed(3)}
-                  </div>
-                  <div className="text-sm text-gray-600">Savings per Mile</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Next Steps */}
-            <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-blue-800 mb-4">Ready to make the switch?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Car className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h4 className="font-semibold">Research Models</h4>
-                    <p className="text-sm text-gray-600">Compare electric versions of your preferred vehicle type</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Zap className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h4 className="font-semibold">Plan Charging</h4>
-                    <p className="text-sm text-gray-600">Set up home charging or find nearby public stations</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <DollarSign className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h4 className="font-semibold">Apply for Incentives</h4>
-                    <p className="text-sm text-gray-600">Take advantage of federal and local tax credits</p>
+                  <div>
+                    <Label htmlFor="bev-infra-cost">Home Charger Cost</Label>
+                    <Input
+                      id="bev-infra-cost"
+                      type="number"
+                      value={bevInputs.infrastructureCost}
+                      onChange={(e) => updateBEVInput('infrastructureCost', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
                   </div>
                 </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="bev-truck-incentive">Federal Tax Credit</Label>
+                    <Input
+                      id="bev-truck-incentive"
+                      type="number"
+                      value={bevInputs.truckIncentive}
+                      onChange={(e) => updateBEVInput('truckIncentive', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bev-infra-incentive">Charger Incentive</Label>
+                    <Input
+                      id="bev-infra-incentive"
+                      type="number"
+                      value={bevInputs.infrastructureIncentive}
+                      onChange={(e) => updateBEVInput('infrastructureIncentive', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="bev-fuel-price">Electricity ($/kWh)</Label>
+                    <Input
+                      id="bev-fuel-price"
+                      type="number"
+                      step="0.01"
+                      value={bevInputs.fuelPrice}
+                      onChange={(e) => updateBEVInput('fuelPrice', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bev-efficiency">Efficiency (kWh/mile)</Label>
+                    <Input
+                      id="bev-efficiency"
+                      type="number"
+                      step="0.1"
+                      value={bevInputs.efficiency}
+                      onChange={(e) => updateBEVInput('efficiency', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="bev-maintenance">Maintenance ($/mile)</Label>
+                    <Input
+                      id="bev-maintenance"
+                      type="number"
+                      step="0.01"
+                      value={bevInputs.maintenancePerMile}
+                      onChange={(e) => updateBEVInput('maintenancePerMile', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bev-residual">Residual Value</Label>
+                    <Input
+                      id="bev-residual"
+                      type="number"
+                      value={bevInputs.residualValue}
+                      onChange={(e) => updateBEVInput('residualValue', e.target.value)}
+                      className="border-green-200 focus:ring-green-500"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* LCFS Card */}
+            <Card className="border-2 border-blue-100 shadow-lg">
+              <CardHeader className="bg-blue-50">
+                <CardTitle className="flex items-center gap-2 text-blue-700">
+                  <Leaf className="h-5 w-5" />
+                  Clean Fuel Credits (Optional)
+                </CardTitle>
+                <CardDescription>Available in CA, OR, WA</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="enable-lcfs"
+                    checked={enableLCFS}
+                    onChange={(e) => setEnableLCFS(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <Label htmlFor="enable-lcfs">Enable LCFS credit calculations</Label>
+                </div>
+
+                {enableLCFS && (
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Label htmlFor="lcfs-credit-price">Credit Price ($/credit)</Label>
+                      <Input
+                        id="lcfs-credit-price"
+                        type="number"
+                        value={lcfsInputs.lcfsCreditPrice}
+                        onChange={(e) => updateLCFSInput('lcfsCreditPrice', e.target.value)}
+                        className="border-blue-200 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="lcfs-eer">Energy Economy Ratio</Label>
+                      <Input
+                        id="lcfs-eer"
+                        type="number"
+                        step="0.1"
+                        value={lcfsInputs.eer}
+                        onChange={(e) => updateLCFSInput('eer', e.target.value)}
+                        className="border-blue-200 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
-        )}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-8">
-          <Button
-            variant="outline"
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            className="flex items-center gap-2 px-6 py-3"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Previous
-          </Button>
-          
-          {currentStep < steps.length - 1 ? (
-            <Button
-              onClick={nextStep}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700"
-            >
-              Next Step
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => setCurrentStep(0)}
-              className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700"
-            >
-              Start Over
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
+          {/* Results Section */}
+          <div className="space-y-6">
+            {results && (
+              <>
+                {/* Savings Summary Card */}
+                <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-3xl font-bold">Your 10-Year Savings</CardTitle>
+                    <CardDescription className="text-green-100">
+                      By switching to electric
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-5xl font-bold mb-4">
+                      {formatCurrency(results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9])}
+                    </div>
+                    <Progress 
+                      value={savingsProgress} 
+                      className="h-4 bg-green-700"
+                    />
+                    <p className="text-sm text-green-100 mt-2">
+                      That's {savingsProgress.toFixed(0)}% savings over 10 years!
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Key Metrics Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-gray-600">
+                        Break-even Point
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold text-blue-600">
+                        {(() => {
+                          const breakEvenIndex = results.bev.yearlyTotalCosts.findIndex(
+                            (cost: number, i: number) => cost < results.diesel.yearlyTotalCosts[i]
+                          );
+                          return breakEvenIndex === -1 ? 'Beyond 10 years' : `Year ${breakEvenIndex + 1}`;
+                        })()}
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-gray-600">
+                        Annual Fuel Savings
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold text-green-600">
+                        {formatCurrency((results.diesel.fuelCostPerMile - results.bev.fuelCostPerMile) * dieselInputs.milesPerYear)}
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-gray-600">
+                        Cost per Mile (Gas)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold text-red-600">
+                        {formatPerMile(results.diesel.totalOperatingCostPerMile)}
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-gray-600">
+                        Cost per Mile (Electric)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold text-green-600">
+                        {formatPerMile(results.bev.totalOperatingCostPerMile)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Cost Comparison Chart */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      10-Year Cost Comparison
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis dataKey="year" stroke="#6b7280" />
+                          <YAxis 
+                            stroke="#6b7280"
+                            tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`} 
+                          />
+                          <Tooltip 
+                            formatter={(value: number) => formatCurrency(value)}
+                            contentStyle={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                              border: '1px solid #e5e7eb',
+                              borderRadius: '8px'
+                            }}
+                          />
+                          <Legend />
+                          <Line 
+                            type="monotone" 
+                            dataKey="Gas Vehicle" 
+                            stroke="#ef4444" 
+                            strokeWidth={3}
+                            dot={{ fill: '#ef4444' }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="Electric Vehicle" 
+                            stroke="#22c55e" 
+                            strokeWidth={3}
+                            dot={{ fill: '#22c55e' }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Additional Info */}
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Environmental Impact</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700">
+                      Switching to electric will reduce your carbon footprint by approximately{' '}
+                      <span className="font-bold text-green-600">
+                        {((dieselInputs.milesPerYear / dieselInputs.efficiency * 8.89) / 1000).toFixed(1)} tons
+                      </span>{' '}
+                      of CO₂ per year.
+                    </p>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ExportButton } from "@/components/ui/export-button";
 import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator, Truck, DollarSign, FileSpreadsheet } from "lucide-react";
 import type { Metadata } from 'next';
 
@@ -8,7 +9,39 @@ export const metadata: Metadata = {
   description: 'Compare Battery Electric Vehicle costs vs Diesel with multiple interactive UI approaches',
 };
 
-export default function Dashboard() {
+function DashboardContent() {
+  const handleExportPDF = async () => {
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'overview',
+          calculatorData: null
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bev-cost-calculator-overview.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
@@ -21,6 +54,12 @@ export default function Dashboard() {
             Compare Battery Electric Vehicle (BEV) costs vs Diesel with multiple interactive UI approaches.
             Explore 7 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
           </p>
+          
+          <div className="flex justify-center">
+            <ExportButton onClick={handleExportPDF} className="text-lg px-8 py-4">
+              Export Calculator Overview
+            </ExportButton>
+          </div>
         </div>
       </div>
 
@@ -202,4 +241,8 @@ export default function Dashboard() {
       </footer>
     </div>
   );
+}
+
+export default function Dashboard() {
+  return <DashboardContent />;
 }

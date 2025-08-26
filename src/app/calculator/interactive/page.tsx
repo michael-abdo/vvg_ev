@@ -395,7 +395,7 @@ export default function InteractiveCalculator() {
               <CardTitle className="text-center">10-Year Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-48">
+              <div className="relative h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="90%" data={savingsChartData}>
                     <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />

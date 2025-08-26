@@ -73,7 +73,7 @@ export function useCalculator(): UseCalculatorReturn {
     setDieselInputs(defaultDieselInputs);
     setBevInputs(defaultBEVInputs);
     setLcfsInputs(defaultLCFSInputs);
-    setEnableLCFS(false);
+    setEnableLCFS(true); // Keep LCFS enabled by default
   }, []);
 
   return {

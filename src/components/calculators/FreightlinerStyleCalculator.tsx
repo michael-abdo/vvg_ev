@@ -543,9 +543,14 @@ export default function FreightlinerStyleCalculator() {
                   {/* Bar Chart Visualization */}
                   <div className="relative h-96 md:h-[500px] flex items-end gap-8 px-4 md:px-16">
                     {(() => {
-                      const maxCost = Math.max(results.diesel.yearlyTotalCosts[9], results.bev.yearlyTotalCosts[9]);
-                      const beverHeight = (results.bev.yearlyTotalCosts[9] / maxCost) * 80; // 80% max height for visual balance
-                      const dieselHeight = (results.diesel.yearlyTotalCosts[9] / maxCost) * 80; // 80% max height for visual balance
+                      const dieselCost = results.diesel.yearlyTotalCosts[9];
+                      const bevCost = results.bev.yearlyTotalCosts[9];
+                      const maxCost = Math.max(dieselCost, bevCost);
+                      
+                      // The higher cost bar gets 80% height, the other is proportional
+                      const maxBarHeight = 80; // 80% of container height
+                      const beverHeight = (bevCost / maxCost) * maxBarHeight;
+                      const dieselHeight = (dieselCost / maxCost) * maxBarHeight;
                       
                       return (
                         <>

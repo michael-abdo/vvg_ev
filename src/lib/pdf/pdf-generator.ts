@@ -1,4 +1,3 @@
-import PDFKit from 'pdfkit';
 import { jsPDF } from 'jspdf';
 import {
   VehicleInputs,

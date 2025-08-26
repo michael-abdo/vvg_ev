@@ -23,7 +23,7 @@ export function Navbar() {
       // Instead of using signIn, redirect to our sign-in page directly
       // This ensures basePath is maintained
       // pathname already includes basePath, so use it directly
-      const currentPath = pathname || pagePath('/dashboard');
+      const currentPath = pathname || pagePath('/');
       window.location.href = `${pagePath('/sign-in')}?callbackUrl=${encodeURIComponent(currentPath)}`;
     } else {
       e.preventDefault();
@@ -48,7 +48,7 @@ export function Navbar() {
     <nav className="fixed top-0 z-50 w-full bg-[#152C5B] h-14">
       <div className="container mx-auto flex h-full max-w-screen-2xl items-center justify-between px-4">
         {/* Left side - Anomaly Detector button */}
-        <Link href="/dashboard" className="bg-white rounded-full py-1 px-4 flex items-center space-x-2">
+        <Link href="/" className="bg-white rounded-full py-1 px-4 flex items-center space-x-2">
           {/* Document icon */}
           <div className="w-6 h-6 rounded-full border border-[#152C5B] flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

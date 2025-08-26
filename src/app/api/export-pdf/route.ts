@@ -65,7 +65,9 @@ export async function POST(request: NextRequest) {
     clearTimeout(timeout);
 
     // Return PDF as response
-    return new NextResponse(pdfBuffer, {
+    // Convert Buffer to Uint8Array for NextResponse compatibility
+    const pdfUint8Array = new Uint8Array(pdfBuffer);
+    return new NextResponse(pdfUint8Array, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="bev-calculator-report.pdf"',

@@ -28,7 +28,7 @@ export function useCalculator(): UseCalculatorReturn {
   const [dieselInputs, setDieselInputs] = useState<VehicleInputs>(defaultDieselInputs);
   const [bevInputs, setBevInputs] = useState<VehicleInputs>(defaultBEVInputs);
   const [lcfsInputs, setLcfsInputs] = useState<LCFSInputs>(defaultLCFSInputs);
-  const [enableLCFS, setEnableLCFS] = useState(false);
+  const [enableLCFS, setEnableLCFS] = useState(true); // Enable LCFS by default for better BEV economics
   const [results, setResults] = useState<{ diesel: CalculatorResults; bev: CalculatorResults } | null>(null);
   const [mounted, setMounted] = useState(false);
 

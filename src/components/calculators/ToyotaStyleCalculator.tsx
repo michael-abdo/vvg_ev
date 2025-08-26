@@ -22,6 +22,7 @@ import {
   defaultBEVInputs,
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
+import { ExportButton } from '@/components/ui/export-button';
 
 export default function ToyotaStyleCalculator() {
   const [mounted, setMounted] = useState(false);
@@ -37,7 +38,7 @@ export default function ToyotaStyleCalculator() {
   
   // LCFS
   const [lcfsInputs, setLcfsInputs] = useState<LCFSInputs>(defaultLCFSInputs);
-  const [enableLCFS, setEnableLCFS] = useState(false);
+  const [enableLCFS, setEnableLCFS] = useState(true); // Enable LCFS by default for better BEV economics
 
   // Vehicle selection
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
@@ -137,6 +138,45 @@ export default function ToyotaStyleCalculator() {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
+  };
+
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'toyota-style',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'toyota-style-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
   };
 
   // Prepare chart data
@@ -507,6 +547,9 @@ export default function ToyotaStyleCalculator() {
           <div className="space-y-6">
             {results && (
               <>
+                <div className="flex justify-end mb-4">
+                  <ExportButton onClick={handleExportPDF} />
+                </div>
                 {/* Savings Summary Card */}
                 <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl">
                   <CardHeader>

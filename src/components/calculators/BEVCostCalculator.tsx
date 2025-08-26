@@ -19,6 +19,7 @@ import {
   defaultBEVInputs,
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
+import { ExportButton } from '@/components/ui/export-button';
 
 interface ComparisonChartProps {
   dieselCosts: number[];
@@ -115,7 +116,7 @@ export default function BEVCostCalculator() {
     otherPerMile: defaultBEVInputs.otherPerMile || 0
   });
   const [lcfsInputs, setLcfsInputs] = useState<LCFSInputs>(defaultLCFSInputs);
-  const [enableLCFS, setEnableLCFS] = useState(false);
+  const [enableLCFS, setEnableLCFS] = useState(true); // Enable LCFS by default for better BEV economics
   const [results, setResults] = useState<any>(null);
   const [preparedFor, setPreparedFor] = useState('');
   const [preparedBy, setPreparedBy] = useState('');
@@ -184,6 +185,45 @@ export default function BEVCostCalculator() {
       ...prev,
       [field]: parseFloat(value) || 0
     }));
+  };
+
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'original',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bev-calculator-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
   };
 
   const formatCurrency = (value: number) => {
@@ -685,6 +725,13 @@ export default function BEVCostCalculator() {
                         </span>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Export Button */}
+                  <div className="mt-4 flex justify-center">
+                    <ExportButton onClick={handleExportPDF}>
+                      Export Results as PDF
+                    </ExportButton>
                   </div>
                 </CardContent>
               </Card>

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { cn } from '@/lib/utils';
+import { ExportButton } from '@/components/ui/export-button';
 
 interface InputFieldProps {
   label: string;
@@ -153,6 +154,44 @@ export default function InteractiveCalculator() {
     }
   ];
 
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'interactive',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs: undefined,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'interactive-calculator-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
 
   return (
     <CalculatorLayout
@@ -426,6 +465,7 @@ export default function InteractiveCalculator() {
               >
                 Reset to Defaults
               </Button>
+              <ExportButton onClick={handleExportPDF} className="w-full" />
               <Button 
                 variant="outline" 
                 className="w-full"

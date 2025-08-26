@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LineChart as LineChartIcon, Settings, TrendingUp, TrendingDown } from 'lucide-react';
+import { ExportButton } from '@/components/ui/export-button';
 import { 
   LineChart, 
   Line, 
@@ -92,6 +93,45 @@ export default function LineGraphCalculator() {
     return null;
   };
 
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'line-graph',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs: undefined,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'line-graph-comparison.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
+
   return (
     <CalculatorLayout
       title="Interactive Line Graph Comparison"
@@ -138,6 +178,7 @@ export default function LineGraphCalculator() {
               >
                 Reset
               </Button>
+              <ExportButton onClick={handleExportPDF} className="h-9" />
             </div>
           </CardContent>
         </Card>

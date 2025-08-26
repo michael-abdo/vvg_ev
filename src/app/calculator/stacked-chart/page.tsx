@@ -16,6 +16,7 @@ import {
   Layers,
   Settings
 } from 'lucide-react';
+import { ExportButton } from '@/components/ui/export-button';
 import { 
   BarChart, 
   Bar, 
@@ -180,6 +181,45 @@ export default function StackedChartCalculator() {
     'BEV LCFS': '#10b981'
   };
 
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'stacked-chart',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs: undefined,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'stacked-chart-analysis.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
+
   return (
     <CalculatorLayout
       title="Cost Breakdown Analysis"
@@ -237,6 +277,7 @@ export default function StackedChartCalculator() {
               >
                 <Settings className="h-4 w-4" />
               </Button>
+              <ExportButton onClick={handleExportPDF} className="h-9" />
             </div>
           </CardContent>
         </Card>

@@ -32,6 +32,7 @@ import {
   LCFSInputs,
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
+import { ExportButton } from '@/components/ui/export-button';
 
 // HVIP Incentive tiers
 const HVIP_INCENTIVES = {
@@ -126,6 +127,45 @@ export default function RizonHvipCalculator() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
+  };
+
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'rizon-hvip',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs,
+          enableLCFS: true,
+          preparedFor: '',
+          preparedBy: 'Rizon HVIP Calculator'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'rizon-hvip-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
   };
 
   if (!results) {
@@ -335,7 +375,10 @@ export default function RizonHvipCalculator() {
 
         {/* Results Section */}
         <div className="space-y-8">
-          <h2 className="text-3xl font-bold text-center">Your Savings Summary</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold">Your Savings Summary</h2>
+            <ExportButton onClick={handleExportPDF} />
+          </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Annual Fuel Savings */}

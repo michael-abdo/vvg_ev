@@ -20,6 +20,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { ExportButton } from '@/components/ui/export-button';
 
 interface PresetScenario {
   name: string;
@@ -123,6 +124,45 @@ export default function DashboardCalculator() {
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'dashboard',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs: undefined,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dashboard-calculator-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
+
   return (
     <CalculatorLayout
       title="Dynamic Cost Dashboard"
@@ -136,8 +176,9 @@ export default function DashboardCalculator() {
       <div className="grid gap-6">
         {/* Preset Scenarios */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Quick Scenarios</CardTitle>
+            <ExportButton onClick={handleExportPDF} />
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

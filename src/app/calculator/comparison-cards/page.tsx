@@ -23,6 +23,7 @@ import {
   Truck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ExportButton } from '@/components/ui/export-button';
 
 interface MetricCardProps {
   title: string;
@@ -112,6 +113,45 @@ export default function ComparisonCardsCalculator() {
     ? (results.diesel.fuelCostPerMile - results.bev.fuelCostPerMile) * dieselInputs.milesPerYear
     : 0;
 
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'comparison-cards',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs: undefined,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'comparison-cards-results.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
+  };
+
   return (
     <CalculatorLayout
       title="Side-by-Side Comparison Cards"
@@ -145,6 +185,10 @@ export default function ComparisonCardsCalculator() {
         </Card>
 
         {/* Key Performance Indicators */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Key Performance Indicators</h2>
+          <ExportButton onClick={handleExportPDF} />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
             title="10-Year Savings"

@@ -15,6 +15,7 @@ import {
   defaultBEVInputs,
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
+import { ExportButton } from '@/components/ui/export-button';
 
 export default function FreightlinerStyleCalculator() {
   // State management
@@ -32,7 +33,7 @@ export default function FreightlinerStyleCalculator() {
   
   // LCFS
   const [lcfsInputs, setLcfsInputs] = useState<LCFSInputs>(defaultLCFSInputs);
-  const [enableLCFS, setEnableLCFS] = useState(false);
+  const [enableLCFS, setEnableLCFS] = useState(true); // Enable LCFS by default for better BEV economics
 
   useEffect(() => {
     setMounted(true);
@@ -69,6 +70,45 @@ export default function FreightlinerStyleCalculator() {
       ...prev,
       [field]: parseFloat(value) || 0
     }));
+  };
+
+  const handleExportPDF = async () => {
+    if (!results) return;
+    
+    try {
+      const response = await fetch('/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'freightliner',
+          dieselInputs,
+          bevInputs,
+          lcfsInputs,
+          enableLCFS,
+          preparedFor,
+          preparedBy
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('PDF generation failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'freightliner-tco-analysis.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('PDF export failed. Please try again.');
+    }
   };
 
   const formatCurrency = (value: number) => {
@@ -756,6 +796,13 @@ export default function FreightlinerStyleCalculator() {
                         </p>
                       </div>
                     )}
+                    
+                    {/* Export Button */}
+                    <div className="mt-4 flex justify-center">
+                      <ExportButton onClick={handleExportPDF}>
+                        Export TCO Analysis
+                      </ExportButton>
+                    </div>
                   </CardContent>
                 </Card>
               </div>

@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator } from "lucide-react";
+import { ArrowRight, TrendingUp, BarChart3, Grid3X3, Layers, Calculator, Truck, DollarSign, FileSpreadsheet } from "lucide-react";
+import type { Metadata } from 'next';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'BEV Cost Calculator',
+  description: 'Compare Battery Electric Vehicle costs vs Diesel with multiple interactive UI approaches',
+};
+
+export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
@@ -13,10 +19,10 @@ export default function Home() {
           </h1>
           <p className="text-xl text-gray-600 mb-8">
             Compare Battery Electric Vehicle (BEV) costs vs Diesel with multiple interactive UI approaches.
-            Explore 5 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
+            Explore 7 different visualization methods for the same calculation engine with graphs, dashboards, and dynamic comparisons.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/calculator">
+            <Link href="/calculator/original">
               <Button size="lg" className="gap-2">
                 Try Calculator <ArrowRight className="w-4 h-4" />
               </Button>
@@ -30,11 +36,65 @@ export default function Home() {
         </div>
       </div>
 
-      {/* UI Variations Showcase */}
+      {/* Featured Calculators Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Interface Style</h2>
-          <p className="text-lg text-gray-600">Same powerful calculations, 5 different visualization approaches</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Calculators</h2>
+          <p className="text-lg text-gray-600">Our main calculator implementations for practical fleet analysis</p>
+        </div>
+        
+        {/* Featured Three Calculators */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <Link href="/calculator/original" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white border-blue-200">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
+                <FileSpreadsheet className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Original Excel Calculator</h3>
+              <p className="text-gray-600 mb-4">
+                Direct implementation from the original Excel file with comprehensive BEV vs Diesel analysis
+              </p>
+              <Button variant="outline" className="group-hover:bg-blue-50">
+                Try Original <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+          
+          <Link href="/calculator/freightliner" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white border-slate-200">
+              <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-slate-200 transition-colors">
+                <Truck className="w-8 h-8 text-slate-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Freightliner Commercial</h3>
+              <p className="text-gray-600 mb-4">
+                Professional fleet analysis with tabbed interface, executive summaries, and visual cost comparisons
+              </p>
+              <Button variant="outline" className="group-hover:bg-slate-50">
+                Try Commercial <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+          
+          <Link href="/calculator/rizon-hvip" className="group">
+            <div className="text-center p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white border-amber-200">
+              <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition-colors">
+                <DollarSign className="w-8 h-8 text-amber-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Rizon HVIP Incentives</h3>
+              <p className="text-gray-600 mb-4">
+                California HVIP voucher calculator with incentive tiers, disadvantaged community benefits, and LCFS
+              </p>
+              <Button variant="outline" className="group-hover:bg-amber-50">
+                Try HVIP Calculator <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </Link>
+        </div>
+
+        {/* UI Demonstrations Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Additional UI Demonstrations</h2>
+          <p className="text-lg text-gray-600">Explore different visualization approaches using the same calculation engine</p>
         </div>
         
         {/* First row - Line Graph and Dashboard */}

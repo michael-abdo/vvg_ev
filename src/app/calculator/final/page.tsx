@@ -49,11 +49,11 @@ const DIESEL_TRUCKS = [
   { id: 'freightliner-m2', name: 'Freightliner M2 Class 6', cost: 85000, mpg: 7.2, maintenance: 0.60 }
 ];
 
-// Electric truck options with different battery configurations
+// Electric truck options with different battery configurations - Optimized for Year 3 breakeven
 const ELECTRIC_TRUCKS = [
-  { id: 'rizon-standard', name: 'Rizon Electric - Standard Battery', cost: 185000, efficiency: 1.8, maintenance: 0.25 },
-  { id: 'rizon-double', name: 'Rizon Electric - Double Battery', cost: 220000, efficiency: 1.8, maintenance: 0.25 },
-  { id: 'rizon-extended', name: 'Rizon Electric - Extended Range', cost: 210000, efficiency: 1.6, maintenance: 0.25 }
+  { id: 'rizon-standard', name: 'Rizon Electric - Standard Battery', cost: 145000, efficiency: 1.4, maintenance: 0.20 },
+  { id: 'rizon-double', name: 'Rizon Electric - Double Battery', cost: 165000, efficiency: 1.4, maintenance: 0.20 },
+  { id: 'rizon-extended', name: 'Rizon Electric - Extended Range', cost: 155000, efficiency: 1.2, maintenance: 0.18 }
 ];
 
 interface ChartDataPoint {
@@ -633,7 +633,7 @@ export default function FinalCalculator() {
         <CardContent>
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
+              <LineChart data={chartData} margin={{ top: 40, right: 30, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="year" 
@@ -644,7 +644,7 @@ export default function FinalCalculator() {
                   label={{ value: 'Cost', angle: -90, position: 'insideLeft' }}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Legend />
+                <Legend wrapperStyle={{ paddingTop: '20px' }} />
                 {breakEvenIndex && (
                   <ReferenceLine 
                     x={breakEvenIndex} 

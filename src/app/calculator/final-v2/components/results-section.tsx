@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ExportButton } from '@/components/ui/export-button';
+import { Button } from '@/components/ui/button';
 import { formatCurrency, formatPerMile, formatPercent } from '@/components/calculators/shared/formatters';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { 
@@ -15,7 +15,8 @@ import {
   Leaf, 
   Award,
   Truck,
-  Zap
+  Zap,
+  Download
 } from 'lucide-react';
 
 interface MetricCardProps {
@@ -363,7 +364,10 @@ export default function ResultsSection({
 
       {/* Export Section */}
       <div className="flex justify-center pt-4">
-        <ExportButton onClick={handleExportPDF} className="px-6 py-2" />
+        <Button onClick={handleExportPDF} className="px-6 py-2">
+          <Download className="h-4 w-4 mr-2" />
+          Export to PDF
+        </Button>
       </div>
       
     </div>

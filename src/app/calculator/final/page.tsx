@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useCalculator } from '@/components/calculators/shared/use-calculator';
 import { formatCurrency, formatPerMile, formatPercent } from '@/components/calculators/shared/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,9 +37,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { cn } from '@/lib/utils';
 import { ExportButton } from '@/components/ui/export-button';
 import {
-  BEVCostCalculator as BEVCalculator,
-  VehicleInputs,
-  LCFSInputs,
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
 

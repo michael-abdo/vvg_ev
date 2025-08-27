@@ -6,6 +6,7 @@ import { formatCurrency, formatPerMile, formatPercent } from '@/components/calcu
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -135,23 +136,48 @@ export default function FinalCalculator() {
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-standard');
   const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
+  
+  // Track if user has manually overridden vehicle-based inputs
+  const [manualOverrides, setManualOverrides] = useState<{
+    dieselCost?: boolean;
+    dieselEfficiency?: boolean;
+    dieselMaintenance?: boolean;
+    bevCost?: boolean;
+    bevEfficiency?: boolean;
+    bevMaintenance?: boolean;
+  }>({});
 
   // Get selected truck and incentive data
   const selectedDiesel = DIESEL_TRUCKS.find(t => t.id === selectedDieselTruck) || DIESEL_TRUCKS[0];
   const selectedElectric = ELECTRIC_TRUCKS.find(t => t.id === selectedElectricTruck) || ELECTRIC_TRUCKS[0];
   const hvipIncentive = HVIP_INCENTIVES[hvipTier].amount;
 
-  // Update calculator when vehicle selection changes
+  // Update calculator when vehicle selection changes (respecting manual overrides)
   useEffect(() => {
-    updateDieselInput('truckCost', selectedDiesel.cost.toString());
-    updateDieselInput('efficiency', selectedDiesel.mpg.toString());
-    updateDieselInput('maintenancePerMile', selectedDiesel.maintenance.toString());
+    // Only update if not manually overridden
+    if (!manualOverrides.dieselCost) {
+      updateDieselInput('truckCost', selectedDiesel.cost.toString());
+    }
+    if (!manualOverrides.dieselEfficiency) {
+      updateDieselInput('efficiency', selectedDiesel.mpg.toString());
+    }
+    if (!manualOverrides.dieselMaintenance) {
+      updateDieselInput('maintenancePerMile', selectedDiesel.maintenance.toString());
+    }
     
-    updateBEVInput('truckCost', selectedElectric.cost.toString());
-    updateBEVInput('efficiency', selectedElectric.efficiency.toString());
-    updateBEVInput('maintenancePerMile', selectedElectric.maintenance.toString());
+    if (!manualOverrides.bevCost) {
+      updateBEVInput('truckCost', selectedElectric.cost.toString());
+    }
+    if (!manualOverrides.bevEfficiency) {
+      updateBEVInput('efficiency', selectedElectric.efficiency.toString());
+    }
+    if (!manualOverrides.bevMaintenance) {
+      updateBEVInput('maintenancePerMile', selectedElectric.maintenance.toString());
+    }
+    
+    // Always update HVIP incentive as it's tied to selection
     updateBEVInput('truckIncentive', hvipIncentive.toString());
-  }, [selectedDieselTruck, selectedElectricTruck, hvipTier, updateDieselInput, updateBEVInput, selectedDiesel, selectedElectric, hvipIncentive]);
+  }, [selectedDieselTruck, selectedElectricTruck, hvipTier, updateDieselInput, updateBEVInput, selectedDiesel, selectedElectric, hvipIncentive, manualOverrides]);
 
   // Prepare chart data for line graph
   const chartData = useMemo<ChartDataPoint[]>(() => {
@@ -371,7 +397,19 @@ export default function FinalCalculator() {
       {/* Adjust Parameters (from Comparison Cards) */}
       <Card>
         <CardHeader>
-          <CardTitle>Adjust Parameters</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            Adjust Parameters
+            {Object.values(manualOverrides).some(Boolean) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setManualOverrides({})}
+                className="text-xs"
+              >
+                Reset to Vehicle Defaults
+              </Button>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="basic" className="w-full">
@@ -413,12 +451,20 @@ export default function FinalCalculator() {
                   />
                 </div>
                 <div>
-                  <Label>Diesel Efficiency (MPG)</Label>
+                  <Label className="flex items-center gap-1">
+                    Diesel Efficiency (MPG)
+                    {manualOverrides.dieselEfficiency && (
+                      <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">manual</span>
+                    )}
+                  </Label>
                   <Input
                     type="number"
                     step="0.1"
                     value={dieselInputs.efficiency}
-                    onChange={(e) => updateDieselInput('efficiency', e.target.value)}
+                    onChange={(e) => {
+                      updateDieselInput('efficiency', e.target.value);
+                      setManualOverrides(prev => ({ ...prev, dieselEfficiency: true }));
+                    }}
                   />
                 </div>
               </div>
@@ -427,37 +473,69 @@ export default function FinalCalculator() {
             <TabsContent value="costs" className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Diesel Truck Cost</Label>
+                  <Label className="flex items-center gap-1">
+                    Diesel Truck Cost
+                    {manualOverrides.dieselCost && (
+                      <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">manual</span>
+                    )}
+                  </Label>
                   <Input
                     type="number"
                     value={dieselInputs.truckCost}
-                    onChange={(e) => updateDieselInput('truckCost', e.target.value)}
+                    onChange={(e) => {
+                      updateDieselInput('truckCost', e.target.value);
+                      setManualOverrides(prev => ({ ...prev, dieselCost: true }));
+                    }}
                   />
                 </div>
                 <div>
-                  <Label>BEV Truck Cost</Label>
+                  <Label className="flex items-center gap-1">
+                    BEV Truck Cost
+                    {manualOverrides.bevCost && (
+                      <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">manual</span>
+                    )}
+                  </Label>
                   <Input
                     type="number"
                     value={bevInputs.truckCost}
-                    onChange={(e) => updateBEVInput('truckCost', e.target.value)}
+                    onChange={(e) => {
+                      updateBEVInput('truckCost', e.target.value);
+                      setManualOverrides(prev => ({ ...prev, bevCost: true }));
+                    }}
                   />
                 </div>
                 <div>
-                  <Label>Diesel Maintenance ($/mi)</Label>
+                  <Label className="flex items-center gap-1">
+                    Diesel Maintenance ($/mi)
+                    {manualOverrides.dieselMaintenance && (
+                      <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">manual</span>
+                    )}
+                  </Label>
                   <Input
                     type="number"
                     step="0.01"
                     value={dieselInputs.maintenancePerMile}
-                    onChange={(e) => updateDieselInput('maintenancePerMile', e.target.value)}
+                    onChange={(e) => {
+                      updateDieselInput('maintenancePerMile', e.target.value);
+                      setManualOverrides(prev => ({ ...prev, dieselMaintenance: true }));
+                    }}
                   />
                 </div>
                 <div>
-                  <Label>BEV Maintenance ($/mi)</Label>
+                  <Label className="flex items-center gap-1">
+                    BEV Maintenance ($/mi)
+                    {manualOverrides.bevMaintenance && (
+                      <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">manual</span>
+                    )}
+                  </Label>
                   <Input
                     type="number"
                     step="0.01"
                     value={bevInputs.maintenancePerMile}
-                    onChange={(e) => updateBEVInput('maintenancePerMile', e.target.value)}
+                    onChange={(e) => {
+                      updateBEVInput('maintenancePerMile', e.target.value);
+                      setManualOverrides(prev => ({ ...prev, bevMaintenance: true }));
+                    }}
                   />
                 </div>
               </div>

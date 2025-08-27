@@ -112,7 +112,7 @@ export default function VehicleSelectionSection({
         </div>
         <div className="text-sm text-blue-600">
           Select a diesel truck to compare against a Rizon electric truck. 
-          We'll calculate 10-year total cost of ownership including fuel, maintenance, and incentives.
+          We&apos;ll calculate 10-year total cost of ownership including fuel, maintenance, and incentives.
         </div>
       </div>
 

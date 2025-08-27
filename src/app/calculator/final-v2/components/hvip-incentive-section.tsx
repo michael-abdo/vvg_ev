@@ -42,7 +42,7 @@ export default function HvipIncentiveSection({
           HVIP (Hybrid and Zero-Emission Truck and Bus Voucher Incentive Project)
         </div>
         <div className="text-sm text-green-600">
-          California's HVIP program provides vouchers to reduce the purchase price of clean commercial vehicles. 
+          California&apos;s HVIP program provides vouchers to reduce the purchase price of clean commercial vehicles. 
           Select your eligibility tier below.
         </div>
       </div>

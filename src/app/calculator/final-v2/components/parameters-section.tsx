@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Fuel, Zap, DollarSign, Settings, RotateCcw } from 'lucide-react';
+import { Fuel, Zap, Settings, RotateCcw } from 'lucide-react';
 
 interface ParametersSectionProps {
   dieselInputs: any;
   bevInputs: any;
   enableLCFS: boolean;
-  updateDieselInput: (field: string, value: string) => void;
-  updateBEVInput: (field: string, value: string) => void;
+  updateDieselInput: (field: any, value: string) => void;
+  updateBEVInput: (field: any, value: string) => void;
   setEnableLCFS: (enable: boolean) => void;
   onResetToDefaults: () => void;
 }

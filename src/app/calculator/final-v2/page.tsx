@@ -103,11 +103,11 @@ export default function FinalV2Calculator() {
       const newStates = [...prevStates];
       
       // Check vehicle selection completion
-      const vehicleCompleted = selectedDieselTruck && selectedElectricTruck;
+      const vehicleCompleted = Boolean(selectedDieselTruck && selectedElectricTruck);
       newStates[0].completed = vehicleCompleted;
       
       // Check HVIP selection completion  
-      const hvipCompleted = hvipTier !== null;
+      const hvipCompleted = Boolean(hvipTier);
       newStates[1].completed = hvipCompleted;
       newStates[1].canOpen = vehicleCompleted;
       
@@ -117,7 +117,7 @@ export default function FinalV2Calculator() {
       
       // Results section (available after required sections)
       newStates[3].canOpen = vehicleCompleted && hvipCompleted;
-      newStates[3].completed = results !== null;
+      newStates[3].completed = Boolean(results);
       
       return newStates;
     });

@@ -50,11 +50,56 @@ const DIESEL_TRUCKS = [
   { id: 'freightliner-m2', name: 'Freightliner M2 Class 6', cost: 85000, mpg: 7.2, maintenance: 0.60 }
 ];
 
-// Electric truck options with different battery configurations - Optimized for Year 3 breakeven
+// Electric truck options based on real Rizon specifications
 const ELECTRIC_TRUCKS = [
-  { id: 'rizon-standard', name: 'Rizon Electric - Standard Battery', cost: 145000, efficiency: 1.4, maintenance: 0.20 },
-  { id: 'rizon-double', name: 'Rizon Electric - Double Battery', cost: 165000, efficiency: 1.4, maintenance: 0.20 },
-  { id: 'rizon-extended', name: 'Rizon Electric - Extended Range', cost: 155000, efficiency: 1.2, maintenance: 0.18 }
+  { 
+    id: 'rizon-class6-2pack', 
+    name: 'Rizon Class 6 - 2 Battery Pack (15,995 lb GVWR)', 
+    cost: 145000, 
+    efficiency: 0.85, // 74 kWh / ~87 miles = 0.85 kWh/mile
+    maintenance: 0.20,
+    specs: '82/74 kWh usable, 75-110 mi range'
+  },
+  { 
+    id: 'rizon-class6-3pack', 
+    name: 'Rizon Class 6 - 3 Battery Pack (15,995 lb GVWR)', 
+    cost: 175000, 
+    efficiency: 0.87, // 116 kWh / ~133 miles = 0.87 kWh/mile
+    maintenance: 0.20,
+    specs: '124/116 kWh usable, 115-160 mi range'
+  },
+  { 
+    id: 'rizon-class7-2pack', 
+    name: 'Rizon Class 7 - 2 Battery Pack (17,995 lb GVWR)', 
+    cost: 155000, 
+    efficiency: 0.95, // 74 kWh / ~78 miles = 0.95 kWh/mile (heavier)
+    maintenance: 0.22,
+    specs: '82/74 kWh usable, 70-105 mi range'
+  },
+  { 
+    id: 'rizon-class7-3pack', 
+    name: 'Rizon Class 7 - 3 Battery Pack (17,995 lb GVWR)', 
+    cost: 185000, 
+    efficiency: 0.97, // 116 kWh / ~120 miles = 0.97 kWh/mile (heavier)
+    maintenance: 0.22,
+    specs: '124/116 kWh usable, 110-155 mi range'
+  },
+  { 
+    id: 'rizon-class7max-2pack', 
+    name: 'Rizon Class 7 Max - 2 Battery Pack (18,850 lb GVWR)', 
+    cost: 165000, 
+    efficiency: 1.0, // 74 kWh / ~74 miles = 1.0 kWh/mile (heaviest)
+    maintenance: 0.24,
+    specs: '82/74 kWh usable, 65-100 mi range'
+  },
+  { 
+    id: 'rizon-class7max-3pack', 
+    name: 'Rizon Class 7 Max - 3 Battery Pack (18,850 lb GVWR)', 
+    cost: 195000, 
+    efficiency: 1.02, // 116 kWh / ~115 miles = 1.01 kWh/mile (heaviest)
+    maintenance: 0.24,
+    specs: '124/116 kWh usable, 105-150 mi range'
+  }
 ];
 
 interface ChartDataPoint {
@@ -134,7 +179,7 @@ export default function FinalCalculator() {
 
   // Local state for HVIP and vehicle selection
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
-  const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-standard');
+  const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-class6-2pack');
   const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
   
   // Track if user has manually overridden vehicle-based inputs
@@ -338,6 +383,7 @@ export default function FinalCalculator() {
                 </div>
                 <div className="text-sm text-gray-600">After HVIP incentive</div>
                 <div className="text-sm text-gray-600 mt-2">{selectedElectric.efficiency} kWh/mile</div>
+                <div className="text-xs text-gray-500 mt-1">{selectedElectric.specs}</div>
               </div>
             </div>
           </div>

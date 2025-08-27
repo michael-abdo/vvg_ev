@@ -3,14 +3,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCalculator } from '@/components/calculators/shared/use-calculator';
 import { formatCurrency, formatPerMile, formatPercent } from '@/components/calculators/shared/formatters';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
@@ -27,10 +24,7 @@ import {
   TrendingDown,
   Award,
   Calendar,
-  CreditCard,
-  Settings,
   LineChart as LineChartIcon,
-  AlertCircle,
   ExternalLink
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
@@ -140,7 +134,6 @@ export default function FinalCalculator() {
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-standard');
   const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
-  const [showInputs, setShowInputs] = useState(true);
 
   // Get selected truck and incentive data
   const selectedDiesel = DIESEL_TRUCKS.find(t => t.id === selectedDieselTruck) || DIESEL_TRUCKS[0];
@@ -375,135 +368,133 @@ export default function FinalCalculator() {
 
 
       {/* Adjust Parameters (from Comparison Cards) */}
-      {showInputs && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Adjust Parameters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">Basic</TabsTrigger>
-                <TabsTrigger value="costs">Costs</TabsTrigger>
-                <TabsTrigger value="incentives">Incentives</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="basic" className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Annual Mileage</Label>
-                    <Input
-                      type="number"
-                      value={dieselInputs.milesPerYear}
-                      onChange={(e) => {
-                        updateDieselInput('milesPerYear', e.target.value);
-                        updateBEVInput('milesPerYear', e.target.value);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Label>Diesel Price ($/gal)</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={dieselInputs.fuelPrice}
-                      onChange={(e) => updateDieselInput('fuelPrice', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Electricity Price ($/kWh)</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={bevInputs.fuelPrice}
-                      onChange={(e) => updateBEVInput('fuelPrice', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Diesel Efficiency (MPG)</Label>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      value={dieselInputs.efficiency}
-                      onChange={(e) => updateDieselInput('efficiency', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="costs" className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Diesel Truck Cost</Label>
-                    <Input
-                      type="number"
-                      value={dieselInputs.truckCost}
-                      onChange={(e) => updateDieselInput('truckCost', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>BEV Truck Cost</Label>
-                    <Input
-                      type="number"
-                      value={bevInputs.truckCost}
-                      onChange={(e) => updateBEVInput('truckCost', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Diesel Maintenance ($/mi)</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={dieselInputs.maintenancePerMile}
-                      onChange={(e) => updateDieselInput('maintenancePerMile', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>BEV Maintenance ($/mi)</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={bevInputs.maintenancePerMile}
-                      onChange={(e) => updateBEVInput('maintenancePerMile', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="incentives" className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>BEV Infrastructure Cost</Label>
-                    <Input
-                      type="number"
-                      value={bevInputs.infrastructureCost}
-                      onChange={(e) => updateBEVInput('infrastructureCost', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>BEV Infrastructure Incentive</Label>
-                    <Input
-                      type="number"
-                      value={bevInputs.infrastructureIncentive}
-                      onChange={(e) => updateBEVInput('infrastructureIncentive', e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="enable-lcfs-final"
-                    checked={enableLCFS}
-                    onChange={(e) => setEnableLCFS(e.target.checked)}
-                    className="h-4 w-4"
+      <Card>
+        <CardHeader>
+          <CardTitle>Adjust Parameters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="basic" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="basic">Basic</TabsTrigger>
+              <TabsTrigger value="costs">Costs</TabsTrigger>
+              <TabsTrigger value="incentives">Incentives</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="basic" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Annual Mileage</Label>
+                  <Input
+                    type="number"
+                    value={dieselInputs.milesPerYear}
+                    onChange={(e) => {
+                      updateDieselInput('milesPerYear', e.target.value);
+                      updateBEVInput('milesPerYear', e.target.value);
+                    }}
                   />
-                  <Label htmlFor="enable-lcfs-final">Enable LCFS calculations (CA, WA, OR)</Label>
                 </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      )}
+                <div>
+                  <Label>Diesel Price ($/gal)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={dieselInputs.fuelPrice}
+                    onChange={(e) => updateDieselInput('fuelPrice', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Electricity Price ($/kWh)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={bevInputs.fuelPrice}
+                    onChange={(e) => updateBEVInput('fuelPrice', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Diesel Efficiency (MPG)</Label>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    value={dieselInputs.efficiency}
+                    onChange={(e) => updateDieselInput('efficiency', e.target.value)}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="costs" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Diesel Truck Cost</Label>
+                  <Input
+                    type="number"
+                    value={dieselInputs.truckCost}
+                    onChange={(e) => updateDieselInput('truckCost', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>BEV Truck Cost</Label>
+                  <Input
+                    type="number"
+                    value={bevInputs.truckCost}
+                    onChange={(e) => updateBEVInput('truckCost', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Diesel Maintenance ($/mi)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={dieselInputs.maintenancePerMile}
+                    onChange={(e) => updateDieselInput('maintenancePerMile', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>BEV Maintenance ($/mi)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={bevInputs.maintenancePerMile}
+                    onChange={(e) => updateBEVInput('maintenancePerMile', e.target.value)}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="incentives" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>BEV Infrastructure Cost</Label>
+                  <Input
+                    type="number"
+                    value={bevInputs.infrastructureCost}
+                    onChange={(e) => updateBEVInput('infrastructureCost', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>BEV Infrastructure Incentive</Label>
+                  <Input
+                    type="number"
+                    value={bevInputs.infrastructureIncentive}
+                    onChange={(e) => updateBEVInput('infrastructureIncentive', e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="enable-lcfs-final"
+                  checked={enableLCFS}
+                  onChange={(e) => setEnableLCFS(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="enable-lcfs-final">Enable LCFS calculations (CA, WA, OR)</Label>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
       {/* Key Performance Indicators (from Comparison Cards) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

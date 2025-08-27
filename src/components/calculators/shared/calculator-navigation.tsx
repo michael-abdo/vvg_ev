@@ -49,6 +49,12 @@ const calculatorVariants = [
     label: 'Interactive Calculator',
     icon: Calculator,
     description: 'Modern interactive interface'
+  },
+  {
+    href: '/calculator/final-v2',
+    label: 'Interactive Guided Calculator',
+    icon: BarChart3,
+    description: 'Progressive disclosure with guided workflow'
   }
 ];
 

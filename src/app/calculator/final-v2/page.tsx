@@ -143,11 +143,21 @@ export default function FinalV2Calculator() {
       
       // Results section (available after required sections)
       newStates[3].canOpen = vehicleCompleted && hvipCompleted;
-      newStates[3].completed = Boolean(results);
+      newStates[3].completed = vehicleCompleted && hvipCompleted; // Complete when user has made required selections
+      
+      // Debug logging
+      console.log('🔍 Completion Debug:', {
+        selectedDieselTruck,
+        selectedElectricTruck, 
+        hvipTier,
+        vehicleCompleted,
+        hvipCompleted,
+        sectionsComplete: newStates.filter(s => s.completed).length
+      });
       
       return newStates;
     });
-  }, [selectedDieselTruck, selectedElectricTruck, hvipTier, results]);
+  }, [selectedDieselTruck, selectedElectricTruck, hvipTier]);
 
   // Calculate overall progress
   const completedSections = sectionStates.filter(s => s.completed).length;

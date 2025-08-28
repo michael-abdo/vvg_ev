@@ -23,16 +23,32 @@ import HvipIncentiveSection from './components/hvip-incentive-section';
 import ParametersSection from './components/parameters-section';
 import ResultsSection from './components/results-section';
 
-// Section completion tracking
+// Section completion tracking - NOTE: icon is now a string, not a React node
 interface SectionState {
   id: string;
   title: string;
-  icon: React.ReactNode;
+  iconName: 'truck' | 'dollar' | 'settings' | 'chart'; // Store icon names, not React nodes
   completed: boolean;
   required: boolean;
   canOpen: boolean;
   description: string;
 }
+
+// Function to render icons based on name
+const renderIcon = (iconName: string, className?: string) => {
+  switch (iconName) {
+    case 'truck':
+      return <Truck className={className || "h-5 w-5"} />;
+    case 'dollar':
+      return <DollarSign className={className || "h-5 w-5"} />;
+    case 'settings':
+      return <Settings className={className || "h-5 w-5"} />;
+    case 'chart':
+      return <BarChart3 className={className || "h-5 w-5"} />;
+    default:
+      return null;
+  }
+};
 
 export default function FinalV2Calculator() {
   const {
@@ -45,12 +61,12 @@ export default function FinalV2Calculator() {
     setEnableLCFS
   } = useCalculator();
 
-  // Section states with progressive unlock logic
+  // Section states with progressive unlock logic - No React nodes in state!
   const [sectionStates, setSectionStates] = useState<SectionState[]>([
     { 
       id: 'vehicles', 
       title: 'Select Vehicles to Compare', 
-      icon: <Truck className="h-5 w-5" />,
+      iconName: 'truck',
       completed: false, 
       required: true, 
       canOpen: true,
@@ -59,7 +75,7 @@ export default function FinalV2Calculator() {
     { 
       id: 'incentives', 
       title: 'Configure HVIP Incentives', 
-      icon: <DollarSign className="h-5 w-5" />,
+      iconName: 'dollar',
       completed: false, 
       required: true, 
       canOpen: false,
@@ -68,7 +84,7 @@ export default function FinalV2Calculator() {
     { 
       id: 'parameters', 
       title: 'Fine-tune Parameters', 
-      icon: <Settings className="h-5 w-5" />,
+      iconName: 'settings',
       completed: false, 
       required: false, 
       canOpen: false,
@@ -77,7 +93,7 @@ export default function FinalV2Calculator() {
     { 
       id: 'results', 
       title: 'View Results & Analysis', 
-      icon: <BarChart3 className="h-5 w-5" />,
+      iconName: 'chart',
       completed: false, 
       required: false, 
       canOpen: false,
@@ -191,7 +207,7 @@ export default function FinalV2Calculator() {
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="flex items-center gap-3">
-                  {section.icon}
+                  {renderIcon(section.iconName)}
                   <div>
                     <div className="font-semibold">{section.title}</div>
                     <div className="text-sm text-gray-500">

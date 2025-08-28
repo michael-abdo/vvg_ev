@@ -6,19 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from '@/components/ui/accordion';
-import { 
   Truck, 
   DollarSign, 
   Settings, 
   BarChart3,
   CheckCircle,
   Clock,
-  Lock
+  Lock,
+  ChevronDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -90,7 +85,7 @@ export default function FinalV2Calculator() {
     }
   ]);
 
-  const [currentSection, setCurrentSection] = useState('vehicles');
+  const [expandedSections, setExpandedSections] = useState<string[]>(['vehicles']);
   
   // Vehicle selection state (will be passed to sections)
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
@@ -139,6 +134,19 @@ export default function FinalV2Calculator() {
     }
   };
 
+  const toggleSection = (sectionId: string) => {
+    const section = sectionStates.find(s => s.id === sectionId);
+    if (!section?.canOpen) return;
+
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  const isExpanded = (sectionId: string) => expandedSections.includes(sectionId);
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       
@@ -164,46 +172,34 @@ export default function FinalV2Calculator() {
       </Card>
 
       {/* Progressive Disclosure Sections */}
-      <Accordion 
-        type="single" 
-        collapsible 
-        value={currentSection}
-        onValueChange={(value) => {
-          // Only change section if it's allowed to open
-          const targetSection = sectionStates.find(s => s.id === value);
-          if (targetSection?.canOpen) {
-            setCurrentSection(value);
-          }
-        }}
-        className="space-y-4"
-      >
+      <div className="space-y-4">
         {sectionStates.map((section) => (
-          <AccordionItem 
-            key={section.id} 
-            value={section.id}
+          <Card
+            key={section.id}
             className={cn(
-              "border rounded-lg",
+              "border transition-all",
               section.canOpen ? "border-gray-200" : "border-gray-100 bg-gray-50"
             )}
           >
-            <AccordionTrigger 
+            <button
               className={cn(
-                "px-6 py-4 hover:no-underline",
-                !section.canOpen && "cursor-not-allowed opacity-50"
+                "w-full px-6 py-4 flex items-center justify-between text-left",
+                section.canOpen ? "cursor-pointer hover:bg-gray-50" : "cursor-not-allowed opacity-50"
               )}
+              onClick={() => toggleSection(section.id)}
               disabled={!section.canOpen}
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="flex items-center gap-3">
                   {section.icon}
-                  <div className="text-left">
+                  <div>
                     <div className="font-semibold">{section.title}</div>
-                    <div className="text-sm text-gray-500 font-normal">
+                    <div className="text-sm text-gray-500">
                       {section.description}
                     </div>
                   </div>
                 </div>
-                <div className="ml-auto flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   {getSectionStatus(section)}
                   <Badge 
                     variant={section.completed ? "default" : section.canOpen ? "secondary" : "outline"}
@@ -211,71 +207,77 @@ export default function FinalV2Calculator() {
                   >
                     {section.completed ? "Complete" : section.canOpen ? "Ready" : "Locked"}
                   </Badge>
+                  <ChevronDown 
+                    className={cn(
+                      "h-4 w-4 transition-transform",
+                      isExpanded(section.id) && "rotate-180"
+                    )}
+                  />
                 </div>
               </div>
-            </AccordionTrigger>
+            </button>
             
-            <AccordionContent className="px-6 pb-6">
-              {section.id === 'vehicles' && (
-                <VehicleSelectionSection
-                  selectedDieselTruck={selectedDieselTruck}
-                  selectedElectricTruck={selectedElectricTruck}
-                  onDieselTruckChange={setSelectedDieselTruck}
-                  onElectricTruckChange={setSelectedElectricTruck}
-                  onVehicleDataUpdate={(diesel, electric) => {
-                    // Update calculator inputs based on vehicle selection
-                    updateDieselInput('truckCost', diesel.cost.toString());
-                    updateDieselInput('efficiency', diesel.mpg.toString());
-                    updateDieselInput('maintenancePerMile', diesel.maintenance.toString());
-                    
-                    updateBEVInput('truckCost', electric.cost.toString());
-                    updateBEVInput('efficiency', electric.efficiency.toString());
-                    updateBEVInput('maintenancePerMile', electric.maintenance.toString());
-                  }}
-                />
-              )}
-              
-              {section.id === 'incentives' && (
-                <HvipIncentiveSection
-                  selectedTier={hvipTier}
-                  onTierChange={setHvipTier}
-                  onIncentiveUpdate={(amount) => {
-                    updateBEVInput('truckIncentive', amount.toString());
-                  }}
-                />
-              )}
-              
-              {section.id === 'parameters' && (
-                <ParametersSection
-                  dieselInputs={dieselInputs}
-                  bevInputs={bevInputs}
-                  enableLCFS={enableLCFS}
-                  updateDieselInput={updateDieselInput}
-                  updateBEVInput={updateBEVInput}
-                  setEnableLCFS={setEnableLCFS}
-                  onResetToDefaults={() => {
-                    // Reset to default values - this would need to be implemented
-                    // or we could provide a reset function from useCalculator
-                    console.log('Reset to defaults');
-                  }}
-                />
-              )}
-              
-              {section.id === 'results' && (
-                <ResultsSection
-                  results={results}
-                  dieselInputs={dieselInputs}
-                  bevInputs={bevInputs}
-                  enableLCFS={enableLCFS}
-                  selectedDieselTruck={selectedDieselTruck}
-                  selectedElectricTruck={selectedElectricTruck}
-                  selectedHvipTier={hvipTier}
-                />
-              )}
-            </AccordionContent>
-          </AccordionItem>
+            {isExpanded(section.id) && section.canOpen && (
+              <div className="px-6 pb-6">
+                {section.id === 'vehicles' && (
+                  <VehicleSelectionSection
+                    selectedDieselTruck={selectedDieselTruck}
+                    selectedElectricTruck={selectedElectricTruck}
+                    onDieselTruckChange={setSelectedDieselTruck}
+                    onElectricTruckChange={setSelectedElectricTruck}
+                    onVehicleDataUpdate={(diesel, electric) => {
+                      // Update calculator inputs based on vehicle selection
+                      updateDieselInput('truckCost', diesel.cost.toString());
+                      updateDieselInput('efficiency', diesel.mpg.toString());
+                      updateDieselInput('maintenancePerMile', diesel.maintenance.toString());
+                      
+                      updateBEVInput('truckCost', electric.cost.toString());
+                      updateBEVInput('efficiency', electric.efficiency.toString());
+                      updateBEVInput('maintenancePerMile', electric.maintenance.toString());
+                    }}
+                  />
+                )}
+                
+                {section.id === 'incentives' && (
+                  <HvipIncentiveSection
+                    selectedTier={hvipTier}
+                    onTierChange={setHvipTier}
+                    onIncentiveUpdate={(amount) => {
+                      updateBEVInput('truckIncentive', amount.toString());
+                    }}
+                  />
+                )}
+                
+                {section.id === 'parameters' && (
+                  <ParametersSection
+                    dieselInputs={dieselInputs}
+                    bevInputs={bevInputs}
+                    enableLCFS={enableLCFS}
+                    updateDieselInput={updateDieselInput}
+                    updateBEVInput={updateBEVInput}
+                    setEnableLCFS={setEnableLCFS}
+                    onResetToDefaults={() => {
+                      console.log('Reset to defaults');
+                    }}
+                  />
+                )}
+                
+                {section.id === 'results' && (
+                  <ResultsSection
+                    results={results}
+                    dieselInputs={dieselInputs}
+                    bevInputs={bevInputs}
+                    enableLCFS={enableLCFS}
+                    selectedDieselTruck={selectedDieselTruck}
+                    selectedElectricTruck={selectedElectricTruck}
+                    selectedHvipTier={hvipTier}
+                  />
+                )}
+              </div>
+            )}
+          </Card>
         ))}
-      </Accordion>
+      </div>
 
       {/* Quick Summary (always visible when results available) */}
       {results && results.diesel && results.bev && results.diesel.yearlyTotalCosts && results.bev.yearlyTotalCosts && (

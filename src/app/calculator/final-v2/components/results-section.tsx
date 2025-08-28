@@ -23,13 +23,29 @@ interface MetricCardProps {
   title: string;
   value: string;
   subtitle?: string;
-  icon: React.ReactNode;
+  iconName: 'dollar' | 'calendar' | 'leaf' | 'award';
   trend?: 'up' | 'down' | 'neutral';
   color?: 'red' | 'green' | 'blue' | 'orange';
   progress?: number;
 }
 
-function MetricCard({ title, value, subtitle, icon, trend, color = 'blue', progress }: MetricCardProps) {
+// Function to render icons based on name
+const renderIcon = (iconName: string, className?: string) => {
+  switch (iconName) {
+    case 'dollar':
+      return <DollarSign className={className || "h-4 w-4"} />;
+    case 'calendar':
+      return <Calendar className={className || "h-4 w-4"} />;
+    case 'leaf':
+      return <Leaf className={className || "h-4 w-4"} />;
+    case 'award':
+      return <Award className={className || "h-4 w-4"} />;
+    default:
+      return null;
+  }
+};
+
+function MetricCard({ title, value, subtitle, iconName, trend, color = 'blue', progress }: MetricCardProps) {
   const colorClasses = {
     red: 'text-red-600 bg-red-50 border-red-200',
     green: 'text-green-600 bg-green-50 border-green-200',
@@ -59,7 +75,7 @@ function MetricCard({ title, value, subtitle, icon, trend, color = 'blue', progr
             )}
           </div>
           <div className={`p-2 rounded-lg bg-white/50 ${iconColorClasses[color]}`}>
-            {icon}
+            {renderIcon(iconName)}
           </div>
         </div>
         {trend && (
@@ -204,7 +220,7 @@ export default function ResultsSection({
           title="10-Year Savings"
           value={formatCurrency(Math.abs(totalSavings))}
           subtitle={totalSavings > 0 ? 'BEV saves' : 'Diesel costs less'}
-          icon={<DollarSign className="h-4 w-4" />}
+          iconName="dollar"
           color={totalSavings > 0 ? 'green' : 'red'}
           trend={totalSavings > 0 ? 'up' : 'down'}
         />
@@ -213,7 +229,7 @@ export default function ResultsSection({
           title="Break-even"
           value={breakEvenYear > 0 && breakEvenYear <= 10 ? `Year ${breakEvenYear}` : '10+ years'}
           subtitle="When BEV becomes cheaper"
-          icon={<Calendar className="h-4 w-4" />}
+          iconName="calendar"
           color="blue"
         />
         
@@ -221,7 +237,7 @@ export default function ResultsSection({
           title="Annual Fuel Savings"
           value={formatCurrency(fuelSavingsPerYear)}
           subtitle="Energy cost difference"
-          icon={<Leaf className="h-4 w-4" />}
+          iconName="leaf"
           color="green"
           trend="up"
         />
@@ -230,7 +246,7 @@ export default function ResultsSection({
           title="Savings Rate"
           value={formatPercent(Math.abs(savingsPercentage))}
           subtitle={totalSavings > 0 ? 'Lower total cost' : 'Higher total cost'}
-          icon={<Award className="h-4 w-4" />}
+          iconName="award"
           color={totalSavings > 0 ? 'green' : 'orange'}
           progress={Math.abs(savingsPercentage) * 100}
         />

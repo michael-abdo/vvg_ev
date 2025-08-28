@@ -165,7 +165,7 @@ export default function ResultsSection({
         </div>
       );
     }
-    return null;
+    return <div />; // Return empty div instead of null
   };
 
   const handleExportPDF = async () => {

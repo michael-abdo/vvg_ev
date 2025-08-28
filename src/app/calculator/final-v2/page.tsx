@@ -108,6 +108,14 @@ export default function FinalV2Calculator() {
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('');
   const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity' | ''>('');
 
+  // AGGRESSIVE DEBUGGING - Track initial render
+  console.log('🚨 COMPONENT RENDER:', {
+    selectedDieselTruck,
+    selectedElectricTruck,
+    hvipTier,
+    timestamp: new Date().toISOString()
+  });
+
   // Memoized callback functions to prevent infinite useEffect loops
   const handleVehicleDataUpdate = useCallback((diesel: any, electric: any) => {
     updateDieselInput('truckCost', diesel.cost.toString());
@@ -163,6 +171,14 @@ export default function FinalV2Calculator() {
   const completedSections = sectionStates.filter(s => s.completed).length;
   const totalSections = sectionStates.length;
   const progressPercentage = (completedSections / totalSections) * 100;
+
+  // AGGRESSIVE DEBUGGING - Track progress calculation
+  console.log('🎯 PROGRESS CALCULATION:', {
+    sectionStates: sectionStates.map(s => ({ id: s.id, completed: s.completed })),
+    completedSections,
+    totalSections,
+    progressPercentage
+  });
 
   // Section status indicator
   const getSectionStatus = (section: SectionState) => {

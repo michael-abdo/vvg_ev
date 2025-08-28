@@ -86,12 +86,14 @@ export default function VehicleSelectionSection({
   onVehicleDataUpdate
 }: VehicleSelectionSectionProps) {
   
-  const selectedDiesel = DIESEL_TRUCKS.find(t => t.id === selectedDieselTruck) || DIESEL_TRUCKS[0];
-  const selectedElectric = ELECTRIC_TRUCKS.find(t => t.id === selectedElectricTruck) || ELECTRIC_TRUCKS[0];
+  const selectedDiesel = DIESEL_TRUCKS.find(t => t.id === selectedDieselTruck);
+  const selectedElectric = ELECTRIC_TRUCKS.find(t => t.id === selectedElectricTruck);
   
-  // Update vehicle data when selection changes
+  // Update vehicle data when selection changes (only if both are selected)
   React.useEffect(() => {
-    onVehicleDataUpdate(selectedDiesel, selectedElectric);
+    if (selectedDiesel && selectedElectric) {
+      onVehicleDataUpdate(selectedDiesel, selectedElectric);
+    }
   }, [selectedDiesel, selectedElectric, onVehicleDataUpdate]);
 
   const handleDieselChange = (value: string) => {
@@ -130,7 +132,7 @@ export default function VehicleSelectionSection({
           <CardContent className="space-y-4 p-6">
             <Select value={selectedDieselTruck} onValueChange={handleDieselChange}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select a diesel truck" />
               </SelectTrigger>
               <SelectContent>
                 {DIESEL_TRUCKS.map(truck => (
@@ -141,20 +143,26 @@ export default function VehicleSelectionSection({
               </SelectContent>
             </Select>
             
-            <div className="bg-red-50 p-4 rounded-lg space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Base Price</span>
-                <span className="font-bold text-red-600">{formatCurrency(selectedDiesel.cost)}</span>
+            {selectedDiesel ? (
+              <div className="bg-red-50 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Base Price</span>
+                  <span className="font-bold text-red-600">{formatCurrency(selectedDiesel.cost)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Fuel Efficiency</span>
+                  <span className="font-medium">{selectedDiesel.mpg} MPG</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Maintenance</span>
+                  <span className="font-medium">${selectedDiesel.maintenance}/mile</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Fuel Efficiency</span>
-                <span className="font-medium">{selectedDiesel.mpg} MPG</span>
+            ) : (
+              <div className="bg-gray-50 p-4 rounded-lg text-center text-gray-500">
+                Select a diesel truck to view specifications
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Maintenance</span>
-                <span className="font-medium">${selectedDiesel.maintenance}/mile</span>
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
@@ -169,7 +177,7 @@ export default function VehicleSelectionSection({
           <CardContent className="space-y-4 p-6">
             <Select value={selectedElectricTruck} onValueChange={handleElectricChange}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select an electric truck" />
               </SelectTrigger>
               <SelectContent>
                 {ELECTRIC_TRUCKS.map(truck => (
@@ -180,43 +188,60 @@ export default function VehicleSelectionSection({
               </SelectContent>
             </Select>
             
-            <div className="bg-green-50 p-4 rounded-lg space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Base Price</span>
-                <span className="font-bold text-green-600">{formatCurrency(selectedElectric.cost)}</span>
+            {selectedElectric ? (
+              <div className="bg-green-50 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Base Price</span>
+                  <span className="font-bold text-green-600">{formatCurrency(selectedElectric.cost)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Energy Efficiency</span>
+                  <span className="font-medium">{selectedElectric.efficiency} kWh/mile</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Maintenance</span>
+                  <span className="font-medium">${selectedElectric.maintenance}/mile</span>
+                </div>
+                <div className="text-xs text-gray-500 pt-2 border-t">
+                  {selectedElectric.specs}
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Energy Efficiency</span>
-                <span className="font-medium">{selectedElectric.efficiency} kWh/mile</span>
+            ) : (
+              <div className="bg-gray-50 p-4 rounded-lg text-center text-gray-500">
+                Select an electric truck to view specifications
               </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Maintenance</span>
-                <span className="font-medium">${selectedElectric.maintenance}/mile</span>
-              </div>
-              <div className="text-xs text-gray-500 pt-2 border-t">
-                {selectedElectric.specs}
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
       {/* Comparison Preview */}
-      <div className="bg-gray-50 border rounded-lg p-4">
-        <div className="text-sm font-medium text-gray-700 mb-2">
-          Selected Comparison
-        </div>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="text-center">
-            <div className="font-medium text-red-600">{selectedDiesel.name}</div>
-            <div className="text-gray-500">{formatCurrency(selectedDiesel.cost)} • {selectedDiesel.mpg} MPG</div>
+      {selectedDiesel && selectedElectric ? (
+        <div className="bg-gray-50 border rounded-lg p-4">
+          <div className="text-sm font-medium text-gray-700 mb-2">
+            Selected Comparison
           </div>
-          <div className="text-center">
-            <div className="font-medium text-green-600">{selectedElectric.name}</div>
-            <div className="text-gray-500">{formatCurrency(selectedElectric.cost)} • {selectedElectric.efficiency} kWh/mi</div>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="text-center">
+              <div className="font-medium text-red-600">{selectedDiesel.name}</div>
+              <div className="text-gray-500">{formatCurrency(selectedDiesel.cost)} • {selectedDiesel.mpg} MPG</div>
+            </div>
+            <div className="text-center">
+              <div className="font-medium text-green-600">{selectedElectric.name}</div>
+              <div className="text-gray-500">{formatCurrency(selectedElectric.cost)} • {selectedElectric.efficiency} kWh/mi</div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div className="text-sm font-medium text-blue-800 mb-1">
+            Ready to Compare
+          </div>
+          <div className="text-sm text-blue-600">
+            Select both vehicles above to see your comparison summary
+          </div>
+        </div>
+      )}
       
     </div>
   );

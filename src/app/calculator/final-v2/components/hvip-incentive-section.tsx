@@ -13,7 +13,7 @@ const HVIP_INCENTIVES = {
 };
 
 interface HvipIncentiveSectionProps {
-  selectedTier: 'base' | 'smallFleet' | 'disadvantagedCommunity';
+  selectedTier: 'base' | 'smallFleet' | 'disadvantagedCommunity' | '';
   onTierChange: (tier: 'base' | 'smallFleet' | 'disadvantagedCommunity') => void;
   onIncentiveUpdate: (amount: number) => void;
 }
@@ -24,9 +24,11 @@ export default function HvipIncentiveSection({
   onIncentiveUpdate
 }: HvipIncentiveSectionProps) {
   
-  // Update incentive amount when tier changes
+  // Update incentive amount when tier changes (only if tier is selected)
   React.useEffect(() => {
-    onIncentiveUpdate(HVIP_INCENTIVES[selectedTier].amount);
+    if (selectedTier && HVIP_INCENTIVES[selectedTier as keyof typeof HVIP_INCENTIVES]) {
+      onIncentiveUpdate(HVIP_INCENTIVES[selectedTier as keyof typeof HVIP_INCENTIVES].amount);
+    }
   }, [selectedTier, onIncentiveUpdate]);
 
   const handleTierChange = (tier: 'base' | 'smallFleet' | 'disadvantagedCommunity') => {
@@ -112,24 +114,35 @@ export default function HvipIncentiveSection({
       </div>
 
       {/* Selected Summary */}
-      <div className="bg-gray-50 border rounded-lg p-4">
-        <div className="text-sm font-medium text-gray-700 mb-2">
-          Selected HVIP Tier
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-medium text-gray-900">
-              {HVIP_INCENTIVES[selectedTier].label}
+      {selectedTier ? (
+        <div className="bg-gray-50 border rounded-lg p-4">
+          <div className="text-sm font-medium text-gray-700 mb-2">
+            Selected HVIP Tier
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-medium text-gray-900">
+                {HVIP_INCENTIVES[selectedTier as keyof typeof HVIP_INCENTIVES].label}
+              </div>
+              <div className="text-sm text-gray-600">
+                {HVIP_INCENTIVES[selectedTier as keyof typeof HVIP_INCENTIVES].description}
+              </div>
             </div>
-            <div className="text-sm text-gray-600">
-              {HVIP_INCENTIVES[selectedTier].description}
+            <div className="text-xl font-bold text-green-600">
+              {formatCurrency(HVIP_INCENTIVES[selectedTier as keyof typeof HVIP_INCENTIVES].amount)}
             </div>
           </div>
-          <div className="text-xl font-bold text-green-600">
-            {formatCurrency(HVIP_INCENTIVES[selectedTier].amount)}
+        </div>
+      ) : (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div className="text-sm font-medium text-blue-800 mb-1">
+            Choose Your HVIP Tier
+          </div>
+          <div className="text-sm text-blue-600">
+            Select your voucher eligibility above to see your incentive amount
           </div>
         </div>
-      </div>
+      )}
       
     </div>
   );

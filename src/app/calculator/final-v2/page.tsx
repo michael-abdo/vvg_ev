@@ -103,10 +103,10 @@ export default function FinalV2Calculator() {
 
   const [expandedSections, setExpandedSections] = useState<string[]>(['vehicles']);
   
-  // Vehicle selection state (will be passed to sections)
-  const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
-  const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-class6-2pack');
-  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
+  // Vehicle selection state (will be passed to sections) - Start with empty selections
+  const [selectedDieselTruck, setSelectedDieselTruck] = useState('');
+  const [selectedElectricTruck, setSelectedElectricTruck] = useState('');
+  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity' | ''>('');
 
   // Memoized callback functions to prevent infinite useEffect loops
   const handleVehicleDataUpdate = useCallback((diesel: any, electric: any) => {
@@ -137,9 +137,9 @@ export default function FinalV2Calculator() {
       newStates[1].completed = hvipCompleted;
       newStates[1].canOpen = vehicleCompleted;
       
-      // Parameters section (optional, always available after HVIP)
+      // Parameters section (optional, available after HVIP, completed when accessed)
       newStates[2].canOpen = hvipCompleted;
-      newStates[2].completed = true; // Always considered complete as it's optional
+      newStates[2].completed = hvipCompleted; // Complete when HVIP is done (optional section)
       
       // Results section (available after required sections)
       newStates[3].canOpen = vehicleCompleted && hvipCompleted;

@@ -46,7 +46,7 @@ const renderIcon = (iconName: string, className?: string) => {
     case 'chart':
       return <BarChart3 className={className || "h-5 w-5"} />;
     default:
-      return null;
+      return <BarChart3 className={className || "h-5 w-5"} />; // Return fallback icon instead of null
   }
 };
 

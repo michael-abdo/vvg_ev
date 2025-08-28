@@ -41,7 +41,7 @@ const renderIcon = (iconName: string, className?: string) => {
     case 'award':
       return <Award className={className || "h-4 w-4"} />;
     default:
-      return null;
+      return <DollarSign className={className || "h-4 w-4"} />; // Return fallback icon instead of null
   }
 };
 

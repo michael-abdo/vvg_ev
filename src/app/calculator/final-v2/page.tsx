@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useCalculator } from '@/components/calculators/shared/use-calculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -107,6 +107,21 @@ export default function FinalV2Calculator() {
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-class6-2pack');
   const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
+
+  // Memoized callback functions to prevent infinite useEffect loops
+  const handleVehicleDataUpdate = useCallback((diesel: any, electric: any) => {
+    updateDieselInput('truckCost', diesel.cost.toString());
+    updateDieselInput('efficiency', diesel.mpg.toString());
+    updateDieselInput('maintenancePerMile', diesel.maintenance.toString());
+    
+    updateBEVInput('truckCost', electric.cost.toString());
+    updateBEVInput('efficiency', electric.efficiency.toString());
+    updateBEVInput('maintenancePerMile', electric.maintenance.toString());
+  }, [updateDieselInput, updateBEVInput]);
+
+  const handleIncentiveUpdate = useCallback((amount: number) => {
+    updateBEVInput('truckIncentive', amount.toString());
+  }, [updateBEVInput]);
 
   // Check section completion and update unlock status
   useEffect(() => {
@@ -241,16 +256,7 @@ export default function FinalV2Calculator() {
                     selectedElectricTruck={selectedElectricTruck}
                     onDieselTruckChange={setSelectedDieselTruck}
                     onElectricTruckChange={setSelectedElectricTruck}
-                    onVehicleDataUpdate={(diesel, electric) => {
-                      // Update calculator inputs based on vehicle selection
-                      updateDieselInput('truckCost', diesel.cost.toString());
-                      updateDieselInput('efficiency', diesel.mpg.toString());
-                      updateDieselInput('maintenancePerMile', diesel.maintenance.toString());
-                      
-                      updateBEVInput('truckCost', electric.cost.toString());
-                      updateBEVInput('efficiency', electric.efficiency.toString());
-                      updateBEVInput('maintenancePerMile', electric.maintenance.toString());
-                    }}
+                    onVehicleDataUpdate={handleVehicleDataUpdate}
                   />
                 )}
                 
@@ -258,9 +264,7 @@ export default function FinalV2Calculator() {
                   <HvipIncentiveSection
                     selectedTier={hvipTier}
                     onTierChange={setHvipTier}
-                    onIncentiveUpdate={(amount) => {
-                      updateBEVInput('truckIncentive', amount.toString());
-                    }}
+                    onIncentiveUpdate={handleIncentiveUpdate}
                   />
                 )}
                 

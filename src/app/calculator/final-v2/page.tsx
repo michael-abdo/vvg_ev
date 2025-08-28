@@ -174,18 +174,23 @@ export default function FinalV2Calculator() {
         {sectionStates.map((section) => (
           <AccordionItem 
             key={section.id} 
-            value={section.id}
+            value={section.canOpen ? section.id : `disabled-${section.id}`}
             className={cn(
               "border rounded-lg",
               section.canOpen ? "border-gray-200" : "border-gray-100 bg-gray-50"
             )}
-            disabled={!section.canOpen}
           >
             <AccordionTrigger 
               className={cn(
                 "px-6 py-4 hover:no-underline",
                 !section.canOpen && "cursor-not-allowed opacity-50"
               )}
+              onClick={(e) => {
+                if (!section.canOpen) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="flex items-center gap-3">
@@ -272,7 +277,7 @@ export default function FinalV2Calculator() {
       </Accordion>
 
       {/* Quick Summary (always visible when results available) */}
-      {results && (
+      {results && results.diesel && results.bev && results.diesel.yearlyTotalCosts && results.bev.yearlyTotalCosts && (
         <Card className="border-green-200 bg-green-50/50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">

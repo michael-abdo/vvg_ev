@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -111,6 +111,18 @@ export default function ResultsSection({
   selectedElectricTruck,
   selectedHvipTier
 }: ResultsSectionProps) {
+  
+  // Abort controller for async operations
+  const abortControllerRef = useRef<AbortController | null>(null);
+  
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // Calculate key metrics
   const totalSavings = results ? results.diesel.yearlyTotalCosts[9] - results.bev.yearlyTotalCosts[9] : 0;
@@ -172,6 +184,9 @@ export default function ResultsSection({
     if (!results) return;
     
     try {
+      // Create new abort controller for this request
+      abortControllerRef.current = new AbortController();
+      
       const response = await fetch('/api/export-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -184,6 +199,7 @@ export default function ResultsSection({
           selectedElectricTruck,
           selectedHvipTier
         }),
+        signal: abortControllerRef.current.signal
       });
 
       if (!response.ok) throw new Error('PDF generation failed');
@@ -198,8 +214,14 @@ export default function ResultsSection({
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Export cancelled');
+        return;
+      }
       console.error('Export failed:', error);
       alert('PDF export failed. Please try again.');
+    } finally {
+      abortControllerRef.current = null;
     }
   };
 

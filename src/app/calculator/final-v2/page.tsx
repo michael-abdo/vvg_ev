@@ -300,7 +300,7 @@ export default function FinalV2Calculator() {
       </div>
 
       {/* Quick Summary (always visible when results available) */}
-      {results && results.diesel && results.bev && results.diesel.yearlyTotalCosts && results.bev.yearlyTotalCosts && (
+      {results?.diesel?.yearlyTotalCosts?.[9] && results?.bev?.yearlyTotalCosts?.[9] && (
         <Card className="border-green-200 bg-green-50/50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">

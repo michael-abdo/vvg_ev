@@ -5,16 +5,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency } from '@/components/calculators/shared/formatters';
 import { ExternalLink } from 'lucide-react';
 
-// HVIP Incentive tiers (from original calculator)
+// HVIP Incentive tiers
 const HVIP_INCENTIVES = {
   base: { amount: 60000, label: 'Base HVIP Voucher', description: 'Standard voucher for all eligible fleets' },
-  smallFleet: { amount: 120000, label: 'Small Fleet Eligible', description: 'For fleets with 1-49 vehicles in CA' },
-  disadvantagedCommunity: { amount: 138000, label: 'Disadvantaged Community', description: 'Additional DAC benefits' }
+  smallFleet: { amount: 90000, label: 'Small Fleet Eligible', description: 'For fleets with 20 vehicles or fewer and $5M or less in annual revenue' }
 };
 
 interface HvipIncentiveSectionProps {
-  selectedTier: 'base' | 'smallFleet' | 'disadvantagedCommunity' | '';
-  onTierChange: (tier: 'base' | 'smallFleet' | 'disadvantagedCommunity') => void;
+  selectedTier: 'base' | 'smallFleet' | '';
+  onTierChange: (tier: 'base' | 'smallFleet') => void;
   onIncentiveUpdate: (amount: number) => void;
 }
 
@@ -31,7 +30,7 @@ export default function HvipIncentiveSection({
     }
   }, [selectedTier, onIncentiveUpdate]);
 
-  const handleTierChange = (tier: 'base' | 'smallFleet' | 'disadvantagedCommunity') => {
+  const handleTierChange = (tier: 'base' | 'smallFleet') => {
     onTierChange(tier);
   };
 
@@ -95,23 +94,6 @@ export default function HvipIncentiveSection({
         ))}
       </div>
 
-      {/* DAC Check Link */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="text-sm">
-          <span className="font-medium text-blue-800">Disadvantaged Community Check:</span>
-          <span className="text-blue-600 ml-1">
-            Not sure if you qualify for DAC benefits?
-          </span>
-        </div>
-        <a 
-          href="https://webmaps.arb.ca.gov/PriorityPopulations/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium text-sm mt-2"
-        >
-          Check DAC eligibility map <ExternalLink className="h-3 w-3" />
-        </a>
-      </div>
 
       {/* Selected Summary */}
       {selectedTier ? (

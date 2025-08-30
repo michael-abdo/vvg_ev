@@ -106,7 +106,7 @@ export default function FinalV2Calculator() {
   // Vehicle selection state (will be passed to sections) - Start with empty selections
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('');
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('');
-  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity' | ''>('');
+  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | ''>('');
 
   // AGGRESSIVE DEBUGGING - Track initial render
   console.log('🚨 COMPONENT RENDER:', {

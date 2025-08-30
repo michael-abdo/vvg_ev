@@ -36,11 +36,10 @@ import {
   defaultLCFSInputs
 } from '@/lib/calculators/bev-cost-calculator';
 
-// HVIP Incentive tiers from Rizon calculator
+// HVIP Incentive tiers
 const HVIP_INCENTIVES = {
   base: { amount: 60000, label: 'Base HVIP Voucher' },
-  smallFleet: { amount: 120000, label: 'Small Fleet Eligible' },
-  disadvantagedCommunity: { amount: 138000, label: 'Disadvantaged Community' }
+  smallFleet: { amount: 90000, label: 'Small Fleet Eligible' }
 };
 
 // Vehicle data from Rizon calculator
@@ -180,7 +179,7 @@ export default function FinalCalculator() {
   // Local state for HVIP and vehicle selection
   const [selectedDieselTruck, setSelectedDieselTruck] = useState('isuzu-n-series');
   const [selectedElectricTruck, setSelectedElectricTruck] = useState('rizon-class6-2pack');
-  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet' | 'disadvantagedCommunity'>('base');
+  const [hvipTier, setHvipTier] = useState<'base' | 'smallFleet'>('base');
   
   // Track if user has manually overridden vehicle-based inputs
   const [manualOverrides, setManualOverrides] = useState<{
@@ -399,7 +398,7 @@ export default function FinalCalculator() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid md:grid-cols-3 gap-3 mb-3">
+          <div className="grid md:grid-cols-2 gap-3">
             {Object.entries(HVIP_INCENTIVES).map(([key, tier]) => (
               <label
                 key={key}
@@ -415,26 +414,20 @@ export default function FinalCalculator() {
                   onChange={(e) => setHvipTier(e.target.value as any)}
                 />
                 <div className="flex flex-1 flex-col">
-                  <span className="block text-xs font-medium text-gray-900">
+                  <span className="block text-sm font-medium text-gray-900">
                     {tier.label}
                   </span>
-                  <span className="mt-1 flex items-center text-xs text-gray-500">
-                    {formatCurrency(tier.amount)}
+                  <span className="mt-1 text-xs text-gray-500">
+                    {formatCurrency(tier.amount)} incentive
                   </span>
+                  {key === 'smallFleet' && (
+                    <span className="mt-1 text-xs text-gray-500">
+                      For fleets with 20 vehicles or fewer and $5M or less in annual revenue
+                    </span>
+                  )}
                 </div>
               </label>
             ))}
-          </div>
-          
-          <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
-            <a 
-              href="https://webmaps.arb.ca.gov/PriorityPopulations/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium underline inline-flex items-center gap-1"
-            >
-              Check DAC eligibility <ExternalLink className="h-3 w-3" />
-            </a>
           </div>
         </CardContent>
       </Card>
